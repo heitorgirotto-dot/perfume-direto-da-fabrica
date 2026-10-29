@@ -1,0 +1,28 @@
+name: Baixar fotos dos produtos
+on:
+  workflow_dispatch:
+  push:
+    paths: ["fotos-king-lista.txt"]
+permissions:
+  contents: write
+jobs:
+  baixar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Baixar imagens
+        run: |
+          mkdir -p fotos-king
+          while read -r dest url; do
+            [ -z "$dest" ] && continue
+            [ -s "$dest" ] && continue
+            curl -sSL --retry 3 -A "Mozilla/5.0" -o "$dest" "$url" || echo "falhou: $url"
+          done < fotos-king-lista.txt
+          ls fotos-king | wc -l
+      - name: Commit
+        run: |
+          git config user.name "nota-bot"
+          git config user.email "bot@notaperfumaria"
+          git add fotos-king
+          git diff --cached --quiet || git commit -m "Fotos dos produtos (download automático)"
+          git push

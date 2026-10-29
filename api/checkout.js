@@ -7,6 +7,10 @@ module.exports = async (req, res) => {
   const name = String(q.n || '').slice(0, 120);
   const brand = String(q.b || '').slice(0, 60);
   const value = Number(q.p);
+  const qty = Math.min(10, Math.max(1, parseInt(q.q || '1', 10) || 1));
+  const frete = Number(q.f || 0);
+  const freteNome = String(q.fn || 'Frete').slice(0, 40);
+  const end = String(q.e || '').slice(0, 200);
   const site = 'https://' + (req.headers['x-forwarded-host'] || req.headers.host || 'notaperfumaria.vercel.app');
   if (!key) return res.status(500).send('Checkout não configurado: defina ASAAS_API_KEY na Vercel.');
   if (!name || !(value > 0)) return res.status(400).send('Produto ou valor inválido.');
@@ -20,7 +24,9 @@ module.exports = async (req, res) => {
         minutesToExpire: 60,
         installment: { maxInstallmentCount: 6 },
         callback: { successUrl: site + '/?pago=1', cancelUrl: site + '/', expiredUrl: site + '/' },
-        items: [{ name: name, description: brand ? 'Marca: ' + brand : undefined, quantity: 1, value: Math.round(value * 100) / 100 }]
+        externalReference: end ? ('Entrega: ' + end) : undefined,
+        items: [{ name: name, description: (brand ? 'Marca: ' + brand : '') + (end ? ' · Entrega: ' + end : ''), quantity: qty, value: Math.round(value * 100) / 100 }]
+          .concat(frete > 0 ? [{ name: 'Frete ' + freteNome, description: end || undefined, quantity: 1, value: Math.round(frete * 100) / 100 }] : [])
       })
     });
     const data = await r.json();

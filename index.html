@@ -259,10 +259,6 @@ footer{background:#020202;border-top:1px solid var(--line);padding-block:44px 24
   <div class="more" id="more"></div>
 </div></section>
 
-<section id="ofertas"><div class="wrap">
-  <div class="sh"><h2 class="gold-text">Produtos em oferta</h2><p>Seleção com os melhores preços do catálogo</p><div class="rule"></div></div>
-  <div class="grid five" id="sale"></div>
-</div></section>
 
 <div class="benef"><div class="wrap">
   <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l2.6 6.5L21 9l-5 4.3L17.5 21 12 17.5 6.5 21 8 13.3 3 9l6.4-.5z"/></svg><b>Qualidade premium</b><span>As melhores marcas para você</span></div>
@@ -276,7 +272,7 @@ footer{background:#020202;border-top:1px solid var(--line);padding-block:44px 24
 
 <footer><div class="wrap">
   <div class="fcols">
-    <div><h4>Institucional</h4><ul><li><a href="#colecoes">Catálogo completo</a></li><li><a href="#ofertas">Ofertas</a></li></ul></div>
+    <div><h4>Institucional</h4><ul><li><a href="#colecoes">Catálogo completo</a></li></ul></div>
     <div><h4>Ajuda &amp; Suporte</h4><ul><li><a href="#" data-pol="prazos">Política de prazos e entregas</a></li><li><a href="#" data-pol="trocas">Política de trocas e devoluções</a></li><li><a href="#" data-pol="rastreio">Rastreie o seu pedido</a></li><li><a href="#" data-pol="contato">Contato</a></li></ul></div>
     <div><h4>Atendimento</h4><ul><li id="f-wa">WhatsApp: (11) 98265-9792</li><li>Seg. a sáb., 9h às 18h</li><li>Siga-nos: @notaperfumaria</li></ul></div>
     <div><h4>Newsletter</h4><form class="news" id="nform"><input id="nemail" type="email" placeholder="Seu e-mail" aria-label="E-mail"><button type="submit">Assinar</button></form><p class="note" id="nmsg" style="text-align:left;margin-top:6px">Receba lançamentos e promoções antes de todo mundo.</p>
@@ -330,7 +326,6 @@ function card(it,o={}){
 const byName=n=>{const [b,nm]=n.includes("|")?n.split("|"):[null,n];return ITEMS.find(i=>i.n===nm&&(!b||i.b===b))};
 $('#best').innerHTML=BEST.map(byName).filter(Boolean).map(i=>card(i)).join('');
 $('#top5').innerHTML=TOP5.map(byName).filter(Boolean).map((i,k)=>card(i,{rank:k+1})).join('');
-$('#sale').innerHTML=ITEMS.filter(i=>i.p&&i.p<=149&&!i.splash).sort((a,b)=>(!!b.img-!!a.img)||a.p-b.p).slice(0,10).map(i=>card(i)).join('');
 [...new Set(ITEMS.map(i=>i.b))].sort().forEach(b=>{const o=document.createElement('option');o.value=b;o.textContent=b;$('#brand').appendChild(o)});
 
 let f='all',page=1;const PAGE=40;

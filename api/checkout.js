@@ -1,6 +1,7 @@
 // Cria uma sessão de Checkout no Asaas e redireciona o cliente para pagar.
 // Variáveis de ambiente na Vercel: ASAAS_API_KEY (obrigatória), ASAAS_ENV ("sandbox" ou "production", padrão production)
 const { calcular } = require('./_taxas');
+const brl = v => 'R$ ' + Number(v).toFixed(2).replace('.', ',');
 module.exports = async (req, res) => {
   const key = process.env.ASAAS_API_KEY;
   const apiBase = (process.env.ASAAS_ENV || 'production') === 'sandbox' ? 'https://api-sandbox.asaas.com/v3' : 'https://api.asaas.com/v3';
@@ -24,7 +25,7 @@ module.exports = async (req, res) => {
     const c = calcular(base, metodo, nParc);
     const payload = (billing) => ({
         billingTypes: billing,
-        chargeTypes: metodo === 'CARD' && c.n > 1 ? ['INSTALLMENT'] : ['DETACHED'],
+        chargeTypes: metodo === 'CARD' && c.n > 1 ? ['DETACHED', 'INSTALLMENT'] : ['DETACHED'],
         minutesToExpire: 60,
         installment: metodo === 'CARD' && c.n > 1 ? { maxInstallmentCount: c.n, minInstallmentCount: c.n } : undefined,
         callback: { successUrl: site + '/?pago=1', cancelUrl: site + '/', expiredUrl: site + '/' },
@@ -33,7 +34,16 @@ module.exports = async (req, res) => {
           .concat(frete > 0 ? [{ name: ('Frete ' + freteNome).slice(0, 30), description: end || undefined, quantity: 1, value: Math.round(frete * 100) / 100 }] : [])
           .concat(c.taxa > 0 ? [{ name: (metodo === 'CARD' ? (c.n > 1 ? 'Taxa cartão ' + c.n + 'x' : 'Taxa cartão à vista') : 'Taxa boleto'), description: 'Taxa de processamento do pagamento', quantity: 1, value: c.taxa }] : [])
       });
-    const billing = metodo === 'CARD' ? ['CREDIT_CARD'] : metodo === 'BOLETO' ? ['BOLETO'] : ['PIX'];
+    if (metodo === 'BOLETO') {
+      // Checkout não aceita boleto: usa link de pagamento Asaas (código de barras + linha digitável)
+      const rb = await fetch(apiBase + '/paymentLinks', { method: 'POST', headers: { 'Content-Type': 'application/json', 'access_token': key, 'User-Agent': 'NotaPerfumaria' },
+        body: JSON.stringify({ name: ('Boleto - ' + name).slice(0, 60), description: (qty + 'x ' + name + (brand ? ' (' + brand + ')' : '') + (frete > 0 ? ' + Frete ' + freteNome + ' ' + brl(frete) : '') + (c.taxa > 0 ? ' + Taxa boleto ' + brl(c.taxa) : '') + (end ? ' · Entrega: ' + end : '')).slice(0, 500),
+          billingType: 'BOLETO', chargeType: 'DETACHED', value: c.total, dueDateLimitDays: 3, maxInstallmentCount: 1, notificationEnabled: true, externalReference: end ? ('Entrega: ' + end).slice(0, 200) : undefined }) });
+      const db = await rb.json();
+      if (!rb.ok || !db.url) { console.error('asaas boleto', rb.status, JSON.stringify(db)); return res.status(502).send('Não foi possível gerar o boleto agora. Fale com a gente no WhatsApp.'); }
+      res.setHeader('Cache-Control', 'no-store'); res.writeHead(302, { Location: db.url }); return res.end();
+    }
+    const billing = metodo === 'CARD' ? ['CREDIT_CARD'] : ['PIX'];
     const call = (b) => fetch(apiBase + '/checkouts', { method: 'POST', headers: { 'Content-Type': 'application/json', 'access_token': key, 'User-Agent': 'NotaPerfumaria' }, body: JSON.stringify(payload(b)) });
     let r = await call(billing);
     let data = await r.json();

@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Nota Perfumaria — os melhores perfumes com preço de fábrica. Árabes e importados originais, PIX com desconto e até 6x sem juros.">
+<meta name="description" content="Nota Perfumaria — os melhores perfumes com preço de fábrica. Árabes e importados originais, PIX com desconto, boleto ou cartão em até 12x.">
 <meta property="og:title" content="Nota Perfumaria — Os melhores perfumes com preço de fábrica">
-<meta property="og:description" content="Perfumes árabes e importados originais com desconto no PIX e até 6x sem juros.">
+<meta property="og:description" content="Perfumes árabes e importados originais com desconto no PIX, boleto ou cartão em até 12x.">
 <title>Nota Perfumaria</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Jost:wght@300;400;500;600;700&display=swap">
 <style>
@@ -194,6 +194,7 @@ section{padding-block:56px}
 .qty span{min-width:34px;text-align:center;font-weight:600}
 .frete{border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px;background:var(--card)}
 .frete h4{margin:0;font-size:.74rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+.frete select{background:var(--bg2);border:1px solid var(--line);color:var(--fg);border-radius:8px;padding:9px 12px;font-family:inherit;font-size:.95rem}
 .frete input{background:var(--bg2);border:1px solid var(--line);color:var(--fg);border-radius:8px;padding:10px 12px;font-family:inherit;font-size:.95rem;min-width:0;width:100%}
 .frete .g2{display:grid;grid-template-columns:1fr auto;gap:8px}
 .frete .g3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px}
@@ -363,7 +364,7 @@ footer{background:#020202;border-top:1px solid var(--line);padding-block:44px 24
   <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l2.6 6.5L21 9l-5 4.3L17.5 21 12 17.5 6.5 21 8 13.3 3 9l6.4-.5z"/></svg><b>Qualidade premium</b><span>As melhores marcas para você</span></div>
   <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v18M5 10c3 0 4-3 7-3s4 3 7 3"/></svg><b>Alta fixação</b><span>Fragrâncias de longa duração</span></div>
   <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l7 3v5c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg><b>Produtos originais</b><span>Lacrados, com selo do importador</span></div>
-  <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/></svg><b>Pagamento facilitado</b><span>Até 6x no cartão ou PIX com desconto</span></div>
+  <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/></svg><b>Pagamento facilitado</b><span>PIX, boleto ou cartão em até 12x</span></div>
   <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg><b>Entrega segura</b><span>Entrega em todo o Brasil</span></div>
   <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 5h16v11H8l-4 4z"/></svg><b>Atendimento</b><span>Suporte humano pelo WhatsApp</span></div>
 </div></div>
@@ -396,11 +397,12 @@ div class="lb-txt" id="lb-txt"></div></div></div>
     </div>
     <div class="tot"><span>Produtos</span><span id="t-sub">R$ 0</span></div>
     <div class="tot" style="border:0;padding-top:0"><span>Frete</span><span id="t-frete">—</span></div>
-    <div class="tot"><span>Total no cartão</span><b id="t-tot">R$ 0</b></div>
-    <div class="tot" style="border:0;padding-top:0"><span>Total no PIX</span><span id="t-pix" style="color:var(--gold2);font-weight:700">R$ 0</span></div>
+    <div class="frete"><h4>Forma de pagamento</h4><div class="opts" id="pay"></div><div class="pv-row" id="parcrow" hidden><span class="msg">Parcelas</span><select id="parc"></select></div></div>
+    <div class="tot"><span id="t-lab">Total</span><b id="t-tot">R$ 0</b></div>
+    <div class="msg" id="t-det"></div>
     <div class="acts"><a class="buy off" id="pv-buy" href="#" target="_blank" rel="noopener">Comprar agora</a><a class="ask" id="pv-ask" href="#" target="_blank" rel="noopener">Dúvidas</a></div>
     <div class="msg" id="pv-hint"></div>
-    <div class="msg">Pagamento seguro via Asaas: PIX ou cartão em até 6x. Envio pelos Correios após a confirmação.</div>
+    <div class="msg">Pagamento seguro via Asaas: PIX, boleto ou cartão em até 12x. Envio pelos Correios após a confirmação.</div>
   </div></div></div>
 <div class="fab"><a id="fab-wa" href="https://chat.whatsapp.com/HzhNBMK6T6G7exPlnNXAZ5" target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4c1.7.7 2.1.6 2.8.5a2.4 2.4 0 0 0 1.6-1.1 2 2 0 0 0 .1-1.1c0-.1-.2-.2-.5-.3z"/></svg></a></div>
 
@@ -412,7 +414,7 @@ const WA_NUMBER = "5511982659792"; // Ex.: "5511999999999" (DDI+DDD, só número
 const WA_GROUP  = "https://chat.whatsapp.com/HzhNBMK6T6G7exPlnNXAZ5";
 const PIX_OFF   = 0.10;   // desconto no PIX
 const PARCELAS  = 6;      // parcelas sem juros exibidas
-const PROMO     = ["Pague em até 6x sem juros","Desconto de até 10% OFF pagando com o PIX","Entrega em todo o Brasil","Produtos 100% originais"];
+const PROMO     = ["Cartão em até 12x","Desconto de até 10% OFF pagando com o PIX","Entrega em todo o Brasil","Produtos 100% originais"];
 const BEST  = ["Yara Tous EDP 100ml","Lattafa|Asad EDP 100ml","Club De Nuit Intense Man EDT 105ml","Hawas For Him 100ml","9 PM Elixir Black Gold Parfum 100ml","Fakhar Black EDP 100ml","Yara Elixir EDP 100ml","Teriaq EDP 100ml","Asad Bourbon EDP 100ml","Maître De Blue EDP 100ml"];
 const TOP5  = ["Asad Elixir EDP 100ml","Yara Tous EDP 100ml","Club De Nuit Intense Man EDT 105ml","Hawas Ice EDP 100ml","Fakhar Gold Extrait EDP 100ml"];
 const IMPORT= ["Animale","Azzaro","Britney Spears","Burberry","Dolce & Gabbana","Elizabeth Arden","Escada","Hugo Boss","Issey Miyake","Giorgio Armani","Messi","Montblanc","Paco Rabanne","Victoria’s Secret"];
@@ -429,7 +431,7 @@ function checkoutLink(it){
 }
 function waLink(it){
   let t=`Olá, Nota Perfumaria! Tenho uma dúvida sobre este perfume:\n\n*${it.n}*\nMarca: ${it.b} · ${G[it.g]}`;
-  if(it.p!=null) t+=`\nPreço: ${brl(it.p)}\nNo PIX (${Math.round(PIX_OFF*100)}% off): ${brl(pix(it.p))}\nou ${PARCELAS}x de ${brl(it.p/PARCELAS)} sem juros`; else t+=`\nPreço: a consultar`;
+  if(it.p!=null) t+=`\nPreço: ${brl(it.p)}\nNo PIX (${Math.round(PIX_OFF*100)}% off): ${brl(pix(it.p))}\nCartão em até 12x`; else t+=`\nPreço: a consultar`;
   t+=`\n\nPode me ajudar?`;
   return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(t)}`;
 }
@@ -439,7 +441,7 @@ $('#mq').innerHTML=PROMO.map(t=>`<span>✦ ${t}</span>`).join('');$('#mq2').inne
 
 const bottle=`<svg viewBox="0 0 100 130" fill="none"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#3a2d18"/><stop offset=".45" stop-color="#8a6a2a"/><stop offset=".5" stop-color="#f5dd95"/><stop offset=".55" stop-color="#8a6a2a"/><stop offset="1" stop-color="#2a1f10"/></linearGradient></defs><rect x="36" y="4" width="28" height="18" rx="3" fill="#d9b25a"/><rect x="40" y="22" width="20" height="12" fill="#2a241a"/><path d="M22 36h56a10 10 0 0 1 10 10v66a10 10 0 0 1-10 10H22a10 10 0 0 1-10-10V46a10 10 0 0 1 10-10z" fill="url(#g)" stroke="#d9b25a" stroke-opacity=".6"/><rect x="28" y="66" width="44" height="30" fill="#050505" fill-opacity=".7" stroke="#d9b25a"/></svg>`;
 function card(it,o={}){
-  const price=it.p==null?`<div class="pix" style="font-size:1rem">Consultar</div>`:`<div class="pix">${brl(pix(it.p))}<small>no PIX</small></div><div class="full">${brl(it.p)} ou ${PARCELAS}x de ${brl(it.p/PARCELAS)} sem juros</div>`;
+  const price=it.p==null?`<div class="pix" style="font-size:1rem">Consultar</div>`:`<div class="pix">${brl(pix(it.p))}<small>no PIX</small></div><div class="full">${brl(it.p)} no boleto · cartão em até 12x</div>`;
   return `<div class="card"><div class="ph${it.img?" has zoom":""}" data-open="${it.id}" title="${it.img?"Ver produto":""}">${it.img?`<img src="${it.img}" alt="${it.n}" loading="lazy">`:bottle}${o.rank?`<span class="rank">${o.rank}</span>`:''}<span class="pill ${it.g}">${G[it.g]}</span></div>
   <div class="cb"><div class="brand">${it.b}</div><h3>${it.n}</h3><p class="notes"><b>Notas:</b> ${it.notes||""}</p>${it.like?`<p class="like">Lembra: <b>${it.like}</b></p>`:""}${price}
   <div class="acts"><a class="buy" href="#p-${it.id}" data-open="${it.id}">Comprar</a><a class="ask" href="${waLink(it)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4c1.7.7 2.1.6 2.8.5a2.4 2.4 0 0 0 1.6-1.1 2 2 0 0 0 .1-1.1c0-.1-.2-.2-.5-.3z"/></svg>Dúvidas</a></div></div></div>`;
@@ -472,8 +474,12 @@ function setF(v,scroll){f=v;render(true);if(scroll)$('#colecoes').scrollIntoView
 ['#brand','#range','#sort'].forEach(s=>$(s).addEventListener('input',()=>render(true)));
 $('#q').addEventListener('input',()=>render(true));
 $('#sform').addEventListener('submit',e=>{e.preventDefault();f='all';render(true);$('#colecoes').scrollIntoView({behavior:'smooth'})});
-const PV={id:null,qty:1,cep:'',end:null,num:'',comp:'',opts:[],frete:null};
-function openPV(id){const it=ITEMS[id];if(!it)return;PV.id=id;PV.qty=1;PV.frete=null;PV.opts=[];PV.end=null;
+const PV={id:null,qty:1,cep:'',end:null,num:'',comp:'',opts:[],frete:null,met:'PIX',parc:1};
+let TAXAS={card1:{pct:2.99,fixo:0.49},card2_6:{pct:3.49,fixo:0.49},card7_12:{pct:3.99,fixo:0.49},boleto:0,pix:0,maxParcelas:12,parcelaMinima:30};
+fetch('/api/taxas').then(r=>r.json()).then(t=>{TAXAS=Object.assign(TAXAS,t)}).catch(()=>{});
+function calc(base,met,n){base=Math.round(base*100)/100;if(met==='PIX')return{total:base,taxa:0,n:1,parcela:base};if(met==='BOLETO')return{total:base+TAXAS.boleto,taxa:TAXAS.boleto,n:1,parcela:base+TAXAS.boleto};
+  n=Math.max(1,Math.min(TAXAS.maxParcelas,n||1));const f=n===1?TAXAS.card1:n<=6?TAXAS.card2_6:TAXAS.card7_12;const total=Math.round(((base+f.fixo)/(1-f.pct/100))*100)/100;return{total,taxa:Math.round((total-base)*100)/100,n,parcela:Math.round(total/n*100)/100}}
+function openPV(id){const it=ITEMS[id];if(!it)return;PV.id=id;PV.qty=1;PV.met='PIX';PV.parc=1;PV.frete=null;PV.opts=[];PV.end=null;
   $('#pv-thumbs').innerHTML=(it.pics||[]).map((u,k)=>`<img src="${u}" class="${k?'':'on'}" data-src="${u}" alt="">`).join('');
   $('#pv-main').innerHTML=it.img?`<img src="${it.img}" alt="${it.n}">`:bottle;
   $('#pv-brand').textContent=it.b;$('#pv-name').textContent=it.n;$('#pv-g').textContent=G[it.g];$('#pv-g').className='pill '+it.g;
@@ -483,13 +489,28 @@ function openPV(id){const it=ITEMS[id];if(!it)return;PV.id=id;PV.qty=1;PV.frete=
 function closePV(){$('#pv').hidden=true;document.body.style.overflow='';if(location.hash.startsWith('#p-'))history.replaceState(null,'',' ');}
 function renderPV(){const it=ITEMS[PV.id];if(!it)return;$('#qtyv').textContent=PV.qty;
   const unit=it.p||0,sub=unit*PV.qty,fr=PV.frete?PV.frete.preco:0;
-  $('#pv-price').innerHTML=it.p==null?'<div class="pix">Consultar</div>':`<div class="pix">${brl(pix(unit))}<small>no PIX (unid.)</small></div><div class="full">${brl(unit)} ou ${PARCELAS}x de ${brl(unit/PARCELAS)} sem juros</div>`;
-  $('#t-sub').textContent=brl(sub);$('#t-frete').textContent=PV.frete?brl(fr):'—';$('#t-tot').textContent=brl(sub+fr);$('#t-pix').textContent=brl(pix(sub)+fr);
-  const ok=it.p!=null&&PV.frete&&PV.end&&$('#num').value.trim();
+  $('#pv-price').innerHTML=it.p==null?'<div class="pix">Consultar</div>':`<div class="pix">${brl(pix(unit))}<small>no PIX (unid.)</small></div><div class="full">${brl(unit)} no boleto · cartão em até 12x</div>`;
+  $('#t-sub').textContent=brl(sub);$('#t-frete').textContent=PV.frete?brl(fr):'—';
+  const basePix=pix(unit)*PV.qty+fr, base=sub+fr;
+  const cPix=calc(basePix,'PIX',1), cBol=calc(base,'BOLETO',1), c1=calc(base,'CARD',1);
+  const maxN=Math.max(1,Math.min(TAXAS.maxParcelas,Math.floor(base/(TAXAS.parcelaMinima||1))));
+  if(PV.parc>maxN)PV.parc=maxN;
+  const cN=calc(base,'CARD',PV.parc);
+  $('#pay').innerHTML=`<div class="opt ${PV.met==='PIX'?'on':''}" data-m="PIX"><span>PIX à vista <small>· ${Math.round(PIX_OFF*100)}% de desconto</small></span><b>${brl(cPix.total)}</b></div>
+   <div class="opt ${PV.met==='BOLETO'?'on':''}" data-m="BOLETO"><span>Boleto à vista</span><b>${brl(cBol.total)}</b></div>
+   <div class="opt ${PV.met==='CARD1'?'on':''}" data-m="CARD1"><span>Cartão à vista <small>· taxa inclusa</small></span><b>${brl(c1.total)}</b></div>
+   <div class="opt ${PV.met==='CARDN'?'on':''}" data-m="CARDN"><span>Cartão parcelado <small>· até ${maxN}x, taxa inclusa</small></span><b>${PV.parc>1?PV.parc+'x '+brl(cN.parcela):'escolher'}</b></div>`;
+  const sel=$('#parc');$('#parcrow').hidden=PV.met!=='CARDN';
+  if(PV.met==='CARDN'){sel.innerHTML=Array.from({length:Math.max(0,maxN-1)},(_,k)=>k+2).map(n=>{const c=calc(base,'CARD',n);return `<option value="${n}" ${n===PV.parc?'selected':''}>${n}x de ${brl(c.parcela)} (total ${brl(c.total)})</option>`}).join('')}
+  const chosen=PV.met==='PIX'?cPix:PV.met==='BOLETO'?cBol:PV.met==='CARD1'?c1:cN;
+  $('#t-lab').textContent=PV.met==='PIX'?'Total no PIX':PV.met==='BOLETO'?'Total no boleto':PV.met==='CARD1'?'Total no cartão':`Total em ${PV.parc}x`;
+  $('#t-tot').textContent=brl(chosen.total);$('#t-det').textContent=chosen.taxa>0?`Inclui taxa de pagamento de ${brl(chosen.taxa)}${PV.met==='CARDN'?' · '+PV.parc+'x de '+brl(chosen.parcela):''}`:'Sem taxa adicional';
+  const ok=it.p!=null&&PV.frete&&PV.end&&$('#num').value.trim()&&!(PV.met==='CARDN'&&PV.parc<2);
   $('#pv-buy').classList.toggle('off',!ok);
   if(ok){const e=`${PV.end.logradouro}, ${$('#num').value.trim()}${$('#comp').value.trim()?' '+$('#comp').value.trim():''} - ${PV.end.bairro} - ${PV.end.localidade}/${PV.end.uf} - CEP ${PV.cep}`;
-    $('#pv-buy').href=`/api/checkout?n=${encodeURIComponent(it.n)}&b=${encodeURIComponent(it.b)}&p=${unit}&q=${PV.qty}&f=${fr}&fn=${encodeURIComponent(PV.frete.nome)}&e=${encodeURIComponent(e)}`;}
-  $('#pv-hint').textContent=ok?'':(it.p==null?'Produto sob consulta: fale conosco.':!PV.end?'Informe o CEP para calcular o frete.':!$('#num').value.trim()?'Informe o número do endereço.':!PV.frete?'Escolha uma opção de frete.':'');}
+    const m=PV.met==='PIX'?'PIX':PV.met==='BOLETO'?'BOLETO':'CARD';const n=PV.met==='CARDN'?PV.parc:1;
+    $('#pv-buy').href=`/api/checkout?n=${encodeURIComponent(it.n)}&b=${encodeURIComponent(it.b)}&p=${unit}&q=${PV.qty}&f=${fr}&fn=${encodeURIComponent(PV.frete.nome)}&e=${encodeURIComponent(e)}&m=${m}&parc=${n}`;}
+  $('#pv-hint').textContent=ok?'':(it.p==null?'Produto sob consulta: fale conosco.':!PV.end?'Informe o CEP para calcular o frete.':!$('#num').value.trim()?'Informe o número do endereço.':!PV.frete?'Escolha uma opção de frete.':PV.met==='CARDN'&&PV.parc<2?'Escolha o número de parcelas.':'');}
 async function buscarCEP(){const c=$('#cep').value.replace(/\D/g,'');if(c.length!==8){$('#fmsg').textContent='Digite um CEP com 8 números.';return}
   $('#fmsg').textContent='Buscando endereço…';PV.end=null;PV.frete=null;PV.opts=[];$('#opts').innerHTML='';renderPV();
   try{const v=await (await fetch(`https://viacep.com.br/ws/${c}/json/`)).json();if(v.erro)throw 0;PV.end=v;PV.cep=c.replace(/(\d{5})(\d{3})/,'$1-$2');
@@ -505,6 +526,7 @@ $('#pv-thumbs').addEventListener('click',e=>{const t=e.target.closest('img[data-
 $('#qminus').addEventListener('click',()=>{PV.qty=Math.max(1,PV.qty-1);renderPV()});$('#qplus').addEventListener('click',()=>{PV.qty=Math.min(10,PV.qty+1);renderPV()});
 $('#cepbtn').addEventListener('click',buscarCEP);$('#cep').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();buscarCEP()}});$('#cep').addEventListener('input',()=>{const v=$('#cep').value.replace(/\D/g,'').slice(0,8);$('#cep').value=v.length>5?v.slice(0,5)+'-'+v.slice(5):v;if(v.length===8)buscarCEP()});
 $('#num').addEventListener('input',renderPV);$('#comp').addEventListener('input',renderPV);
+$('#pay').addEventListener('click',e=>{const o=e.target.closest('.opt[data-m]');if(!o)return;PV.met=o.dataset.m;if(PV.met==='CARDN'&&PV.parc<2)PV.parc=2;renderPV()});$('#parc').addEventListener('change',()=>{PV.parc=+$('#parc').value;renderPV()});
 $('#opts').addEventListener('click',e=>{const o=e.target.closest('.opt');if(!o)return;document.querySelectorAll('.opt').forEach(x=>x.classList.toggle('on',x===o));PV.frete=PV.opts[+o.dataset.k];renderPV()});
 window.addEventListener('hashchange',()=>{const m=location.hash.match(/^#p-(\d+)$/);if(m)openPV(+m[1])});
 document.addEventListener('click',e=>{

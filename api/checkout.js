@@ -1,8 +1,9 @@
 // Cria uma sessão de Checkout no Asaas e redireciona o cliente para pagar.
 // Variáveis de ambiente na Vercel: ASAAS_API_KEY (obrigatória), ASAAS_ENV ("sandbox" ou "production", padrão production)
+const { calcular } = require('./_taxas');
 module.exports = async (req, res) => {
   const key = process.env.ASAAS_API_KEY;
-  const base = (process.env.ASAAS_ENV || 'production') === 'sandbox' ? 'https://api-sandbox.asaas.com/v3' : 'https://api.asaas.com/v3';
+  const apiBase = (process.env.ASAAS_ENV || 'production') === 'sandbox' ? 'https://api-sandbox.asaas.com/v3' : 'https://api.asaas.com/v3';
   const q = req.query || {};
   const name = String(q.n || '').slice(0, 120);
   const brand = String(q.b || '').slice(0, 60);
@@ -11,27 +12,34 @@ module.exports = async (req, res) => {
   const frete = Number(q.f || 0);
   const freteNome = String(q.fn || 'Frete').slice(0, 40);
   const end = String(q.e || '').slice(0, 200);
+  const metodo = ['PIX','BOLETO','CARD'].includes(String(q.m||'').toUpperCase()) ? String(q.m).toUpperCase() : 'PIX';
+  const nParc = parseInt(q.n_ || q.parc || '1', 10) || 1;
+  const pixOff = Number(process.env.PIX_OFF || 0.10);
   const site = 'https://' + (req.headers['x-forwarded-host'] || req.headers.host || 'notaperfumaria.vercel.app');
   if (!key) return res.status(500).send('Checkout não configurado: defina ASAAS_API_KEY na Vercel.');
   if (!name || !(value > 0)) return res.status(400).send('Produto ou valor inválido.');
   try {
+    const unit = metodo === 'PIX' ? Math.round(value * (1 - pixOff) * 100) / 100 : Math.round(value * 100) / 100;
+    const base = unit * qty + (frete > 0 ? Math.round(frete * 100) / 100 : 0);
+    const c = calcular(base, metodo, nParc);
     const payload = (billing) => ({
         billingTypes: billing,
-        chargeTypes: ['DETACHED', 'INSTALLMENT'],
+        chargeTypes: metodo === 'CARD' && c.n > 1 ? ['INSTALLMENT'] : ['DETACHED'],
         minutesToExpire: 60,
-        installment: { maxInstallmentCount: 6 },
+        installment: metodo === 'CARD' && c.n > 1 ? { maxInstallmentCount: c.n, minInstallmentCount: c.n } : undefined,
         callback: { successUrl: site + '/?pago=1', cancelUrl: site + '/', expiredUrl: site + '/' },
         externalReference: end ? ('Entrega: ' + end) : undefined,
-        items: [{ name: name, description: (brand ? 'Marca: ' + brand : '') + (end ? ' · Entrega: ' + end : ''), quantity: qty, value: Math.round(value * 100) / 100 }]
+        items: [{ name: name + (metodo === 'PIX' ? ' (preço PIX)' : ''), description: (brand ? 'Marca: ' + brand : '') + (end ? ' · Entrega: ' + end : ''), quantity: qty, value: unit }]
           .concat(frete > 0 ? [{ name: 'Frete ' + freteNome, description: end || undefined, quantity: 1, value: Math.round(frete * 100) / 100 }] : [])
+          .concat(c.taxa > 0 ? [{ name: 'Taxa de pagamento' + (metodo === 'CARD' ? (c.n > 1 ? ' (cartão ' + c.n + 'x)' : ' (cartão à vista)') : ' (boleto)'), quantity: 1, value: c.taxa }] : [])
       });
-    const call = (billing) => fetch(base + '/checkouts', { method: 'POST', headers: { 'Content-Type': 'application/json', 'access_token': key, 'User-Agent': 'NotaPerfumaria' }, body: JSON.stringify(payload(billing)) });
-    let r = await call(['PIX', 'CREDIT_CARD']);
+    const billing = metodo === 'CARD' ? ['CREDIT_CARD'] : metodo === 'BOLETO' ? ['BOLETO'] : ['PIX'];
+    const call = (b) => fetch(apiBase + '/checkouts', { method: 'POST', headers: { 'Content-Type': 'application/json', 'access_token': key, 'User-Agent': 'NotaPerfumaria' }, body: JSON.stringify(payload(b)) });
+    let r = await call(billing);
     let data = await r.json();
     if (!r.ok && JSON.stringify(data).includes('chave Pix')) {
-      console.warn('asaas: sem chave Pix cadastrada, abrindo checkout só com cartão');
-      r = await call(['CREDIT_CARD']);
-      data = await r.json();
+      console.error('asaas: conta sem chave Pix cadastrada');
+      return res.status(503).send('PIX indisponível no momento: a loja ainda não cadastrou a chave Pix. Escolha cartão ou boleto, ou fale com a gente no WhatsApp.');
     }
     const link = data.link || (data.id ? 'https://asaas.com/checkoutSession/show?id=' + data.id : null);
     if (!r.ok || !link) {

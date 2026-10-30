@@ -15,11 +15,8 @@ module.exports = async (req, res) => {
   if (!key) return res.status(500).send('Checkout não configurado: defina ASAAS_API_KEY na Vercel.');
   if (!name || !(value > 0)) return res.status(400).send('Produto ou valor inválido.');
   try {
-    const r = await fetch(base + '/checkouts', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'access_token': key, 'User-Agent': 'NotaPerfumaria' },
-      body: JSON.stringify({
-        billingTypes: ['PIX', 'CREDIT_CARD'],
+    const payload = (billing) => ({
+        billingTypes: billing,
         chargeTypes: ['DETACHED', 'INSTALLMENT'],
         minutesToExpire: 60,
         installment: { maxInstallmentCount: 6 },
@@ -27,9 +24,15 @@ module.exports = async (req, res) => {
         externalReference: end ? ('Entrega: ' + end) : undefined,
         items: [{ name: name, description: (brand ? 'Marca: ' + brand : '') + (end ? ' · Entrega: ' + end : ''), quantity: qty, value: Math.round(value * 100) / 100 }]
           .concat(frete > 0 ? [{ name: 'Frete ' + freteNome, description: end || undefined, quantity: 1, value: Math.round(frete * 100) / 100 }] : [])
-      })
-    });
-    const data = await r.json();
+      });
+    const call = (billing) => fetch(base + '/checkouts', { method: 'POST', headers: { 'Content-Type': 'application/json', 'access_token': key, 'User-Agent': 'NotaPerfumaria' }, body: JSON.stringify(payload(billing)) });
+    let r = await call(['PIX', 'CREDIT_CARD']);
+    let data = await r.json();
+    if (!r.ok && JSON.stringify(data).includes('chave Pix')) {
+      console.warn('asaas: sem chave Pix cadastrada, abrindo checkout só com cartão');
+      r = await call(['CREDIT_CARD']);
+      data = await r.json();
+    }
     const link = data.link || (data.id ? 'https://asaas.com/checkoutSession/show?id=' + data.id : null);
     if (!r.ok || !link) {
       console.error('asaas', r.status, JSON.stringify(data));

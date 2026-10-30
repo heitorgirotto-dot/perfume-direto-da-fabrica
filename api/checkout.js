@@ -29,9 +29,9 @@ module.exports = async (req, res) => {
         installment: metodo === 'CARD' && c.n > 1 ? { maxInstallmentCount: c.n, minInstallmentCount: c.n } : undefined,
         callback: { successUrl: site + '/?pago=1', cancelUrl: site + '/', expiredUrl: site + '/' },
         externalReference: end ? ('Entrega: ' + end) : undefined,
-        items: [{ name: name + (metodo === 'PIX' ? ' (preço PIX)' : ''), description: (brand ? 'Marca: ' + brand : '') + (end ? ' · Entrega: ' + end : ''), quantity: qty, value: unit }]
-          .concat(frete > 0 ? [{ name: 'Frete ' + freteNome, description: end || undefined, quantity: 1, value: Math.round(frete * 100) / 100 }] : [])
-          .concat(c.taxa > 0 ? [{ name: 'Taxa de pagamento' + (metodo === 'CARD' ? (c.n > 1 ? ' (cartão ' + c.n + 'x)' : ' (cartão à vista)') : ' (boleto)'), quantity: 1, value: c.taxa }] : [])
+        items: [{ name: name.slice(0, 30), description: (name.length > 30 ? name + ' · ' : '') + (brand ? 'Marca: ' + brand : '') + (metodo === 'PIX' ? ' · preço PIX' : '') + (end ? ' · Entrega: ' + end : ''), quantity: qty, value: unit }]
+          .concat(frete > 0 ? [{ name: ('Frete ' + freteNome).slice(0, 30), description: end || undefined, quantity: 1, value: Math.round(frete * 100) / 100 }] : [])
+          .concat(c.taxa > 0 ? [{ name: (metodo === 'CARD' ? (c.n > 1 ? 'Taxa cartão ' + c.n + 'x' : 'Taxa cartão à vista') : 'Taxa boleto'), description: 'Taxa de processamento do pagamento', quantity: 1, value: c.taxa }] : [])
       });
     const billing = metodo === 'CARD' ? ['CREDIT_CARD'] : metodo === 'BOLETO' ? ['BOLETO'] : ['PIX'];
     const call = (b) => fetch(apiBase + '/checkouts', { method: 'POST', headers: { 'Content-Type': 'application/json', 'access_token': key, 'User-Agent': 'NotaPerfumaria' }, body: JSON.stringify(payload(b)) });

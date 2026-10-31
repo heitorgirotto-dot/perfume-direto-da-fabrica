@@ -17,7 +17,7 @@ module.exports = async (req, res) => {
   const metodo = ['PIX','BOLETO','CARD'].includes(String(q.m||'').toUpperCase()) ? String(q.m).toUpperCase() : 'PIX';
   const nParc = parseInt(q.n_ || q.parc || '1', 10) || 1;
   const pixOff = Number(process.env.PIX_OFF || 0.10);
-  const site = 'https://' + (req.headers['x-forwarded-host'] || req.headers.host || 'notaperfumaria.vercel.app');
+  const site = 'https://' + (req.headers['x-forwarded-host'] || req.headers.host || 'notaperfumaria.com');
   if (!key) return res.status(500).send('Checkout não configurado: defina ASAAS_API_KEY na Vercel.');
   if (!name || !(value > 0)) return res.status(400).send('Produto ou valor inválido.');
   try {

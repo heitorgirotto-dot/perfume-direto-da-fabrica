@@ -24,7 +24,7 @@ module.exports = async (req, res) => {
   if (token) {
     try {
       const r = await fetch('https://api.superfrete.com/api/v0/calculator', {
-        method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json','Authorization':'Bearer '+token,'User-Agent':'NotaPerfumaria (notaperfumaria.vercel.app)'},
+        method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json','Authorization':'Bearer '+token,'User-Agent':'NotaPerfumaria (notaperfumaria.com)'},
         body: JSON.stringify({from:{postal_code:origem}, to:{postal_code:cep}, services:'1,2', options:{own_hand:false,receipt:false,insurance_value:0,use_insurance_value:false},
           package:{height:12,width:12,length:17,weight:peso}})
       });

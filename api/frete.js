@@ -29,7 +29,8 @@ module.exports = async (req, res) => {
           package:{height:12,width:12,length:17,weight:peso}})
       });
       const data = await r.json();
-      const ops = (Array.isArray(data)?data:[]).filter(o=>!o.error&&o.price).map(o=>({nome:o.name, preco:Number(o.price), prazo:o.delivery_time, estimativa:false}));
+      const acr = Number(process.env.FRETE_ACRESCIMO || 0); // valor fixo somado a cada opção (embalagem/manuseio), opcional
+      const ops = (Array.isArray(data)?data:[]).filter(o=>!o.error&&o.price).map(o=>({nome:o.name, preco:Math.round((Number(o.price)+acr)*100)/100, prazo:o.delivery_time, estimativa:false})).sort((a,b)=>a.preco-b.preco);
       if (ops.length) return res.json({cep, opcoes:ops});
       console.error('superfrete', JSON.stringify(data).slice(0,300));
     } catch(e){ console.error(e); }

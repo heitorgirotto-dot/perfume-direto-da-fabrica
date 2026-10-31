@@ -2,6 +2,7 @@
 // Variáveis de ambiente na Vercel: ASAAS_API_KEY (obrigatória), ASAAS_ENV ("sandbox" ou "production", padrão production)
 const { calcular } = require('./_taxas');
 const brl = v => 'R$ ' + Number(v).toFixed(2).replace('.', ',');
+const db = require('./_db');
 module.exports = async (req, res) => {
   const key = process.env.ASAAS_API_KEY;
   const apiBase = (process.env.ASAAS_ENV || 'production') === 'sandbox' ? 'https://api-sandbox.asaas.com/v3' : 'https://api.asaas.com/v3';
@@ -23,6 +24,7 @@ module.exports = async (req, res) => {
     const unit = metodo === 'PIX' ? Math.round(value * (1 - pixOff) * 100) / 100 : Math.round(value * 100) / 100;
     const base = unit * qty + (frete > 0 ? Math.round(frete * 100) / 100 : 0);
     const c = calcular(base, metodo, nParc);
+    db.insert('eventos', { tipo: 'checkout', produto_nome: (brand + ' ' + name).slice(0, 120), pagina: metodo + (nParc > 1 ? ' ' + nParc + 'x' : ''), referencia: String(c.total) }, false).catch(() => {});
     const payload = (billing) => ({
         billingTypes: billing,
         chargeTypes: metodo === 'CARD' && c.n > 1 ? ['DETACHED', 'INSTALLMENT'] : ['DETACHED'],

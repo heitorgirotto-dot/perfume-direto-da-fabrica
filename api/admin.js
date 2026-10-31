@@ -124,6 +124,37 @@ module.exports = async (req, res) => {
       const rows = await db.select('leads', 'select=*&order=criado_em.desc&limit=5000');
       return res.status(200).json(rows);
     }
+    if (a === 'pedidos') {
+      const st = String(req.query.status || '');
+      const rows = await db.select('pedidos', 'select=*,clientes(nome,email,whatsapp)' + (st ? '&status=eq.' + encodeURIComponent(st) : '') + '&order=criado_em.desc&limit=1000');
+      return res.status(200).json(rows);
+    }
+    if (a === 'pedido' && req.method === 'POST') {
+      const b = body(req);
+      const id = +b.id; if (!Number.isFinite(id)) return res.status(400).json({ error: 'id' });
+      const atual = (await db.select('pedidos', 'select=status,historico&id=eq.' + id))[0];
+      if (!atual) return res.status(404).json({ error: 'Pedido não encontrado' });
+      const STS = ['aguardando_pagamento', 'pago', 'em_separacao', 'enviado', 'entregue', 'cancelado'];
+      const patch = { atualizado_em: new Date().toISOString() };
+      if (b.status && STS.includes(b.status) && b.status !== atual.status) {
+        patch.status = b.status;
+        patch.historico = (atual.historico || []).concat([{ status: b.status, em: patch.atualizado_em, por: 'admin' }]);
+      }
+      if (b.rastreio !== undefined) patch.rastreio = String(b.rastreio || '').trim().toUpperCase().slice(0, 40) || null;
+      const r = await db.update('pedidos', 'id=eq.' + id, patch);
+      return res.status(200).json(r[0]);
+    }
+    if (a === 'clientes') {
+      const rows = await db.select('clientes', 'select=id,nome,cpf,email,whatsapp,marketing,criado_em,ultimo_login,pedidos(count)&order=criado_em.desc&limit=5000');
+      return res.status(200).json(rows);
+    }
+    if (a === 'cliente-senha' && req.method === 'POST') {
+      const b = body(req);
+      const nova = String(b.nova || '');
+      if (nova.length < 8) return res.status(400).json({ error: 'Mínimo de 8 caracteres' });
+      await db.update('clientes', 'id=eq.' + (+b.id), { senha_hash: require('./_auth').hashSenha(nova) });
+      return res.status(200).json({ ok: true });
+    }
     if (a === 'lead' && req.method === 'DELETE') {
       const id = +req.query.id; if (!Number.isFinite(id)) return res.status(400).json({ error: 'id' });
       await db.remove('leads', 'id=eq.' + id);

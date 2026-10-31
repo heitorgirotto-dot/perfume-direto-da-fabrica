@@ -67,7 +67,9 @@ tr:hover td{background:#141414}
   <div class="brand">NOTA<small>Painel administrativo</small></div>
   <nav id="nav" class="hidden">
     <button data-v="dash" class="on">Dashboard</button>
+    <button data-v="ped">Pedidos</button>
     <button data-v="prod">Produtos</button>
+    <button data-v="cli">Clientes</button>
     <button data-v="leads">Leads</button>
     <button id="sair" title="Sair">Sair</button>
   </nav>
@@ -111,6 +113,22 @@ tr:hover td{background:#141414}
       <select id="pf"><option value="">Todos</option><option value="ativo">Ativos</option><option value="inativo">Inativos</option><option value="semfoto">Sem foto</option><option value="sempreco">Sem preço</option><option value="best">Mais vendidos</option><option value="top5">Top 5</option></select>
     </div>
     <div class="card" style="padding:0;overflow:auto"><table><thead><tr><th></th><th>Produto</th><th>Preço</th><th>Status</th><th></th></tr></thead><tbody id="plist"></tbody></table></div>
+  </section>
+
+  <!-- PEDIDOS -->
+  <section id="v-ped" class="hidden">
+    <h1 style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">Pedidos <span id="ocount" style="color:var(--mut);font-size:14px"></span>
+      <select id="ost" style="width:auto;margin-left:auto"><option value="">Todos os status</option><option value="aguardando_pagamento">Aguardando pagamento</option><option value="pago">Pago</option><option value="em_separacao">Em separação</option><option value="enviado">Enviado</option><option value="entregue">Entregue</option><option value="cancelado">Cancelado</option></select>
+      <input id="oq" placeholder="Buscar código, cliente…" style="width:auto"></h1>
+    <div class="kpis" id="okpis"></div>
+    <div class="card" style="padding:0;overflow:auto"><table><thead><tr><th>Pedido</th><th>Cliente</th><th>Produto</th><th>Total</th><th>Status</th><th>Rastreio</th><th></th></tr></thead><tbody id="olist"></tbody></table></div>
+  </section>
+
+  <!-- CLIENTES -->
+  <section id="v-cli" class="hidden">
+    <h1 style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">Clientes cadastrados <span id="ccount" style="color:var(--mut);font-size:14px"></span>
+      <input id="cq" placeholder="Buscar…" style="width:auto;margin-left:auto"><button class="btn ghost" id="ccsv">Exportar CSV</button></h1>
+    <div class="card" style="padding:0;overflow:auto"><table><thead><tr><th>Cadastro</th><th>Nome</th><th>CPF</th><th>Contato</th><th>Pedidos</th><th></th></tr></thead><tbody id="clist"></tbody></table></div>
   </section>
 
   <!-- LEADS -->
@@ -165,9 +183,9 @@ async function api(a,opt={}){const r=await fetch('/api/admin?a='+a+(opt.q||''),{
 
 function show(v){
   $('#login').classList.toggle('hidden',v!=='login');$('#nav').classList.toggle('hidden',v==='login');
-  ['dash','prod','leads'].forEach(k=>$('#v-'+k).classList.toggle('hidden',v!==k));
+  ['dash','ped','prod','cli','leads'].forEach(k=>$('#v-'+k).classList.toggle('hidden',v!==k));
   document.querySelectorAll('#nav [data-v]').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
-  if(v==='dash')loadStats();if(v==='prod')loadProds();if(v==='leads')loadLeads();
+  if(v==='dash')loadStats();if(v==='prod')loadProds();if(v==='leads')loadLeads();if(v==='ped')loadPeds();if(v==='cli')loadClis();
 }
 $('#nav').addEventListener('click',e=>{const b=e.target.closest('[data-v]');if(b)show(b.dataset.v)});
 $('#sair').onclick=async()=>{await api('logout',{method:'POST'});show('login')};
@@ -270,6 +288,48 @@ function renderLeads(){
 $('#llist').addEventListener('click',async e=>{const b=e.target.closest('[data-del]');if(!b||!confirm('Excluir este lead?'))return;try{await api('lead',{method:'DELETE',q:'&id='+b.dataset.del});LEADS=LEADS.filter(l=>l.id!=b.dataset.del);renderLeads()}catch(err){toast(err.message)}});
 $('#csv').onclick=()=>{const rows=[['data','nome','whatsapp','email','interesse','origem','utm_source','utm_campaign']].concat(LEADS.map(l=>[l.criado_em,l.nome||'',l.whatsapp||'',l.email||'',l.produto_nome||'',l.origem||'',l.utm&&l.utm.utm_source||'',l.utm&&l.utm.utm_campaign||'']));
   const csv='﻿'+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='leads-nota-perfumaria.csv';a.click()};
+
+/* ---------- PEDIDOS ---------- */
+const ST={aguardando_pagamento:'Aguardando pagamento',pago:'Pago',em_separacao:'Em separação',enviado:'Enviado',entregue:'Entregue',cancelado:'Cancelado'};
+const STC={aguardando_pagamento:'',pago:'g',em_separacao:'g',enviado:'g',entregue:'g',cancelado:'off'};
+let PEDS=[];
+async function loadPeds(){try{PEDS=await api('pedidos');renderPeds()}catch(e){toast(e.message)}}
+['#ost','#oq'].forEach(s=>$(s).addEventListener('input',renderPeds));
+function renderPeds(){
+  const st=$('#ost').value,q=norm($('#oq').value);
+  const out=PEDS.filter(p=>(!st||p.status===st)&&(!q||norm([p.codigo,p.produto_nome,p.pagador_nome,p.clientes&&p.clientes.nome,p.clientes&&p.clientes.email,p.endereco].join(' ')).includes(q)));
+  $('#ocount').textContent=out.length+' de '+PEDS.length;
+  const soma=s=>PEDS.filter(p=>p.status===s).length;const fat=PEDS.filter(p=>['pago','em_separacao','enviado','entregue'].includes(p.status)).reduce((a,p)=>a+Number(p.total),0);
+  $('#okpis').innerHTML=[['A enviar',soma('pago')+soma('em_separacao')],['Aguardando pagamento',soma('aguardando_pagamento')],['Enviados',soma('enviado')],['Faturado (pagos)',brl(fat)]].map(([k,v])=>`<div class="kpi"><span>${k}</span><b>${v}</b></div>`).join('');
+  $('#olist').innerHTML=out.map(p=>{const cli=p.clientes||{};const nome=cli.nome||p.pagador_nome||'Visitante';const wa=cli.whatsapp;
+    return `<tr data-id="${p.id}"><td style="white-space:nowrap"><b>${esc(p.codigo)}</b><div style="font-size:12px;color:var(--mut)">${new Date(p.criado_em).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</div></td>
+    <td>${esc(nome)}${wa?`<div><a href="https://wa.me/${wa}?text=${encodeURIComponent('Olá, '+nome.split(' ')[0]+'! Aqui é da Nota Perfumaria, sobre o seu pedido '+p.codigo+'.')}" target="_blank" style="color:var(--wa);font-size:12px">WhatsApp</a></div>`:''}</td>
+    <td>${p.quantidade}× ${esc(p.produto_nome)}<div style="font-size:12px;color:var(--mut)">${esc(p.endereco||'')}</div></td>
+    <td style="white-space:nowrap">${brl(p.total)}<div style="font-size:12px;color:var(--mut)">${p.metodo}${p.parcelas>1?' '+p.parcelas+'x':''}</div></td>
+    <td><select data-st="${p.id}" style="width:auto;padding:6px 8px">${Object.entries(ST).map(([k,v])=>`<option value="${k}"${k===p.status?' selected':''}>${v}</option>`).join('')}</select></td>
+    <td><input data-rt="${p.id}" value="${esc(p.rastreio||'')}" placeholder="AA123456789BR" style="width:150px;padding:6px 8px"></td>
+    <td><div class="act">${wa&&p.rastreio?`<a class="tag g" target="_blank" href="https://wa.me/${wa}?text=${encodeURIComponent('Olá, '+nome.split(' ')[0]+'! Seu pedido '+p.codigo+' da Nota Perfumaria foi enviado. Código de rastreio: '+p.rastreio+' — acompanhe em https://rastreamento.correios.com.br/app/index.php?objetos='+p.rastreio)}">Avisar envio</a>`:''}</div></td></tr>`}).join('')||'<tr><td colspan="7" style="color:var(--mut)">Nenhum pedido ainda.</td></tr>';
+}
+$('#olist').addEventListener('change',async e=>{
+  const s=e.target.closest('[data-st]'),r=e.target.closest('[data-rt]');if(!s&&!r)return;
+  const id=+(s?s.dataset.st:r.dataset.rt);const body=s?{id,status:s.value}:{id,rastreio:r.value};
+  if(body.status==='enviado'){const p=PEDS.find(x=>x.id===id);if(p&&!p.rastreio){const c=prompt('Código de rastreio dos Correios (opcional):');if(c)body.rastreio=c}}
+  try{const p=await api('pedido',{method:'POST',body});const i=PEDS.findIndex(x=>x.id===id);PEDS[i]=Object.assign(PEDS[i],p);renderPeds();toast('Pedido atualizado')}catch(err){toast(err.message)}
+});
+
+/* ---------- CLIENTES ---------- */
+let CLIS=[];
+async function loadClis(){try{CLIS=await api('clientes');renderClis()}catch(e){toast(e.message)}}
+$('#cq').addEventListener('input',renderClis);
+const fmtCPF=c=>String(c||'').replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/,'$1.$2.$3-$4');
+function renderClis(){const q=norm($('#cq').value);const out=CLIS.filter(c=>!q||norm([c.nome,c.cpf,c.email,c.whatsapp].join(' ')).includes(q));
+  $('#ccount').textContent=out.length+' de '+CLIS.length;
+  $('#clist').innerHTML=out.map(c=>`<tr><td style="white-space:nowrap;color:var(--mut)">${new Date(c.criado_em).toLocaleDateString('pt-BR')}</td><td>${esc(c.nome)}${c.marketing?'':' <span class="tag">sem marketing</span>'}</td><td style="white-space:nowrap">${fmtCPF(c.cpf)}</td>
+    <td><a href="https://wa.me/${c.whatsapp}" target="_blank" style="color:var(--wa)">${fmtF(c.whatsapp)}</a><div style="font-size:12px;color:var(--mut)">${esc(c.email)}</div></td><td>${(c.pedidos&&c.pedidos[0]&&c.pedidos[0].count)||0}</td>
+    <td><div class="act"><button data-pw="${c.id}">Nova senha</button></div></td></tr>`).join('')||'<tr><td colspan="6" style="color:var(--mut)">Nenhum cliente ainda.</td></tr>';}
+$('#clist').addEventListener('click',async e=>{const b=e.target.closest('[data-pw]');if(!b)return;const nova=prompt('Nova senha para o cliente (mínimo 8 caracteres). Envie a ele pelo WhatsApp:');if(!nova)return;try{await api('cliente-senha',{method:'POST',body:{id:+b.dataset.pw,nova}});toast('Senha redefinida')}catch(err){toast(err.message)}});
+$('#ccsv').onclick=()=>{const rows=[['cadastro','nome','cpf','email','whatsapp','aceita_marketing','pedidos']].concat(CLIS.map(c=>[c.criado_em,c.nome,c.cpf,c.email,c.whatsapp,c.marketing?'sim':'nao',(c.pedidos&&c.pedidos[0]&&c.pedidos[0].count)||0]));
+  const csv='\ufeff'+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='clientes-nota-perfumaria.csv';a.click()};
 
 /* ---------- INIT ---------- */
 (async()=>{try{const m=await api('me');if(m.ok)show('dash');else{show('login');if(!m.config.admin)$('#lmsg').textContent='Configure ADMIN_USER e ADMIN_PASS na Vercel.';}}catch(e){show('login')}})();

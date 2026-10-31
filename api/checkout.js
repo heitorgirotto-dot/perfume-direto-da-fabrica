@@ -4,8 +4,6 @@ const { calcular } = require('./_taxas');
 const brl = v => 'R$ ' + Number(v).toFixed(2).replace('.', ',');
 const db = require('./_db');
 const A = require('./_auth');
-function codigoPedido() { return 'NP' + Date.now().toString(36).toUpperCase().slice(-6) + Math.random().toString(36).slice(2, 4).toUpperCase(); }
-async function clienteId(req) { const sub = A.readToken(A.getCookie(req, 'nota_cli')); return sub && sub.startsWith('c:') ? +sub.slice(2) : null; }
 module.exports = async (req, res) => {
   const key = process.env.ASAAS_API_KEY;
   const apiBase = (process.env.ASAAS_ENV || 'production') === 'sandbox' ? 'https://api-sandbox.asaas.com/v3' : 'https://api.asaas.com/v3';
@@ -27,19 +25,19 @@ module.exports = async (req, res) => {
     const unit = metodo === 'PIX' ? Math.round(value * (1 - pixOff) * 100) / 100 : Math.round(value * 100) / 100;
     const base = unit * qty + (frete > 0 ? Math.round(frete * 100) / 100 : 0);
     const c = calcular(base, metodo, nParc);
-    const codigo = codigoPedido();
     const pid = Number.isFinite(+q.id) ? +q.id : null;
-    const pedido = { codigo, cliente_id: await clienteId(req), produto_id: pid, produto_nome: ((brand ? brand + ' ' : '') + name).slice(0, 160), quantidade: qty, valor_unit: unit, frete: frete > 0 ? Math.round(frete * 100) / 100 : 0, frete_nome: frete > 0 ? freteNome : null, taxa: c.taxa || 0, total: c.total, metodo, parcelas: c.n || 1, endereco: end || null, historico: [{ status: 'aguardando_pagamento', em: new Date().toISOString() }] };
-    const salvo = await db.insert('pedidos', pedido, true).then(() => true).catch(e => { console.error('pedido', e.message); return false; });
-    const setRef = (ref) => salvo && ref ? db.update('pedidos', 'codigo=eq.' + codigo, { asaas_ref: ref }).catch(() => {}) : null;
-    db.insert('eventos', { tipo: 'checkout', produto_nome: (brand + ' ' + name).slice(0, 120), pagina: metodo + (nParc > 1 ? ' ' + nParc + 'x' : ''), referencia: String(c.total) }, false).catch(() => {});
+    const pedido = { produto_id: pid, produto_nome: ((brand ? brand + ' ' : '') + name).slice(0, 160), quantidade: qty, valor_unit: unit, frete: frete > 0 ? Math.round(frete * 100) / 100 : 0, frete_nome: frete > 0 ? freteNome : null, taxa: c.taxa || 0, total: c.total, metodo, parcelas: c.n || 1, endereco: end || null };
+    let codigo = null;
+    try { codigo = await db.rpc('pedido_criar', { p: pedido, p_tok: A.getCookie(req, 'nota_cli') || '' }); } catch (e) { console.error('pedido', e.message); }
+    const setRef = (ref) => codigo && ref ? db.rpc('pedido_ref', { p_codigo: codigo, p_ref: String(ref) }).catch(() => {}) : null;
+    db.rpc('evento_registrar', { p: { tipo: 'checkout', produto_id: pid, produto_nome: (brand + ' ' + name).slice(0, 120), pagina: metodo + (nParc > 1 ? ' ' + nParc + 'x' : ''), referencia: String(c.total) } }).catch(() => {});
     const payload = (billing) => ({
         billingTypes: billing,
         chargeTypes: metodo === 'CARD' && c.n > 1 ? ['DETACHED', 'INSTALLMENT'] : ['DETACHED'],
         minutesToExpire: 60,
         installment: metodo === 'CARD' && c.n > 1 ? { maxInstallmentCount: c.n, minInstallmentCount: c.n } : undefined,
-        callback: { successUrl: site + '/?pago=' + codigo, cancelUrl: site + '/', expiredUrl: site + '/' },
-        externalReference: codigo,
+        callback: { successUrl: site + '/?pago=' + (codigo || '1'), cancelUrl: site + '/', expiredUrl: site + '/' },
+        externalReference: codigo || undefined,
         items: [{ name: name.slice(0, 30), description: (name.length > 30 ? name + ' · ' : '') + (brand ? 'Marca: ' + brand : '') + (metodo === 'PIX' ? ' · preço PIX' : '') + (end ? ' · Entrega: ' + end : ''), quantity: qty, value: unit }]
           .concat(frete > 0 ? [{ name: ('Frete ' + freteNome).slice(0, 30), description: end || undefined, quantity: 1, value: Math.round(frete * 100) / 100 }] : [])
           .concat(c.taxa > 0 ? [{ name: (metodo === 'CARD' ? (c.n > 1 ? 'Taxa cartão ' + c.n + 'x' : 'Taxa cartão à vista') : 'Taxa boleto'), description: 'Taxa de processamento do pagamento', quantity: 1, value: c.taxa }] : [])
@@ -47,8 +45,8 @@ module.exports = async (req, res) => {
     if (metodo === 'BOLETO') {
       // Checkout não aceita boleto: usa link de pagamento Asaas (código de barras + linha digitável)
       const rb = await fetch(apiBase + '/paymentLinks', { method: 'POST', headers: { 'Content-Type': 'application/json', 'access_token': key, 'User-Agent': 'NotaPerfumaria' },
-        body: JSON.stringify({ name: ('Boleto - ' + name).slice(0, 60), description: ('Pedido ' + codigo + ' · ' + qty + 'x ' + name + (brand ? ' (' + brand + ')' : '') + (frete > 0 ? ' + Frete ' + freteNome + ' ' + brl(frete) : '') + (c.taxa > 0 ? ' + Taxa boleto ' + brl(c.taxa) : '') + (end ? ' · Entrega: ' + end : '')).slice(0, 500),
-          billingType: 'BOLETO', chargeType: 'DETACHED', value: c.total, dueDateLimitDays: 3, maxInstallmentCount: 1, notificationEnabled: true, externalReference: codigo }) });
+        body: JSON.stringify({ name: ('Boleto - ' + name).slice(0, 60), description: ((codigo ? 'Pedido ' + codigo + ' · ' : '') + qty + 'x ' + name + (brand ? ' (' + brand + ')' : '') + (frete > 0 ? ' + Frete ' + freteNome + ' ' + brl(frete) : '') + (c.taxa > 0 ? ' + Taxa boleto ' + brl(c.taxa) : '') + (end ? ' · Entrega: ' + end : '')).slice(0, 500),
+          billingType: 'BOLETO', chargeType: 'DETACHED', value: c.total, dueDateLimitDays: 3, maxInstallmentCount: 1, notificationEnabled: true, externalReference: codigo || undefined }) });
       const db = await rb.json();
       if (!rb.ok || !db.url) { console.error('asaas boleto', rb.status, JSON.stringify(db)); return res.status(502).send('Não foi possível gerar o boleto agora. Fale com a gente no WhatsApp.'); }
       await setRef(db.id); res.setHeader('Cache-Control', 'no-store'); res.writeHead(302, { Location: db.url }); return res.end();

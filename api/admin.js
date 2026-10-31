@@ -1,167 +1,96 @@
-// Painel administrativo — API única (?a=acao).
-// Variáveis na Vercel: ADMIN_USER, ADMIN_PASS (obrigatórias), ADMIN_SECRET (opcional), SUPABASE_SERVICE_ROLE_KEY.
-const crypto = require('crypto');
+// Painel administrativo — API única (?a=acao). Sessão validada no banco.
 const db = require('./_db');
-
-const USER = process.env.ADMIN_USER || '';
-const PASS = process.env.ADMIN_PASS || '';
-const SECRET = process.env.ADMIN_SECRET || crypto.createHash('sha256').update('nota|' + PASS + '|' + USER).digest('hex');
+const A = require('./_auth');
 const COOKIE = 'nota_adm';
-const DURACAO = 12 * 3600; // 12h
 
-function body(req) {
-  if (req.body && typeof req.body === 'object') return req.body;
-  try { return JSON.parse(req.body || '{}'); } catch (e) { return {}; }
-}
-function sign(s) { return crypto.createHmac('sha256', SECRET).update(s).digest('base64url'); }
-function token() { const exp = Math.floor(Date.now() / 1000) + DURACAO; const p = USER + '|' + exp; return p + '|' + sign(p); }
-function valid(t) {
-  if (!t) return false;
-  const i = t.lastIndexOf('|'); if (i < 0) return false;
-  const p = t.slice(0, i), s = t.slice(i + 1);
-  if (sign(p) !== s) return false;
-  const exp = +p.split('|')[1];
-  return exp > Date.now() / 1000;
-}
-function cookieOf(req) {
-  const c = req.headers.cookie || '';
-  const m = c.match(new RegExp('(?:^|;\\s*)' + COOKIE + '=([^;]+)'));
-  return m ? decodeURIComponent(m[1]) : null;
-}
-function setCookie(res, v, maxAge) {
-  res.setHeader('Set-Cookie', COOKIE + '=' + encodeURIComponent(v) + '; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=' + maxAge);
-}
-function safeEq(a, b) {
-  const A = Buffer.from(String(a)), B = Buffer.from(String(b));
-  return A.length === B.length && crypto.timingSafeEqual(A, B);
-}
-const tentativas = new Map(); // IP -> {n, t}
-function bloqueado(ip) { const r = tentativas.get(ip); return r && r.n >= 8 && Date.now() - r.t < 15 * 60e3; }
-function falhou(ip) { const r = tentativas.get(ip) || { n: 0, t: 0 }; r.n++; r.t = Date.now(); tentativas.set(ip, r); }
+const ASAAS_BASE = () => (process.env.ASAAS_ENV || 'production') === 'sandbox' ? 'https://api-sandbox.asaas.com/v3' : 'https://api.asaas.com/v3';
 
-function limparProduto(b) {
-  const p = {
-    marca: String(b.marca || '').trim().slice(0, 80),
-    nome: String(b.nome || '').trim().slice(0, 160),
-    genero: ['M', 'F', 'U'].includes(b.genero) ? b.genero : 'U',
-    preco: b.preco === '' || b.preco == null ? null : Math.round(Number(String(b.preco).replace(',', '.')) * 100) / 100,
-    notas: b.notas ? String(b.notas).trim().slice(0, 400) : null,
-    lembra: b.lembra ? String(b.lembra).trim().slice(0, 120) : null,
-    descricao: b.descricao ? String(b.descricao).trim().slice(0, 2000) : null,
-    fotos: Array.isArray(b.fotos) ? b.fotos.filter(x => typeof x === 'string' && x.length < 500).slice(0, 8) : [],
-    ativo: b.ativo !== false,
-    mais_vendido: !!b.mais_vendido,
-    top5: b.top5 ? Math.min(5, Math.max(1, +b.top5)) : null,
-    atualizado_em: new Date().toISOString()
-  };
-  if (!p.marca || !p.nome) throw new Error('Marca e nome são obrigatórios');
-  if (p.preco != null && !(p.preco >= 0)) throw new Error('Preço inválido');
-  return p;
+// Registra (uma vez) o webhook de pagamentos no Asaas usando a ASAAS_API_KEY já configurada.
+async function garantirWebhook(tok, req) {
+  const key = process.env.ASAAS_API_KEY;
+  if (!key) return { ok: false, motivo: 'ASAAS_API_KEY ausente' };
+  const w = await db.rpc('adm_webhook_token', { p_tok: tok });
+  if (w.registrado) return { ok: true, ja: true };
+  const host = req.headers['x-forwarded-host'] || req.headers.host;
+  const url = 'https://' + (/vercel\.app$/.test(host) ? 'notaperfumaria.com' : host) + '/api/asaas-webhook';
+  const me = await db.rpc('adm_me', { p_tok: tok });
+  const base = { name: 'Nota Perfumaria - pedidos', url, email: me && me.email, enabled: true, interrupted: false, apiVersion: 3, authToken: w.token, sendType: 'SEQUENTIALLY' };
+  const H = { 'Content-Type': 'application/json', access_token: key, 'User-Agent': 'NotaPerfumaria' };
+  const tentativas = [
+    ['PAYMENT_CONFIRMED', 'PAYMENT_RECEIVED', 'PAYMENT_REFUNDED', 'PAYMENT_DELETED', 'PAYMENT_CHARGEBACK_REQUESTED', 'CHECKOUT_PAID', 'CHECKOUT_CANCELED', 'CHECKOUT_EXPIRED'],
+    ['PAYMENT_CONFIRMED', 'PAYMENT_RECEIVED', 'PAYMENT_REFUNDED', 'PAYMENT_DELETED', 'PAYMENT_CHARGEBACK_REQUESTED']
+  ];
+  let ultimo;
+  for (const events of tentativas) {
+    const r = await fetch(ASAAS_BASE() + '/webhooks', { method: 'POST', headers: H, body: JSON.stringify(Object.assign({}, base, { events })) });
+    const d = await r.json().catch(() => ({}));
+    if (r.ok && d.id) { await db.rpc('adm_webhook_marcar', { p_tok: tok, p_info: d.id + ' ' + events.length + 'ev' }); return { ok: true, id: d.id }; }
+    ultimo = (d.errors && d.errors.map(x => x.description).join('; ')) || ('HTTP ' + r.status);
+  }
+  return { ok: false, motivo: ultimo };
 }
 
 module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   const a = String(req.query.a || '');
-  const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'x';
-
+  const ip = A.ipOf(req);
+  const tok = A.getCookie(req, COOKIE);
+  const b = req.method === 'POST' ? A.body(req) : {};
   try {
-    if (a === 'login') {
+    if (a === 'status') return res.status(200).json(await db.rpc('adm_status'));
+    if (a === 'setup' || a === 'login') {
       if (req.method !== 'POST') return res.status(405).end();
-      if (!USER || !PASS) return res.status(503).json({ error: 'Defina ADMIN_USER e ADMIN_PASS nas variáveis da Vercel.' });
-      if (bloqueado(ip)) return res.status(429).json({ error: 'Muitas tentativas. Aguarde 15 minutos.' });
-      const b = body(req);
-      if (!safeEq(b.user || '', USER) || !safeEq(b.pass || '', PASS)) { falhou(ip); return res.status(401).json({ error: 'Usuário ou senha inválidos' }); }
-      tentativas.delete(ip);
-      setCookie(res, token(), DURACAO);
-      return res.status(200).json({ ok: true, user: USER });
+      if (A.bloqueado('adm:' + ip)) return res.status(429).json({ error: 'Muitas tentativas. Aguarde 15 minutos.' });
+      try {
+        const r = await db.rpc(a === 'setup' ? 'adm_setup' : 'adm_login', { p_email: String(b.user || ''), p_senha: String(b.pass || '') });
+        A.limpa('adm:' + ip);
+        A.setCookie(res, COOKIE, r.token, 86400, 'Strict');
+        return res.status(200).json({ ok: true, user: r.email });
+      } catch (e) { A.falhou('adm:' + ip); throw e; }
     }
-    if (a === 'logout') { setCookie(res, '', 0); return res.status(200).json({ ok: true }); }
+    if (a === 'logout') { if (tok) await db.rpc('cli_logout', { p_tok: tok }).catch(() => {}); A.setCookie(res, COOKIE, '', 0, 'Strict'); return res.status(200).json({ ok: true }); }
+    if (a === 'me') {
+      const me = tok ? await db.rpc('adm_me', { p_tok: tok }) : null;
+      const st = me ? null : await db.rpc('adm_status');
+      return res.status(200).json({ ok: !!me, user: me && me.email, setup: st && st.precisa_setup ? st.email_setup : null });
+    }
+    if (!tok) return res.status(401).json({ error: 'Não autenticado' });
+    const P = (fn, args) => db.rpc(fn, Object.assign({ p_tok: tok }, args || {}));
 
-    const logado = valid(cookieOf(req));
-    if (a === 'me') return res.status(200).json({ ok: logado, user: logado ? USER : null, config: { admin: !!(USER && PASS), supabase: !!db.KEY } });
-    if (!logado) return res.status(401).json({ error: 'Não autenticado' });
-
-    if (a === 'produtos') {
-      const rows = await db.select('produtos', 'select=*&order=id.asc&limit=5000');
-      return res.status(200).json(rows.map(db.toSite));
-    }
-    if (a === 'produto') {
-      if (req.method === 'DELETE') {
-        const id = +req.query.id; if (!Number.isFinite(id)) return res.status(400).json({ error: 'id' });
-        const r = await db.remove('produtos', 'id=eq.' + id);
-        return res.status(200).json({ ok: true, removidos: r.length });
+    switch (a) {
+      case 'produtos': return res.status(200).json((await P('adm_produtos')).map(db.toSite));
+      case 'produto':
+        if (req.method === 'DELETE') { await P('adm_produto_excluir', { p_id: +req.query.id }); return res.status(200).json({ ok: true }); }
+        {
+          const preco = b.preco === '' || b.preco == null ? '' : String(Math.round(Number(String(b.preco).replace(',', '.')) * 100) / 100);
+          if (!String(b.marca || '').trim() || !String(b.nome || '').trim()) return res.status(400).json({ error: 'Marca e nome são obrigatórios' });
+          if (preco !== '' && !(+preco >= 0)) return res.status(400).json({ error: 'Preço inválido' });
+          const p = { id: b.id == null ? '' : String(b.id), marca: String(b.marca).trim().slice(0, 80), nome: String(b.nome).trim().slice(0, 160), genero: ['M', 'F', 'U'].includes(b.genero) ? b.genero : 'U', preco,
+            notas: String(b.notas || '').slice(0, 400) || null, lembra: String(b.lembra || '').slice(0, 120) || null, descricao: String(b.descricao || '').slice(0, 2000) || null,
+            fotos: Array.isArray(b.fotos) ? b.fotos.filter(x => typeof x === 'string' && x.length < 500).slice(0, 8) : [], ativo: b.ativo !== false, mais_vendido: !!b.mais_vendido, top5: b.top5 ? String(Math.min(5, Math.max(1, +b.top5))) : '' };
+          return res.status(200).json(db.toSite(await P('adm_produto_salvar', { p })));
+        }
+      case 'upload': {
+        const m = /^data:(image\/(jpeg|png|webp));base64,(.+)$/.exec(String(b.dados || ''));
+        if (!m) return res.status(400).json({ error: 'Envie uma imagem JPG, PNG ou WebP' });
+        if (m[3].length > 5.5e6) return res.status(413).json({ error: 'Imagem acima de 4 MB' });
+        const id = await P('adm_foto_salvar', { p_mime: m[1], p_b64: m[3] });
+        return res.status(200).json({ url: '/api/foto?id=' + id });
       }
-      if (req.method !== 'POST') return res.status(405).end();
-      const b = body(req);
-      const p = limparProduto(b);
-      let r;
-      if (b.id != null && b.id !== '') r = await db.update('produtos', 'id=eq.' + (+b.id), p);
-      else r = await db.insert('produtos', p, true);
-      if (p.top5) { // garante posição única no Top 5
-        await db.update('produtos', 'top5=eq.' + p.top5 + '&id=neq.' + r[0].id, { top5: null }).catch(() => {});
+      case 'stats': return res.status(200).json(await P('adm_stats', { p_dias: Math.min(365, Math.max(1, +req.query.dias || 30)) }));
+      case 'leads': return res.status(200).json(await P('adm_leads'));
+      case 'lead': await P('adm_lead_excluir', { p_id: +req.query.id }); return res.status(200).json({ ok: true });
+      case 'pedidos': return res.status(200).json(await P('adm_pedidos'));
+      case 'pedido': {
+        const STS = ['aguardando_pagamento', 'pago', 'em_separacao', 'enviado', 'entregue', 'cancelado'];
+        const r = await P('adm_pedido_atualizar', { p_id: +b.id, p_status: STS.includes(b.status) ? b.status : null, p_rastreio: b.rastreio == null ? null : String(b.rastreio).slice(0, 40), p_set_rastreio: b.rastreio !== undefined });
+        return res.status(200).json(r);
       }
-      return res.status(200).json(db.toSite(r[0]));
-    }
-    if (a === 'upload') {
-      if (req.method !== 'POST') return res.status(405).end();
-      const b = body(req);
-      const m = /^data:(image\/(jpeg|png|webp));base64,(.+)$/.exec(String(b.dados || ''));
-      if (!m) return res.status(400).json({ error: 'Envie uma imagem JPG, PNG ou WebP' });
-      const buf = Buffer.from(m[3], 'base64');
-      if (buf.length > 4 * 1024 * 1024) return res.status(413).json({ error: 'Imagem acima de 4 MB' });
-      const ext = m[2] === 'jpeg' ? 'jpg' : m[2];
-      const slug = String(b.nome || 'foto').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
-      const nome = slug + '-' + Date.now().toString(36) + '.' + ext;
-      const url = await db.upload(nome, buf, m[1]);
-      return res.status(200).json({ url });
-    }
-    if (a === 'stats') {
-      const dias = Math.min(365, Math.max(1, +req.query.dias || 30));
-      const r = await db.rpc('stats_resumo', { dias });
-      return res.status(200).json(r);
-    }
-    if (a === 'leads') {
-      const rows = await db.select('leads', 'select=*&order=criado_em.desc&limit=5000');
-      return res.status(200).json(rows);
-    }
-    if (a === 'pedidos') {
-      const st = String(req.query.status || '');
-      const rows = await db.select('pedidos', 'select=*,clientes(nome,email,whatsapp)' + (st ? '&status=eq.' + encodeURIComponent(st) : '') + '&order=criado_em.desc&limit=1000');
-      return res.status(200).json(rows);
-    }
-    if (a === 'pedido' && req.method === 'POST') {
-      const b = body(req);
-      const id = +b.id; if (!Number.isFinite(id)) return res.status(400).json({ error: 'id' });
-      const atual = (await db.select('pedidos', 'select=status,historico&id=eq.' + id))[0];
-      if (!atual) return res.status(404).json({ error: 'Pedido não encontrado' });
-      const STS = ['aguardando_pagamento', 'pago', 'em_separacao', 'enviado', 'entregue', 'cancelado'];
-      const patch = { atualizado_em: new Date().toISOString() };
-      if (b.status && STS.includes(b.status) && b.status !== atual.status) {
-        patch.status = b.status;
-        patch.historico = (atual.historico || []).concat([{ status: b.status, em: patch.atualizado_em, por: 'admin' }]);
-      }
-      if (b.rastreio !== undefined) patch.rastreio = String(b.rastreio || '').trim().toUpperCase().slice(0, 40) || null;
-      const r = await db.update('pedidos', 'id=eq.' + id, patch);
-      return res.status(200).json(r[0]);
-    }
-    if (a === 'clientes') {
-      const rows = await db.select('clientes', 'select=id,nome,cpf,email,whatsapp,marketing,criado_em,ultimo_login,pedidos(count)&order=criado_em.desc&limit=5000');
-      return res.status(200).json(rows);
-    }
-    if (a === 'cliente-senha' && req.method === 'POST') {
-      const b = body(req);
-      const nova = String(b.nova || '');
-      if (nova.length < 8) return res.status(400).json({ error: 'Mínimo de 8 caracteres' });
-      await db.update('clientes', 'id=eq.' + (+b.id), { senha_hash: require('./_auth').hashSenha(nova) });
-      return res.status(200).json({ ok: true });
-    }
-    if (a === 'lead' && req.method === 'DELETE') {
-      const id = +req.query.id; if (!Number.isFinite(id)) return res.status(400).json({ error: 'id' });
-      await db.remove('leads', 'id=eq.' + id);
-      return res.status(200).json({ ok: true });
+      case 'clientes': return res.status(200).json(await P('adm_clientes'));
+      case 'cliente-senha': await P('adm_cliente_senha', { p_id: +b.id, p_nova: String(b.nova || '') }); return res.status(200).json({ ok: true });
+      case 'senha': await P('adm_trocar_senha', { p_atual: String(b.atual || ''), p_nova: String(b.nova || '') }); return res.status(200).json({ ok: true });
+      case 'webhook': return res.status(200).json(await garantirWebhook(tok, req));
     }
     return res.status(404).json({ error: 'ação desconhecida' });
-  } catch (e) {
-    return res.status(500).json({ error: e.message });
-  }
+  } catch (e) { return A.fail(res, e); }
 };

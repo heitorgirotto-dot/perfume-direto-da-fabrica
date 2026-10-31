@@ -1,40 +1,12 @@
-// Utilitários de autenticação compartilhados (cliente e admin).
-const crypto = require('crypto');
-
-const SECRET = process.env.AUTH_SECRET || process.env.ADMIN_SECRET ||
-  crypto.createHash('sha256').update('nota|' + (process.env.SUPABASE_SERVICE_ROLE_KEY || '') + '|' + (process.env.ADMIN_PASS || '')).digest('hex');
-
-function sign(s) { return crypto.createHmac('sha256', SECRET).update(s).digest('base64url'); }
-function makeToken(sub, horas) { const exp = Math.floor(Date.now() / 1000) + horas * 3600; const p = sub + '|' + exp; return p + '|' + sign(p); }
-function readToken(t) {
-  if (!t) return null;
-  const i = t.lastIndexOf('|'); if (i < 0) return null;
-  const p = t.slice(0, i), s = t.slice(i + 1);
-  const a = Buffer.from(sign(p)), b = Buffer.from(s);
-  if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return null;
-  const [sub, exp] = p.split('|');
-  return +exp > Date.now() / 1000 ? sub : null;
-}
+// Utilitários HTTP de sessão (o token é gerado e validado no banco).
 function getCookie(req, nome) {
   const m = (req.headers.cookie || '').match(new RegExp('(?:^|;\\s*)' + nome + '=([^;]+)'));
   return m ? decodeURIComponent(m[1]) : null;
 }
-function setCookie(res, nome, v, maxAge) {
+function setCookie(res, nome, v, maxAge, sameSite) {
   const prev = res.getHeader('Set-Cookie');
-  const c = nome + '=' + encodeURIComponent(v) + '; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=' + maxAge;
+  const c = nome + '=' + encodeURIComponent(v) + '; Path=/; HttpOnly; Secure; SameSite=' + (sameSite || 'Lax') + '; Max-Age=' + maxAge;
   res.setHeader('Set-Cookie', prev ? [].concat(prev, c) : c);
-}
-function hashSenha(senha) {
-  const salt = crypto.randomBytes(16);
-  const h = crypto.scryptSync(String(senha), salt, 64);
-  return 'scrypt$' + salt.toString('base64') + '$' + h.toString('base64');
-}
-function confereSenha(senha, hash) {
-  const [alg, s, h] = String(hash || '').split('$');
-  if (alg !== 'scrypt' || !s || !h) return false;
-  const calc = crypto.scryptSync(String(senha), Buffer.from(s, 'base64'), 64);
-  const ref = Buffer.from(h, 'base64');
-  return ref.length === calc.length && crypto.timingSafeEqual(ref, calc);
 }
 function cpfValido(c) {
   c = String(c || '').replace(/\D/g, '');
@@ -59,5 +31,6 @@ function bloqueado(k) { const r = tentativas.get(k); return r && r.n >= 8 && Dat
 function falhou(k) { const r = tentativas.get(k) || { n: 0, t: 0 }; r.n++; r.t = Date.now(); tentativas.set(k, r); }
 function limpa(k) { tentativas.delete(k); }
 function ipOf(req) { return String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'x'; }
+function fail(res, e) { res.status(e.status || 500).json({ error: e.message }); }
 
-module.exports = { makeToken, readToken, getCookie, setCookie, hashSenha, confereSenha, cpfValido, fone, body, bloqueado, falhou, limpa, ipOf };
+module.exports = { getCookie, setCookie, cpfValido, fone, body, bloqueado, falhou, limpa, ipOf, fail };

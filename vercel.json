@@ -24,18 +24,5 @@
         }
       ]
     }
-  ],
-  "redirects": [
-    {
-      "source": "/:path*",
-      "has": [
-        {
-          "type": "host",
-          "value": "notaperfumaria.vercel.app"
-        }
-      ],
-      "destination": "https://notaperfumaria.com/:path*",
-      "permanent": true
-    }
   ]
 }

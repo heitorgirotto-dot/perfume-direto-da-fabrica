@@ -50,7 +50,12 @@ module.exports = async (req, res) => {
     }
     if (a === 'logout') { if (tok) await db.rpc('cli_logout', { p_tok: tok }).catch(() => {}); A.setCookie(res, COOKIE, '', 0, 'Strict'); return res.status(200).json({ ok: true }); }
     if (a === 'me') {
-      const me = tok ? await db.rpc('adm_me', { p_tok: tok }) : null;
+      let me = tok ? await db.rpc('adm_me', { p_tok: tok }) : null;
+      const cli = A.getCookie(req, 'nota_cli');
+      if (!me && cli) {
+        const r = await db.rpc('adm_via_cliente', { p_tok: cli }).catch(() => null);
+        if (r && r.token) { A.setCookie(res, COOKIE, r.token, 86400, 'Strict'); me = { email: r.email }; }
+      }
       const st = me ? null : await db.rpc('adm_status');
       return res.status(200).json({ ok: !!me, user: me && me.email, setup: st && st.precisa_setup ? st.email_setup : null });
     }

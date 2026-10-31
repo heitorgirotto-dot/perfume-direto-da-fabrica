@@ -20,13 +20,13 @@ module.exports = async (req, res) => {
   const cep = String((req.query||{}).cep||'').replace(/\D/g,'');
   res.setHeader('Cache-Control','no-store');
   if (cep.length!==8) return res.status(400).json({erro:'CEP inválido'});
-  const token=process.env.SUPERFRETE_TOKEN, origem=(process.env.ORIGEM_CEP||'01310-100').replace(/\D/g,''), peso=Number(process.env.PESO_KG||0.5);
+  const token=process.env.SUPERFRETE_TOKEN, origem=(process.env.ORIGEM_CEP||'01310-100').replace(/\D/g,''), peso0=Number(process.env.PESO_KG||0.5), qtd=Math.min(20,Math.max(1,parseInt((req.query||{}).q,10)||1)), peso=Math.round(peso0*qtd*100)/100, alt=Math.min(60,12+6*(qtd-1));
   if (token) {
     try {
       const r = await fetch('https://api.superfrete.com/api/v0/calculator', {
         method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json','Authorization':'Bearer '+token,'User-Agent':'NotaPerfumaria (notaperfumaria.com)'},
         body: JSON.stringify({from:{postal_code:origem}, to:{postal_code:cep}, services:'1,2', options:{own_hand:false,receipt:false,insurance_value:0,use_insurance_value:false},
-          package:{height:12,width:12,length:17,weight:peso}})
+          package:{height:alt,width:12,length:17,weight:peso}})
       });
       const data = await r.json();
       const acr = Number(process.env.FRETE_ACRESCIMO || 0); // valor fixo somado a cada opção (embalagem/manuseio), opcional
@@ -35,5 +35,5 @@ module.exports = async (req, res) => {
       console.error('superfrete', JSON.stringify(data).slice(0,300));
     } catch(e){ console.error(e); }
   }
-  res.json({cep, opcoes:estimativa(cep)});
+  res.json({cep, opcoes:estimativa(cep).map(o=>Object.assign(o,{preco:Math.round(o.preco*(1+0.25*(qtd-1))*100)/100}))});
 };

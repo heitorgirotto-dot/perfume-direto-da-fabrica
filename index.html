@@ -243,6 +243,10 @@ footer{background:#020202;border-top:1px solid var(--line);padding-block:44px 24
 .news button{background:var(--gold);border:0;color:#140f05;padding:0 16px;font-weight:600}
 .pay{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
 .pay span{border:1px solid var(--line);border-radius:6px;padding:4px 10px;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:30px;padding-top:22px;border-top:1px solid var(--line)}
+.seg>div{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#070707}
+.seg svg{width:28px;height:28px;flex:0 0 28px;color:var(--gold)}.seg span{color:var(--muted);font-size:.8rem;line-height:1.45}.seg b{display:block;color:var(--gold2);font-size:.86rem;letter-spacing:.04em;margin-bottom:2px}
+@media(max-width:760px){.seg{grid-template-columns:1fr}}
 .copy{border-top:1px solid var(--line);margin-top:30px;padding-top:16px;color:var(--muted);font-size:.78rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 @media(max-width:860px){.fcols{grid-template-columns:1fr 1fr}}
 @media(max-width:480px){.fcols{grid-template-columns:1fr}}
@@ -436,7 +440,12 @@ footer{background:#020202;border-top:1px solid var(--line);padding-block:44px 24
     <div><h4>Ajuda &amp; Suporte</h4><ul><li><a href="#" data-pol="prazos">Política de prazos e entregas</a></li><li><a href="#" data-pol="trocas">Política de trocas e devoluções</a></li><li><a href="#" data-pol="rastreio">Rastreie o seu pedido</a></li><li><a href="#" data-pol="contato">Contato</a></li></ul></div>
     <div><h4>Atendimento</h4><ul><li id="f-wa">WhatsApp: (11) 98265-9792</li><li>Seg. a sáb., 9h às 18h</li><li>Siga-nos: @notaperfumaria</li></ul></div>
     <div><h4>Newsletter</h4><form class="news" id="nform"><input id="nemail" type="email" placeholder="Seu e-mail" aria-label="E-mail"><button type="submit">Assinar</button></form><p class="note" id="nmsg" style="text-align:left;margin-top:6px">Receba lançamentos e promoções antes de todo mundo.</p>
-      <h4 style="margin-top:18px">Meios de pagamento</h4><div class="pay"><span>PIX</span><span>Crédito 6x</span><span>Débito</span><span>Boleto</span></div></div>
+      <h4 style="margin-top:18px">Meios de pagamento</h4><div class="pay"><span>PIX</span><span>Crédito até 12x</span><span>Boleto</span></div></div>
+  </div>
+  <div class="seg">
+    <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15" r="1.4"/></svg><span><b>Site seguro</b>Conexão protegida com certificado SSL (HTTPS)</span></div>
+    <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l7 3v5c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg><span><b>Pagamento seguro</b>Processado pelo Asaas, instituição de pagamento autorizada pelo Banco Central</span></div>
+    <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h5"/><circle cx="17" cy="15" r="2"/></svg><span><b>Seus dados protegidos</b>Tratados conforme a Lei Geral de Proteção de Dados (LGPD – Lei nº 13.709/2018)</span></div>
   </div>
   <div class="copy"><span>NOTA PERFUMARIA · 2026. Todos os direitos reservados.</span><span>Preços sujeitos a alteração. Consulte disponibilidade.</span></div>
 </div></footer>

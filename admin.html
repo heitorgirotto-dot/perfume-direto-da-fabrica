@@ -136,7 +136,7 @@ tr:hover td{background:#141414}
   <section id="v-leads" class="hidden">
     <h1 style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">Leads <span id="lcount" style="color:var(--mut);font-size:14px"></span>
       <input id="lq" placeholder="Buscar…" style="width:auto;margin-left:auto"><button class="btn ghost" id="csv">Exportar CSV</button></h1>
-    <div class="card" style="padding:0;overflow:auto"><table><thead><tr><th>Data</th><th>Nome</th><th>WhatsApp</th><th>Interesse</th><th>Origem</th><th></th></tr></thead><tbody id="llist"></tbody></table></div>
+    <div class="card" style="padding:0;overflow:auto"><table><thead><tr><th>Data</th><th>Nome</th><th>WhatsApp</th><th>Cidade/UF</th><th>Interesse</th><th>Origem</th><th></th></tr></thead><tbody id="llist"></tbody></table></div>
   </section>
 </main>
 
@@ -284,16 +284,16 @@ async function loadLeads(){try{LEADS=await api('leads');renderLeads()}catch(e){t
 $('#lq').addEventListener('input',renderLeads);
 const fmtF=d=>{if(!d)return'';const n=d.replace(/^55/,'');return n.length>=10?`(${n.slice(0,2)}) ${n.slice(2,-4)}-${n.slice(-4)}`:d};
 function renderLeads(){
-  const q=norm($('#lq').value);const out=LEADS.filter(l=>!q||norm([l.nome,l.whatsapp,l.email,l.produto_nome,l.origem].join(' ')).includes(q));
+  const q=norm($('#lq').value);const out=LEADS.filter(l=>!q||norm([l.nome,l.whatsapp,l.email,l.produto_nome,l.origem,l.cidade,l.estado].join(' ')).includes(q));
   $('#lcount').textContent=out.length+' de '+LEADS.length;
   $('#llist').innerHTML=out.map(l=>`<tr><td style="white-space:nowrap;color:var(--mut)">${new Date(l.criado_em).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</td>
     <td>${esc(l.nome||'—')}${l.email?`<div style="font-size:12px;color:var(--mut)">${esc(l.email)}</div>`:''}</td>
     <td style="white-space:nowrap">${l.whatsapp?`<a href="https://wa.me/${l.whatsapp}" target="_blank" style="color:var(--wa)">${fmtF(l.whatsapp)}</a>`:'—'}</td>
-    <td>${esc(l.produto_nome||'—')}</td><td><span class="tag">${esc(l.origem||'site')}</span>${l.utm&&l.utm.utm_source?`<span class="tag">${esc(l.utm.utm_source)}</span>`:''}</td>
-    <td><div class="act"><button data-del="${l.id}">Excluir</button></div></td></tr>`).join('')||'<tr><td colspan="6" style="color:var(--mut)">Nenhum lead ainda.</td></tr>';
+    <td style="white-space:nowrap">${l.cidade?esc(l.cidade)+'/'+esc(l.estado||''):'—'}</td><td>${esc(l.produto_nome||'—')}</td><td><span class="tag">${esc(l.origem||'site')}</span>${l.utm&&l.utm.utm_source?`<span class="tag">${esc(l.utm.utm_source)}</span>`:''}</td>
+    <td><div class="act"><button data-del="${l.id}">Excluir</button></div></td></tr>`).join('')||'<tr><td colspan="7" style="color:var(--mut)">Nenhum lead ainda.</td></tr>';
 }
 $('#llist').addEventListener('click',async e=>{const b=e.target.closest('[data-del]');if(!b||!confirm('Excluir este lead?'))return;try{await api('lead',{method:'DELETE',q:'&id='+b.dataset.del});LEADS=LEADS.filter(l=>l.id!=b.dataset.del);renderLeads()}catch(err){toast(err.message)}});
-$('#csv').onclick=()=>{const rows=[['data','nome','whatsapp','email','interesse','origem','utm_source','utm_campaign']].concat(LEADS.map(l=>[l.criado_em,l.nome||'',l.whatsapp||'',l.email||'',l.produto_nome||'',l.origem||'',l.utm&&l.utm.utm_source||'',l.utm&&l.utm.utm_campaign||'']));
+$('#csv').onclick=()=>{const rows=[['data','nome','whatsapp','email','cidade','estado','interesse','origem','utm_source','utm_campaign']].concat(LEADS.map(l=>[l.criado_em,l.nome||'',l.whatsapp||'',l.email||'',l.cidade||'',l.estado||'',l.produto_nome||'',l.origem||'',l.utm&&l.utm.utm_source||'',l.utm&&l.utm.utm_campaign||'']));
   const csv='﻿'+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='leads-nota-perfumaria.csv';a.click()};
 
 /* ---------- PEDIDOS ---------- */

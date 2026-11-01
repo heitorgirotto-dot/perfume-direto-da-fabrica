@@ -623,24 +623,38 @@ track('visita');
 let qT;$('#q').addEventListener('input',()=>{clearTimeout(qT);qT=setTimeout(()=>{const v=$('#q').value.trim();if(v.length>=3)track('busca',null,{pagina:v.toLowerCase()})},1200)});
 const _openPV=openPV;openPV=function(id){_openPV(id);const it=BYID[id];if(it)track('produto',it)};
 $('#pv-buy').addEventListener('click',()=>{if(!$('#pv-buy').classList.contains('off'))track('comprar',BYID[PV.id])});
-function leadOk(){try{return !!localStorage.getItem('nota_lead')}catch(e){return false}}
+function leadOk(){try{return !!localStorage.getItem('nota_lead2')}catch(e){return false}}
+const UFS=['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO'];
+const CIDADES={};
+async function carregaCidades(uf){if(!uf)return;if(!CIDADES[uf]){try{CIDADES[uf]=(await (await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios`)).json()).map(c=>c.nome)}catch(e){CIDADES[uf]=[]}}
+  const dl=$('#lg-cids');if(dl)dl.innerHTML=CIDADES[uf].map(c=>`<option value="${c}">`).join('')}
 function leadGate(href,it){
   if(!LEAD_GATE||leadOk()){track('whatsapp',it);window.open(href,'_blank','noopener');return}
-  let m=$('#lg');if(!m){m=document.createElement('div');m.id='lg';m.className='pv';m.innerHTML=`<div class="pv-box" role="dialog" aria-label="Falar no WhatsApp" style="max-width:440px;padding:26px"><button class="pv-close pv-x" type="button" aria-label="Fechar">✕</button>
-    <h3 style="margin:0 0 6px;font-size:1.25rem;color:var(--gold2)">Vamos falar no WhatsApp</h3><p style="margin:0 0 14px;color:#bdb6a6;font-size:.95rem">Deixe seu nome e número para a gente te atender mais rápido.</p>
-    <form id="lgf"><input id="lg-nome" placeholder="Seu nome" autocomplete="name" required style="width:100%;margin-bottom:10px;padding:12px;border-radius:10px;border:1px solid #2a2a2a;background:#0b0b0b;color:#fff">
-    <input id="lg-fone" placeholder="WhatsApp com DDD" inputmode="tel" autocomplete="tel" required minlength="10" style="width:100%;margin-bottom:12px;padding:12px;border-radius:10px;border:1px solid #2a2a2a;background:#0b0b0b;color:#fff">
-    <button class="buy" style="width:100%;justify-content:center;padding:13px;font-size:1rem" type="submit">Continuar para o WhatsApp</button><p id="lg-msg" style="margin:8px 0 0;font-size:.85rem;color:#ff8f8f;min-height:1em"></p></form></div>`;
-    document.body.appendChild(m);m.querySelector('.pv-x').onclick=()=>m.hidden=true;m.addEventListener('click',e=>{if(e.target===m)m.hidden=true});}
-  m.hidden=false;m.dataset.href=href;m.dataset.pid=it?it.id:'';
-  $('#lgf').onsubmit=async e=>{e.preventDefault();const nome=$('#lg-nome').value.trim(),fone=$('#lg-fone').value.replace(/\D/g,'');$('#lg-msg').textContent='';
-    if(fone.length<10||fone.length>13){$('#lg-msg').textContent='Digite o WhatsApp com DDD (ex.: 11 98888-7777).';return}
-    const it2=BYID[m.dataset.pid];const btn=$('#lgf button');btn.disabled=true;
-    try{const r=await fetch('/api/lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome,whatsapp:fone,produto_id:it2?it2.id:null,produto_nome:it2?it2.b+' '+it2.n:null,origem:'whatsapp',utm:UTM,visitante:VIS})});
-      if(!r.ok){const d=await r.json().catch(()=>({}));if(r.status===400){$('#lg-msg').textContent=d.error||'Número inválido';btn.disabled=false;return}}
-      try{localStorage.setItem('nota_lead',fone)}catch(e){}
+  const c=CLI||{};
+  mx(`<h3>Fale com a gente no WhatsApp</h3><p class="sub">Preencha seus dados para ser atendido mais rápido${it?` sobre <b style="color:#e9e2d2">${it.n}</b>`:''}.</p>
+   <form id="lgf" autocomplete="on"><label>Nome completo</label><input type="text" id="lg-nome" autocomplete="name" required value="${c.nome||''}">
+   <label>E-mail</label><input type="email" id="lg-email" autocomplete="email" required value="${c.email||''}">
+   <label>WhatsApp</label><input type="tel" id="lg-fone" autocomplete="tel" inputmode="tel" required placeholder="(11) 98888-7777" value="${c.whatsapp?maskTel(String(c.whatsapp).replace(/^55/,'')):''}">
+   <div class="row2"><div><label>Estado</label><select id="lg-uf" required><option value="">UF</option>${UFS.map(u=>`<option>${u}</option>`).join('')}</select></div>
+   <div><label>Cidade</label><input type="text" id="lg-cid" list="lg-cids" autocomplete="address-level2" required><datalist id="lg-cids"></datalist></div></div>
+   <label class="ck"><input type="checkbox" id="lg-ok" required checked><span>Aceito receber atendimento e ofertas da Nota Perfumaria. Posso cancelar quando quiser.</span></label>
+   <button class="go" type="submit">Continuar para o WhatsApp</button><p class="err" id="lg-msg"></p></form>`);
+  $('#lg-fone').oninput=e=>e.target.value=maskTel(e.target.value);
+  $('#lg-uf').onchange=e=>{$('#lg-cid').value='';carregaCidades(e.target.value)};
+  $('#lgf').onsubmit=async e=>{e.preventDefault();$('#lg-msg').textContent='';
+    const nome=$('#lg-nome').value.trim(),email=$('#lg-email').value.trim(),fone=$('#lg-fone').value.replace(/\D/g,''),uf=$('#lg-uf').value,cid=$('#lg-cid').value.trim();
+    if(nome.length<3){$('#lg-msg').textContent='Informe seu nome.';return}
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){$('#lg-msg').textContent='Informe um e-mail válido.';return}
+    if(fone.length<10||fone.length>11){$('#lg-msg').textContent='Digite o WhatsApp com DDD (ex.: 11 98888-7777).';return}
+    if(!uf||!cid){$('#lg-msg').textContent='Informe estado e cidade.';return}
+    const btn=$('#lgf .go');btn.disabled=true;btn.textContent='Abrindo WhatsApp…';
+    try{const r=await fetch('/api/lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome,email,whatsapp:fone,estado:uf,cidade:cid,produto_id:it?it.id:null,produto_nome:it?it.b+' '+it.n:null,origem:'whatsapp',utm:UTM,visitante:VIS})});
+      if(r.status===400){const d=await r.json().catch(()=>({}));$('#lg-msg').textContent=d.error||'Confira os dados.';btn.disabled=false;btn.textContent='Continuar para o WhatsApp';return}
+      try{localStorage.setItem('nota_lead2','1');localStorage.setItem('nota_lead','1')}catch(e){}
     }catch(e){}
-    btn.disabled=false;m.hidden=true;track('whatsapp',it2);window.open(m.dataset.href,'_blank','noopener');};
+    $('#mx').hidden=true;track('whatsapp',it);
+    const msg=`\n\n— ${nome} · ${cid}/${uf}`;let h=href;try{const u=new URL(href);u.searchParams.set('text',(u.searchParams.get('text')||'')+msg);h=u.toString()}catch(e){}
+    window.open(h,'_blank','noopener');};
 }
 document.addEventListener('click',e=>{const a=e.target.closest('a.ask,#fab-wa');if(!a)return;e.preventDefault();const z=a.closest('.card');const it=a.id==='pv-ask'?BYID[PV.id]:(z?BYID[z.querySelector('[data-open]').dataset.open]:null);leadGate(a.href,it)},true);
 

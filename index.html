@@ -312,6 +312,7 @@ footer{background:#020202;border-top:1px solid var(--line);padding-block:44px 24
 .steps-l{display:flex;justify-content:space-between;font-size:.7rem;color:#8d8678}
 .st-badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:.78rem;font-weight:700;background:#1a1609;color:var(--gold2);border:1px solid var(--gold3)}
 .st-badge.cancelado{background:#2a0f0f;color:#ff9f9f;border-color:#6b1f1f}
+.spin{width:14px;height:14px;border:2px solid #444;border-top-color:var(--gold);border-radius:50%;display:inline-block;animation:sp 1s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
 .ok-bar{position:fixed;left:50%;top:16px;transform:translateX(-50%);z-index:70;background:#0f1f14;border:1px solid #2e7d4f;color:#bff5d2;padding:12px 18px;border-radius:12px;max-width:92vw;font-size:.95rem}
 </style>
 
@@ -470,7 +471,7 @@ div class="lb-txt" id="lb-txt"></div></div></div>
     <div class="tot"><span id="t-lab">Total</span><b id="t-tot">R$ 0</b></div>
     <div class="msg" id="t-det"></div>
     <div class="acts" style="margin-bottom:8px"><button class="buy add-cart" id="pv-add" type="button">Adicionar ao carrinho</button></div>
-    <div class="acts"><a class="buy off" id="pv-buy" href="#" target="_blank" rel="noopener">Comprar agora</a><a class="ask" id="pv-ask" href="#" target="_blank" rel="noopener">Dúvidas</a></div>
+    <div class="acts"><a class="buy off" id="pv-buy" href="#" target="_blank" rel="noopener">Finalizar compra</a><a class="ask" id="pv-ask" href="#" target="_blank" rel="noopener">Dúvidas</a></div>
     <div class="msg" id="pv-hint"></div>
     <div class="msg">Pagamento seguro via Asaas: PIX, boleto ou cartão em até 12x. Envio pelos Correios após a confirmação.</div>
   </div></div></div>
@@ -630,7 +631,11 @@ function track(tipo,it,extra){try{const b=JSON.stringify(Object.assign({tipo,pro
 track('visita');
 let qT;$('#q').addEventListener('input',()=>{clearTimeout(qT);qT=setTimeout(()=>{const v=$('#q').value.trim();if(v.length>=3)track('busca',null,{pagina:v.toLowerCase()})},1200)});
 const _openPV=openPV;openPV=function(id){_openPV(id);const it=BYID[id];if(it)track('produto',it)};
-$('#pv-buy').addEventListener('click',()=>{if(!$('#pv-buy').classList.contains('off'))track('comprar',BYID[PV.id])});
+$('#pv-buy').removeAttribute('target');
+$('#pv-buy').addEventListener('click',e=>{e.preventDefault();if($('#pv-buy').classList.contains('off'))return;const it=BYID[PV.id];track('comprar',it);
+  const num=$('#num').value.trim(),comp=$('#comp').value.trim();
+  abrirPagamento({cart:[{id:it.id,q:PV.qty}],frete:PV.frete,endereco:{cep:PV.cep,numero:num,comp,texto:`${PV.end.logradouro}, ${num}${comp?' '+comp:''} - ${PV.end.bairro} - ${PV.end.localidade}/${PV.end.uf} - CEP ${PV.cep}`},
+    metodo:PV.met==='PIX'?'PIX':PV.met==='BOLETO'?'BOLETO':'CARD',parcelas:PV.met==='CARDN'?PV.parc:1})});
 function leadOk(){try{return !!localStorage.getItem('nota_lead2')}catch(e){return false}}
 function leadGate(href,it){
   if(!LEAD_GATE||leadOk()){track('whatsapp',it);window.open(href,'_blank','noopener');return}
@@ -680,7 +685,7 @@ function openCart(){
      <div id="ck-opts"></div><p class="err" id="ck-msg"></p></div>
    <div class="ck-sec"><h4>Pagamento</h4><div id="ck-pay"></div><select id="ck-parc" hidden></select></div>
    <div class="tot"><span id="ck-lab">Total</span><b id="ck-tot">—</b></div><p id="ck-det" style="font-size:.8rem;color:#9a9385;margin:4px 0 0"></p>
-   <a class="go" id="ck-go" href="#" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none">Finalizar compra</a><p class="err" id="ck-hint" style="color:#a9a294"></p>`,true);
+   <a class="go" id="ck-go" href="#" style="display:block;text-align:center;text-decoration:none">Finalizar compra</a><p class="err" id="ck-hint" style="color:#a9a294"></p>`,true);
   $('#ck-cep').oninput=e=>{let v=e.target.value.replace(/\D/g,'').slice(0,8);e.target.value=v.length>5?v.slice(0,5)+'-'+v.slice(5):v};
   $('#ck-calc').onclick=ckCEP;$('#ck-cep').onkeydown=e=>{if(e.key==='Enter')ckCEP()};
   ['#ck-num','#ck-comp'].forEach(s=>$(s).oninput=renderCart);
@@ -691,12 +696,10 @@ function openCart(){
     saveCart();if(!cartLines().length){openCart();return}CK.frete=null;CK.opts=[];$('#ck-opts').innerHTML='';if(CK.end)ckFrete();renderCart()};
   $('#ck-opts').onclick=e=>{const o=e.target.closest('.opt');if(!o)return;CK.frete=CK.opts[+o.dataset.k];renderCart()};
   $('#ck-pay').onclick=e=>{const o=e.target.closest('.opt');if(!o)return;CK.met=o.dataset.m;renderCart()};
-  $('#ck-go').addEventListener('click',e=>{if($('#ck-go').classList.contains('off')){e.preventDefault();return}
-    if(!CLI){let skip=false;try{skip=sessionStorage.getItem('nota_guest')==='1'}catch(_){}
-      if(!skip){e.preventDefault();const href=$('#ck-go').href;mx(`<h3>Quer acompanhar seu pedido?</h3><p class="sub">Com uma conta você vê o status do pagamento, do envio e o rastreio a qualquer momento.</p>
-        <button class="go" id="g-acc" type="button">Entrar ou criar conta</button><button class="go" id="g-skip" type="button" style="background:transparent;border:1px solid var(--gold);color:var(--gold2)">Continuar sem cadastro</button>`);
-        $('#g-acc').onclick=()=>openAuth('cad',()=>window.open(href,'_blank','noopener'));
-        $('#g-skip').onclick=()=>{try{sessionStorage.setItem('nota_guest','1')}catch(_){}$('#mx').hidden=true;window.open(href,'_blank','noopener')};}}});
+  $('#ck-go').addEventListener('click',e=>{e.preventDefault();if($('#ck-go').classList.contains('off'))return;
+    const num=$('#ck-num').value.trim(),comp=$('#ck-comp').value.trim();
+    abrirPagamento({cart:cartLines().map(x=>({id:x.it.id,q:x.q})),frete:CK.frete,endereco:{cep:CK.cep,numero:num,comp,texto:`${CK.end.logradouro}, ${num}${comp?' '+comp:''} - ${CK.end.bairro} - ${CK.end.localidade}/${CK.end.uf} - CEP ${CK.cep}`},
+      metodo:CK.met==='PIX'?'PIX':CK.met==='BOLETO'?'BOLETO':'CARD',parcelas:CK.met==='CARDN'?CK.parc:1,doCarrinho:true})});
   if(CK.end){$('#ck-end').textContent=`${CK.end.logradouro||''}${CK.end.bairro?' - '+CK.end.bairro:''} - ${CK.end.localidade}/${CK.end.uf}`;$('#ck-numrow').hidden=false;paintOpts()}
   renderCart();
 }
@@ -731,6 +734,72 @@ function renderCart(){const ls=cartLines();if(!$('#ck-lines'))return;
     $('#ck-go').href=`/api/checkout?cart=${encodeURIComponent(JSON.stringify(ls.map(x=>({id:x.it.id,q:x.q}))))}&f=${fr}&fn=${encodeURIComponent(CK.frete.nome)}&e=${encodeURIComponent(e)}&m=${m}&parc=${n}`}
   paintCartBtn()}
 paintCartBtn();
+
+
+/* ---------- pagamento no site (Asaas transparente) ---------- */
+let PAGTO=null,POLL=null;
+const maskCard=v=>v.replace(/\D/g,'').slice(0,19).replace(/(\d{4})(?=\d)/g,'$1 ');
+const maskVal=v=>{const d=v.replace(/\D/g,'').slice(0,4);return d.length>2?d.slice(0,2)+'/'+d.slice(2):d};
+function bandeira(n){n=n.replace(/\D/g,'');return /^4/.test(n)?'Visa':/^(5[1-5]|2[2-7])/.test(n)?'Mastercard':/^3[47]/.test(n)?'Amex':/^(4011|4312|4389|4514|4576|5041|5066|5067|509|6277|6362|6363|650|6516|6550)/.test(n)?'Elo':/^(606282|3841)/.test(n)?'Hipercard':''}
+function resumoPg(o){const ls=o.cart.map(l=>({it:BYID[l.id],q:l.q})).filter(x=>x.it);const fr=o.frete?o.frete.preco:0;
+  const sub=ls.reduce((s,x)=>s+(o.metodo==='PIX'?pix(x.it.p):x.it.p)*x.q,0);const c=calc(sub+fr,o.metodo,o.parcelas);
+  return {ls,c,fr,txt:o.metodo==='PIX'?'PIX à vista':o.metodo==='BOLETO'?'Boleto à vista':o.parcelas>1?`Cartão em ${o.parcelas}x de ${brl(c.parcela)}`:'Cartão à vista'}}
+function abrirPagamento(o){PAGTO=o;clearInterval(POLL);const r=resumoPg(o);const c=CLI||{};
+  mx(`<h3>Finalizar pagamento</h3><p class="sub">Você paga aqui mesmo, sem sair do site. Ambiente seguro.</p>
+  <div class="ped" style="margin-top:0">${r.ls.map(x=>`<div class="ped-h" style="color:#e9e2d2"><span>${x.q}× ${x.it.n}</span><span>${brl((o.metodo==='PIX'?pix(x.it.p):x.it.p)*x.q)}</span></div>`).join('')}
+   <div class="ped-h"><span>Frete ${o.frete?o.frete.nome:''}</span><span>${brl(r.fr)}</span></div>${r.c.taxa>0?`<div class="ped-h"><span>Taxa do cartão</span><span>${brl(r.c.taxa)}</span></div>`:''}
+   <div class="tot" style="margin-top:8px"><span>${r.txt}</span><b>${brl(r.c.total)}</b></div><p style="font-size:.78rem;color:#8d8678;margin:6px 0 0">Entrega: ${o.endereco.texto}</p></div>
+  <form id="pgf" autocomplete="on">
+   <div class="ck-sec"><h4>Seus dados</h4>${CLI?`<p class="sub" style="margin:0">Comprando como <b style="color:#e9e2d2">${c.nome}</b> · ${c.email}</p>`:`
+    <label>Nome completo</label><input type="text" id="pg-nome" autocomplete="name" required>
+    <div class="row2"><div><label>CPF</label><input type="text" id="pg-cpf" inputmode="numeric" required></div><div><label>WhatsApp</label><input type="tel" id="pg-tel" autocomplete="tel" required></div></div>
+    <label>E-mail</label><input type="email" id="pg-email" autocomplete="email" required>
+    <p style="font-size:.82rem;color:#a9a294;margin:8px 0 0">Já tem conta? <button type="button" class="lnk" id="pg-login">Entrar</button> para acompanhar o pedido.</p>`}</div>
+   ${o.metodo==='CARD'?`<div class="ck-sec"><h4>Cartão de crédito <span id="pg-band" style="color:var(--gold);font-weight:500"></span></h4>
+    <label>Número do cartão</label><input type="text" id="pg-num" inputmode="numeric" autocomplete="cc-number" required>
+    <label>Nome impresso no cartão</label><input type="text" id="pg-tit" autocomplete="cc-name" required style="text-transform:uppercase">
+    <div class="row2"><div><label>Validade (MM/AA)</label><input type="text" id="pg-val" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/AA" required></div><div><label>CVV</label><input type="text" id="pg-cvv" inputmode="numeric" autocomplete="cc-csc" maxlength="4" required></div></div>
+    <p style="font-size:.78rem;color:#8d8678;margin:8px 0 0">🔒 Os dados do cartão vão criptografados direto para o Asaas. A loja não guarda o número do seu cartão.</p></div>`:''}
+   <button class="go" type="submit" id="pg-go">${o.metodo==='PIX'?'Gerar QR Code PIX':o.metodo==='BOLETO'?'Gerar boleto':'Pagar '+brl(r.c.total)}</button><p class="err" id="pg-msg"></p></form>`,true);
+  if(!CLI){$('#pg-cpf').oninput=e=>e.target.value=maskCPF(e.target.value);$('#pg-tel').oninput=e=>e.target.value=maskTel(e.target.value);$('#pg-login').onclick=()=>openAuth('login',()=>abrirPagamento(PAGTO))}
+  if(o.metodo==='CARD'){$('#pg-num').oninput=e=>{e.target.value=maskCard(e.target.value);$('#pg-band').textContent=bandeira(e.target.value)};$('#pg-val').oninput=e=>e.target.value=maskVal(e.target.value);$('#pg-cvv').oninput=e=>e.target.value=e.target.value.replace(/\D/g,'')}
+  $('#pgf').onsubmit=enviarPagamento;
+}
+async function enviarPagamento(e){e.preventDefault();const o=PAGTO;$('#pg-msg').textContent='';const btn=$('#pg-go'),lab=btn.textContent;
+  const body={cart:o.cart,frete:o.frete,endereco:o.endereco,metodo:o.metodo,parcelas:o.parcelas};
+  if(!CLI){body.cliente={nome:$('#pg-nome').value,cpf:$('#pg-cpf').value,whatsapp:$('#pg-tel').value,email:$('#pg-email').value};
+    if(!body.cliente.nome.trim().includes(' ')){$('#pg-msg').textContent='Informe nome e sobrenome.';return}}
+  if(o.metodo==='CARD'){const v=$('#pg-val').value.split('/');body.cartao={numero:$('#pg-num').value,nome:$('#pg-tit').value.toUpperCase(),mes:v[0],ano:v[1],cvv:$('#pg-cvv').value};
+    if(!v[1]||+v[0]<1||+v[0]>12){$('#pg-msg').textContent='Validade inválida (use MM/AA).';return}}
+  btn.disabled=true;btn.textContent=o.metodo==='CARD'?'Processando pagamento…':'Gerando…';
+  try{const r=await fetch('/api/pagar',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify(body)});const d=await r.json().catch(()=>({}));
+    if(!r.ok)throw new Error(d.error||'Não foi possível gerar o pagamento.');
+    try{if(!CLI)localStorage.setItem('nota_lead2','1')}catch(_){}
+    mostrarResultado(d)}
+  catch(err){$('#pg-msg').textContent=err.message;btn.disabled=false;btn.textContent=lab}}
+function copiar(t,btn){(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{btn.textContent='Copiado ✓';setTimeout(()=>btn.textContent='Copiar código',2500)}).catch(()=>{const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();btn.textContent='Copiado ✓'})}
+function sucesso(cod){clearInterval(POLL);if(PAGTO&&PAGTO.doCarrinho){CART=[];saveCart()}closePV();
+  mx(`<div style="text-align:center;padding:10px 0"><div style="font-size:52px;line-height:1">✅</div><h3 style="margin-top:10px">Pagamento aprovado!</h3>
+   <p class="sub">Pedido <b style="color:var(--gold2)">${cod}</b> confirmado. Você vai receber as atualizações de envio pelo WhatsApp.</p>
+   ${CLI?'<button class="go" type="button" id="ok-conta">Ver meus pedidos</button>':''}
+   <a class="go" style="display:block;text-decoration:none;background:transparent;border:1px solid var(--gold);color:var(--gold2)" target="_blank" href="https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Olá! Acabei de pagar o pedido '+cod+' na Nota Perfumaria.')}">Falar no WhatsApp</a></div>`);
+  if(CLI)$('#ok-conta').onclick=openConta}
+function acompanhar(cod){clearInterval(POLL);let n=0;POLL=setInterval(async()=>{if(++n>180||$('#mx').hidden){clearInterval(POLL);return}
+  try{const d=await (await fetch('/api/pagar?c='+cod,{cache:'no-store'})).json();if(d.status==='pago'||d.status==='em_separacao'||d.status==='enviado')sucesso(cod)}catch(e){}},5000)}
+function mostrarResultado(d){
+  if(d.metodo==='CARD'){if(d.aprovado){sucesso(d.codigo);return}
+    mx(`<h3>Pagamento em análise</h3><p class="sub">Pedido <b style="color:var(--gold2)">${d.codigo}</b>. O emissor do cartão está analisando a compra; avisaremos assim que for aprovada.</p><p class="sub" id="pg-st">Verificando…</p>`);acompanhar(d.codigo);return}
+  const qr=d.qr?`<div style="text-align:center;margin:10px 0"><img src="data:image/png;base64,${d.qr}" alt="QR Code PIX" style="width:220px;height:220px;background:#fff;border-radius:12px;padding:8px"></div>
+    <label>PIX copia e cola</label><div class="ck-row"><input type="text" readonly value="${d.copia}" id="pg-copia"><button class="go" type="button" id="pg-cp" style="margin:0;padding:0 14px;white-space:nowrap">Copiar código</button></div>`:'';
+  if(d.metodo==='PIX'){mx(`<h3>Pague com PIX</h3><p class="sub">Pedido <b style="color:var(--gold2)">${d.codigo}</b> · <b style="color:#e9e2d2">${brl(d.total)}</b><br>Abra o app do seu banco, escolha <b>PIX → Ler QR Code</b> ou <b>Copia e cola</b>.</p>${qr}
+    <p class="sub" style="margin-top:14px;display:flex;align-items:center;gap:8px"><span class="spin"></span> Aguardando pagamento… esta tela confirma sozinha.</p>`)}
+  else{mx(`<h3>Boleto gerado</h3><p class="sub">Pedido <b style="color:var(--gold2)">${d.codigo}</b> · <b style="color:#e9e2d2">${brl(d.total)}</b> · vence em ${d.vencimento?d.vencimento.split('-').reverse().join('/'):'3 dias'}</p>
+    ${d.linha?`<label>Linha digitável</label><div class="ck-row"><input type="text" readonly value="${d.linha}" id="pg-linha"><button class="go" type="button" id="pg-cpl" style="margin:0;padding:0 14px;white-space:nowrap">Copiar código</button></div>`:''}
+    ${d.boletoUrl?`<a class="go" style="display:block;text-align:center;text-decoration:none" target="_blank" rel="noopener" href="${d.boletoUrl}">Abrir boleto (PDF)</a>`:''}
+    ${d.qr?`<p class="sub" style="margin-top:16px">Prefere pagar agora? Este boleto também aceita <b>PIX</b>:</p>${qr}`:''}
+    <p class="sub" style="margin-top:12px">A confirmação do boleto leva até 2 dias úteis. Você recebe a atualização pelo WhatsApp.</p>`)}
+  if($('#pg-cp'))$('#pg-cp').onclick=e=>copiar(d.copia,e.target);if($('#pg-cpl'))$('#pg-cpl').onclick=e=>copiar(d.linha,e.target);
+  acompanhar(d.codigo)}
 
 /* ---------- conta do cliente ---------- */
 let CLI=null;
@@ -780,18 +849,6 @@ async function openConta(){
   }catch(e){$('#peds').innerHTML='<p class="err">'+e.message+'</p>'}
 }
 $('#acc-btn').onclick=()=>CLI?openConta():openAuth('login');
-// ao comprar sem login: oferece entrar/cadastrar antes do checkout (opcional)
-$('#pv-buy').addEventListener('click',e=>{
-  if(CLI||$('#pv-buy').classList.contains('off'))return;
-  let skip=false;try{skip=sessionStorage.getItem('nota_guest')==='1'}catch(_){}
-  if(skip)return;
-  e.preventDefault();e.stopImmediatePropagation();const href=$('#pv-buy').href;
-  const m=mx(`<h3>Quer acompanhar seu pedido?</h3><p class="sub">Com uma conta você vê o status do pagamento, do envio e o rastreio a qualquer momento.</p>
-    <button class="go" id="g-acc" type="button">Entrar ou criar conta</button>
-    <button class="go" id="g-skip" type="button" style="background:transparent;border:1px solid var(--gold);color:var(--gold2)">Continuar sem cadastro</button>`);
-  $('#g-acc').onclick=()=>openAuth('cad',()=>{track('comprar',BYID[PV.id]);window.open(href,'_blank','noopener')});
-  $('#g-skip').onclick=()=>{try{sessionStorage.setItem('nota_guest','1')}catch(_){}m.hidden=true;track('comprar',BYID[PV.id]);window.open(href,'_blank','noopener')};
-},true);
 // retorno do pagamento
 {const pg=new URLSearchParams(location.search).get('pago');if(pg){CART=[];saveCart();const d=document.createElement('div');d.className='ok-bar';d.innerHTML=`Pagamento recebido! Pedido <b>${pg.replace(/[^A-Z0-9]/gi,'')}</b>. ${'Acompanhe em <b>Minha conta</b>.'}`;document.body.appendChild(d);setTimeout(()=>d.remove(),9000);history.replaceState(null,'',location.pathname)}}
 render(true);{const m=location.hash.match(/^#p-(\d+)$/);if(m)openPV(+m[1]);}

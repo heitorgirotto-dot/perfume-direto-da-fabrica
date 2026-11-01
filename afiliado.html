@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Área do Afiliado · Nota Perfumaria</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#050505;--card:#0f0f0f;--line:#232323;--txt:#f2ecdf;--mut:#9a9385;--gold:#d9b25a;--gold2:#f5dd95;--gold3:#9c7a2e;--ok:#3ddc84;--err:#ff8f8f;--wa:#25d366}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.5 Jost,system-ui,sans-serif}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px}
+header{border-bottom:1px solid var(--line);background:#0a0a0a}header .wrap{display:flex;align-items:center;justify-content:space-between;height:62px}
+.brand{font-family:"Cormorant Garamond",serif;font-weight:700;font-size:1.5rem;letter-spacing:.18em;color:var(--gold2)}.brand small{display:block;font-family:Jost;font-size:.7rem;letter-spacing:.12em;color:var(--mut);font-weight:500}
+h1,h2{font-family:"Cormorant Garamond",serif;color:var(--gold2);font-weight:600}h1{font-size:2rem;margin:26px 0 6px}h2{font-size:1.35rem;margin:0 0 12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}
+.box{max-width:420px;margin:50px auto}
+label{display:block;font-size:.72rem;color:var(--mut);text-transform:uppercase;letter-spacing:.08em;margin:12px 0 5px}
+input{width:100%;padding:12px;border-radius:10px;border:1px solid #2a2a2a;background:#080808;color:#fff;font:inherit}input:focus{outline:0;border-color:var(--gold)}
+.btn{display:inline-flex;justify-content:center;align-items:center;gap:8px;border:0;border-radius:12px;padding:12px 18px;font:inherit;font-weight:700;cursor:pointer;text-decoration:none;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#140f05}
+.btn.full{width:100%;margin-top:16px}.btn.ghost{background:transparent;color:var(--gold2);border:1px solid var(--gold)}.btn.wa{background:var(--wa);color:#04210f}
+.lnk{background:none;border:0;color:var(--mut);font:inherit;cursor:pointer;text-decoration:underline}
+.err{color:var(--err);min-height:1.2em;margin:8px 0 0;font-size:.9rem}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}.kpi span{font-size:.72rem;color:var(--mut);text-transform:uppercase;letter-spacing:.08em}.kpi b{display:block;font-size:1.5rem;color:var(--gold2)}
+@media(max-width:700px){.kpis{grid-template-columns:1fr 1fr}}
+.link{display:flex;gap:8px;flex-wrap:wrap}.link input{flex:1;min-width:220px}
+table{width:100%;border-collapse:collapse;font-size:.9rem}th,td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left}th{color:var(--mut);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.tag{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.75rem;font-weight:600;border:1px solid var(--line)}
+.t-a_pagar{color:var(--gold2);border-color:var(--gold3)}.t-paga{color:var(--ok);border-color:#2e7d4f}.t-cancelada{color:var(--err);border-color:#6b1f1f}
+.hidden{display:none!important}.mut{color:var(--mut)}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#1a1609;border:1px solid var(--gold);color:var(--gold2);padding:10px 16px;border-radius:10px}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="brand">NOTA<small>ÁREA DO AFILIADO</small></div><button class="lnk hidden" id="sair">Sair</button></div></header>
+<main class="wrap">
+  <!-- ativar convite -->
+  <section id="v-ativar" class="box card hidden">
+    <h2>Ative seu acesso</h2><p class="mut" id="at-oi"></p>
+    <form id="f-ativar"><label>Crie sua senha (mín. 8 caracteres)</label><input type="password" id="at-pw" autocomplete="new-password" minlength="8" required>
+      <label>Confirme a senha</label><input type="password" id="at-pw2" autocomplete="new-password" required>
+      <button class="btn full">Ativar e entrar</button><p class="err" id="at-err"></p></form>
+  </section>
+  <!-- login -->
+  <section id="v-login" class="box card hidden">
+    <h2>Entrar</h2><p class="mut">Acompanhe suas vendas e comissões.</p>
+    <form id="f-login"><label>WhatsApp</label><input type="tel" id="lg-tel" autocomplete="tel" placeholder="(11) 98888-7777" required>
+      <label>Senha</label><input type="password" id="lg-pw" autocomplete="current-password" required>
+      <button class="btn full">Entrar</button><p class="err" id="lg-err"></p>
+      <p class="mut" style="font-size:.85rem">Esqueceu a senha? Peça um novo link de ativação à Nota Perfumaria.</p></form>
+  </section>
+  <!-- painel -->
+  <section id="v-painel" class="hidden">
+    <h1 id="p-oi">Olá</h1><p class="mut" id="p-sub"></p>
+    <div class="card" style="margin-top:14px"><h2>Seu link de vendas</h2>
+      <div class="link"><input type="text" readonly id="p-link"><button class="btn" id="p-copy">Copiar link</button><a class="btn wa" id="p-share" target="_blank" rel="noopener">Compartilhar no WhatsApp</a></div>
+      <p class="mut" style="font-size:.85rem;margin:10px 0 0">Toda compra feita em até 30 dias por quem entrou pelo seu link gera comissão para você. A comissão é calculada sobre o valor dos produtos (sem frete e taxas) e liberada em até 10 dias úteis após a confirmação do pagamento, via PIX.</p></div>
+    <div class="kpis" id="p-kpis"></div>
+    <div class="card" style="padding:0;overflow:auto"><table><thead><tr><th>Data</th><th>Pedido</th><th>Venda</th><th>Comissão</th><th>Status</th><th>Recebimento</th></tr></thead><tbody id="p-list"></tbody></table></div>
+  </section>
+</main>
+<script>
+const $=s=>document.querySelector(s);
+const brl=v=>'R$ '+Number(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const dt=d=>d?new Date(d+(d.length===10?'T12:00:00':'')).toLocaleDateString('pt-BR'):'—';
+const maskTel=v=>{const d=v.replace(/\D/g,'').slice(0,11);return d.length>10?d.replace(/(\d{2})(\d{5})(\d{0,4})/,'($1) $2-$3'):d.replace(/(\d{2})(\d{4})(\d{0,4})/,'($1) $2-$3')};
+let tt;function toast(m){let e=$('.toast');if(!e){e=document.createElement('div');e.className='toast';document.body.appendChild(e)}e.textContent=m;e.hidden=false;clearTimeout(tt);tt=setTimeout(()=>e.hidden=true,2500)}
+async function api(a,body,q){const r=await fetch('/api/afiliado?a='+a+(q||''),{method:body?'POST':'GET',headers:{'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});const d=await r.json().catch(()=>({}));if(!r.ok)throw Object.assign(new Error(d.error||'Erro '+r.status),{status:r.status});return d}
+function show(v){['ativar','login','painel'].forEach(k=>$('#v-'+k).classList.toggle('hidden',k!==v));$('#sair').classList.toggle('hidden',v!=='painel')}
+const ST={a_pagar:'A receber',paga:'Recebida',cancelada:'Cancelada'};
+async function painel(){try{const d=await api('painel');show('painel');
+  $('#p-oi').textContent='Olá, '+d.nome.split(' ')[0];$('#p-sub').textContent=`Comissão de ${Number(d.comissao_pct).toLocaleString('pt-BR')}% · PIX para recebimento: ${d.pix}`;
+  const link='https://notaperfumaria.com/?ref='+d.codigo;$('#p-link').value=link;
+  $('#p-share').href='https://wa.me/?text='+encodeURIComponent('Conheça a Nota Perfumaria: perfumes árabes e importados 100% originais, com atendimento personalizado. '+link);
+  $('#p-kpis').innerHTML=[['Visitas pelo link',d.cliques],['Vendas',d.vendas],['A receber',brl(d.a_receber)],['Já recebido',brl(d.recebido)]].map(([k,v])=>`<div class="kpi"><span>${k}</span><b>${v}</b></div>`).join('');
+  $('#p-list').innerHTML=(d.itens||[]).map(i=>`<tr><td>${dt(i.data)}</td><td>${i.codigo}<div class="mut" style="font-size:.78rem">${i.produto||''}</div></td><td>${brl(i.base)}</td><td><b style="color:var(--gold2)">${brl(i.valor)}</b></td>
+    <td><span class="tag t-${i.status}">${ST[i.status]||i.status}</span></td><td>${i.status==='paga'?'Recebida em '+dt(i.paga_em):i.status==='a_pagar'?'Até '+dt(i.prevista):'—'}</td></tr>`).join('')||'<tr><td colspan="6" class="mut">Nenhuma venda ainda. Compartilhe seu link!</td></tr>';
+ }catch(e){if(e.status===401)show('login');else toast(e.message)}}
+$('#p-copy').onclick=()=>{navigator.clipboard.writeText($('#p-link').value).then(()=>toast('Link copiado!'))};
+$('#lg-tel').oninput=e=>e.target.value=maskTel(e.target.value);
+$('#f-login').onsubmit=async e=>{e.preventDefault();$('#lg-err').textContent='';try{await api('login',{whatsapp:$('#lg-tel').value,senha:$('#lg-pw').value});painel()}catch(err){$('#lg-err').textContent=err.message}};
+$('#sair').onclick=async()=>{await api('logout',{});show('login')};
+const conv=new URLSearchParams(location.search).get('convite');
+(async()=>{
+  if(conv){const c=await api('convite',null,'&c='+encodeURIComponent(conv)).catch(()=>null);
+    if(c){show('ativar');$('#at-oi').textContent=`Olá, ${c.nome.split(' ')[0]}! Crie sua senha para acessar seu painel de afiliado. Depois, entre com o WhatsApp cadastrado.`;
+      $('#f-ativar').onsubmit=async e=>{e.preventDefault();$('#at-err').textContent='';if($('#at-pw').value!==$('#at-pw2').value){$('#at-err').textContent='As senhas não conferem.';return}
+        try{await api('ativar',{convite:conv,senha:$('#at-pw').value});history.replaceState(null,'','/afiliado');painel()}catch(err){$('#at-err').textContent=err.message}};return}
+    toast('Link de ativação inválido ou já usado.')}
+  painel()})();
+</script>
+</body>
+</html>

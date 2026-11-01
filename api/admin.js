@@ -94,6 +94,20 @@ module.exports = async (req, res) => {
       case 'clientes': return res.status(200).json(await P('adm_clientes'));
       case 'cliente-senha': await P('adm_cliente_senha', { p_id: +b.id, p_nova: String(b.nova || '') }); return res.status(200).json({ ok: true });
       case 'senha': await P('adm_trocar_senha', { p_atual: String(b.atual || ''), p_nova: String(b.nova || '') }); return res.status(200).json({ ok: true });
+      case 'afiliados': return res.status(200).json(await P('adm_afiliados'));
+      case 'afiliado': {
+        const nome = String(b.nome || '').trim().replace(/\s+/g, ' ');
+        const whatsapp = A.fone(b.whatsapp);
+        const pct = Number(String(b.comissao_pct || '').replace(',', '.'));
+        if (nome.split(' ').length < 2) return res.status(400).json({ error: 'Informe nome e sobrenome.' });
+        if (!whatsapp) return res.status(400).json({ error: 'WhatsApp inválido (DDD + número).' });
+        if (!String(b.pix || '').trim()) return res.status(400).json({ error: 'Informe a chave PIX.' });
+        if (!(pct >= 0 && pct <= 50)) return res.status(400).json({ error: 'Comissão deve estar entre 0% e 50%.' });
+        try { return res.status(200).json(await P('adm_afiliado_salvar', { p: { id: b.id == null ? '' : String(b.id), nome, whatsapp, pix: String(b.pix).trim(), comissao_pct: String(pct), ativo: b.ativo !== false } })); }
+        catch (e) { if (/duplicate|unique/i.test(e.message)) return res.status(400).json({ error: 'Já existe um afiliado com este WhatsApp.' }); throw e; }
+      }
+      case 'afiliado-convite': return res.status(200).json({ convite: await P('adm_afiliado_novo_convite', { p_id: +b.id }) });
+      case 'comissao': await P('adm_comissao_pagar', { p_pedido: +b.pedido_id, p_paga: !!b.paga }); return res.status(200).json({ ok: true });
       case 'webhook': return res.status(200).json(await garantirWebhook(tok, req));
     }
     return res.status(404).json({ error: 'ação desconhecida' });

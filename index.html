@@ -680,6 +680,9 @@ const LEAD_GATE=true; // pedir nome e WhatsApp antes de abrir a conversa
 const VIS=(()=>{try{let v=localStorage.getItem('nota_vis');if(!v){v=Math.random().toString(36).slice(2)+Date.now().toString(36);localStorage.setItem('nota_vis',v)}return v}catch(e){return 'anon'}})();
 const UTM=(()=>{const u={},q=new URLSearchParams(location.search);['utm_source','utm_medium','utm_campaign','utm_content','utm_term','ref'].forEach(k=>{if(q.get(k))u[k]=q.get(k)});try{if(Object.keys(u).length)sessionStorage.setItem('nota_utm',JSON.stringify(u));else return JSON.parse(sessionStorage.getItem('nota_utm')||'{}')}catch(e){}return u})();
 function track(tipo,it,extra){try{const b=JSON.stringify(Object.assign({tipo,produto_id:it?it.id:null,produto_nome:it?it.b+' '+it.n:null,pagina:location.pathname+location.hash,referencia:document.referrer||null,utm:Object.keys(UTM).length?UTM:null,visitante:VIS},extra||{}));if(navigator.sendBeacon)navigator.sendBeacon('/api/evento',new Blob([b],{type:'application/json'}));else fetch('/api/evento',{method:'POST',headers:{'Content-Type':'application/json'},body:b,keepalive:true})}catch(e){}}
+// link de afiliado: guarda o código por 30 dias (último clique vale)
+{const r=new URLSearchParams(location.search).get('ref');if(r&&/^[A-Za-z0-9]{3,20}$/.test(r)){const v=r.toUpperCase();try{localStorage.setItem('nota_ref',JSON.stringify({v,t:Date.now()}))}catch(e){}document.cookie='nota_ref='+v+';path=/;max-age='+30*86400+';SameSite=Lax;Secure'}}
+function refAtual(){try{const o=JSON.parse(localStorage.getItem('nota_ref')||'null');if(o&&Date.now()-o.t<30*86400e3)return o.v}catch(e){}const m=document.cookie.match(/(?:^|;\s*)nota_ref=([A-Z0-9]+)/);return m?m[1]:''}
 track('visita');
 let qT;$('#q').addEventListener('input',()=>{clearTimeout(qT);qT=setTimeout(()=>{const v=$('#q').value.trim();if(v.length>=3)track('busca',null,{pagina:v.toLowerCase()})},1200)});
 const _openPV=openPV;openPV=function(id){_openPV(id);const it=BYID[id];if(it)track('produto',it)};
@@ -834,7 +837,7 @@ function abrirPagamento(o){PAGTO=o;clearInterval(POLL);const r=resumoPg(o);const
   $('#pgf').onsubmit=enviarPagamento;
 }
 async function enviarPagamento(e){e.preventDefault();const o=PAGTO;$('#pg-msg').textContent='';const btn=$('#pg-go'),lab=btn.textContent;
-  const body={cart:o.cart,frete:o.frete,endereco:o.endereco,metodo:o.metodo,parcelas:o.parcelas};
+  const body={cart:o.cart,frete:o.frete,endereco:o.endereco,metodo:o.metodo,parcelas:o.parcelas,ref:refAtual()};
   if(!CLI){body.cliente={nome:$('#pg-nome').value,cpf:$('#pg-cpf').value,whatsapp:$('#pg-tel').value,email:$('#pg-email').value};
     if(!body.cliente.nome.trim().includes(' ')){$('#pg-msg').textContent='Informe nome e sobrenome.';return}}
   if(o.metodo==='CARD'){const v=$('#pg-val').value.split('/');body.cartao={numero:$('#pg-num').value,nome:$('#pg-tit').value.toUpperCase(),mes:v[0],ano:v[1],cvv:$('#pg-cvv').value};

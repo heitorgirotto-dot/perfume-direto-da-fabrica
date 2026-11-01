@@ -12,6 +12,10 @@
     {
       "source": "/painel",
       "destination": "/admin.html"
+    },
+    {
+      "source": "/afiliado",
+      "destination": "/afiliado.html"
     }
   ],
   "headers": [

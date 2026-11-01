@@ -70,6 +70,7 @@ tr:hover td{background:#141414}
     <button data-v="ped">Pedidos</button>
     <button data-v="prod">Produtos</button>
     <button data-v="cli">Clientes</button>
+    <button data-v="afi">Afiliados</button>
     <button data-v="leads">Leads</button>
     <button id="trocar" title="Trocar senha">Senha</button>
     <button id="sair" title="Sair">Sair</button>
@@ -132,6 +133,13 @@ tr:hover td{background:#141414}
     <div class="card" style="padding:0;overflow:auto"><table><thead><tr><th>Cadastro</th><th>Nome</th><th>CPF</th><th>Contato</th><th>Pedidos</th><th></th></tr></thead><tbody id="clist"></tbody></table></div>
   </section>
 
+  <!-- AFILIADOS -->
+  <section id="v-afi" class="hidden">
+    <h1 style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">Afiliados <span id="acount" style="color:var(--mut);font-size:14px"></span><button class="btn" id="anovo" style="margin-left:auto">+ Novo afiliado</button></h1>
+    <div class="kpis" id="akpis"></div>
+    <div id="alist"></div>
+  </section>
+
   <!-- LEADS -->
   <section id="v-leads" class="hidden">
     <h1 style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">Leads <span id="lcount" style="color:var(--mut);font-size:14px"></span>
@@ -184,9 +192,9 @@ async function api(a,opt={}){const r=await fetch('/api/admin?a='+a+(opt.q||''),{
 
 function show(v){
   $('#login').classList.toggle('hidden',v!=='login');$('#nav').classList.toggle('hidden',v==='login');
-  ['dash','ped','prod','cli','leads'].forEach(k=>$('#v-'+k).classList.toggle('hidden',v!==k));
+  ['dash','ped','prod','cli','afi','leads'].forEach(k=>$('#v-'+k).classList.toggle('hidden',v!==k));
   document.querySelectorAll('#nav [data-v]').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
-  if(v==='dash')loadStats();if(v==='prod')loadProds();if(v==='leads')loadLeads();if(v==='ped')loadPeds();if(v==='cli')loadClis();
+  if(v==='dash')loadStats();if(v==='prod')loadProds();if(v==='leads')loadLeads();if(v==='ped')loadPeds();if(v==='cli')loadClis();if(v==='afi')loadAfis();
 }
 $('#nav').addEventListener('click',e=>{const b=e.target.closest('[data-v]');if(b)show(b.dataset.v)});
 $('#trocar').onclick=async()=>{const atual=prompt('Senha atual:');if(!atual)return;const nova=prompt('Nova senha (mínimo 10 caracteres):');if(!nova)return;try{await api('senha',{method:'POST',body:{atual,nova}});toast('Senha alterada')}catch(e){toast(e.message)}};
@@ -311,7 +319,7 @@ function renderPeds(){
   $('#olist').innerHTML=out.map(p=>{const cli=p.clientes||{};const nome=cli.nome||p.pagador_nome||'Visitante';const wa=cli.whatsapp;
     return `<tr data-id="${p.id}"><td style="white-space:nowrap"><b>${esc(p.codigo)}</b><div style="font-size:12px;color:var(--mut)">${new Date(p.criado_em).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</div></td>
     <td>${esc(nome)}${wa?`<div><a href="https://wa.me/${wa}?text=${encodeURIComponent('Olá, '+nome.split(' ')[0]+'! Aqui é da Nota Perfumaria, sobre o seu pedido '+p.codigo+'.')}" target="_blank" style="color:var(--wa);font-size:12px">WhatsApp</a></div>`:''}</td>
-    <td>${p.quantidade}× ${esc(p.produto_nome)}<div style="font-size:12px;color:var(--mut)">${esc(p.endereco||'')}</div></td>
+    <td>${p.afiliado_id?'<span class="tag g">afiliado</span> ':''}${p.quantidade}× ${esc(p.produto_nome)}<div style="font-size:12px;color:var(--mut)">${esc(p.endereco||'')}</div></td>
     <td style="white-space:nowrap">${brl(p.total)}<div style="font-size:12px;color:var(--mut)">${p.metodo}${p.parcelas>1?' '+p.parcelas+'x':''}</div></td>
     <td><select data-st="${p.id}" style="width:auto;padding:6px 8px">${Object.entries(ST).map(([k,v])=>`<option value="${k}"${k===p.status?' selected':''}>${v}</option>`).join('')}</select></td>
     <td><input data-rt="${p.id}" value="${esc(p.rastreio||'')}" placeholder="AA123456789BR" style="width:150px;padding:6px 8px"></td>
@@ -337,6 +345,55 @@ function renderClis(){const q=norm($('#cq').value);const out=CLIS.filter(c=>!q||
 $('#clist').addEventListener('click',async e=>{const b=e.target.closest('[data-pw]');if(!b)return;const nova=prompt('Nova senha para o cliente (mínimo 8 caracteres). Envie a ele pelo WhatsApp:');if(!nova)return;try{await api('cliente-senha',{method:'POST',body:{id:+b.dataset.pw,nova}});toast('Senha redefinida')}catch(err){toast(err.message)}});
 $('#ccsv').onclick=()=>{const rows=[['cadastro','nome','cpf','email','whatsapp','aceita_marketing','pedidos']].concat(CLIS.map(c=>[c.criado_em,c.nome,c.cpf,c.email,c.whatsapp,c.marketing?'sim':'nao',(c.pedidos&&c.pedidos[0]&&c.pedidos[0].count)||0]));
   const csv='\ufeff'+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='clientes-nota-perfumaria.csv';a.click()};
+
+
+/* ---------- AFILIADOS ---------- */
+let AFIS=[];const SITE='https://notaperfumaria.com';
+const CST={a_pagar:'A pagar',paga:'Paga',cancelada:'Cancelada'};
+async function loadAfis(){try{AFIS=await api('afiliados');renderAfis()}catch(e){toast(e.message)}}
+const dBR=d=>d?new Date(d+(String(d).length===10?'T12:00:00':'')).toLocaleDateString('pt-BR'):'—';
+function renderAfis(){
+  $('#acount').textContent=AFIS.length+' cadastrados';
+  const sum=k=>AFIS.reduce((a,x)=>a+Number(x[k]||0),0);const hoje=new Date().toISOString().slice(0,10);
+  const vencendo=AFIS.flatMap(a=>a.comissoes).filter(c=>c.status==='a_pagar'&&c.prevista<=hoje).reduce((a,c)=>a+Number(c.valor),0);
+  $('#akpis').innerHTML=[['Vendas por afiliados',sum('vendas')],['Faturado (produtos)',brl(sum('faturado'))],['Comissões a pagar',brl(sum('a_pagar'))],['Vence hoje ou antes',brl(vencendo)],['Comissões pagas',brl(sum('pago'))]].map(([k,v])=>`<div class="kpi"><span>${k}</span><b>${v}</b></div>`).join('');
+  $('#alist').innerHTML=AFIS.map(a=>{const link=SITE+'/?ref='+a.codigo;const conv=a.convite?SITE+'/afiliado?convite='+a.convite:null;
+    const msgConv=conv?`Olá, ${a.nome.split(' ')[0]}! Seu acesso de afiliado da Nota Perfumaria está pronto.\n\n1) Ative e crie sua senha: ${conv}\n2) Seu link de vendas: ${link}\n\nVocê recebe ${Number(a.comissao_pct).toLocaleString('pt-BR')}% sobre os produtos de cada venda, via PIX, em até 10 dias úteis após a confirmação do pagamento.`:'';
+    return `<div class="card" style="margin-bottom:12px" data-a="${a.id}">
+    <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start;justify-content:space-between">
+      <div><b style="font-size:16px">${esc(a.nome)}</b> ${a.ativo?'':'<span class="tag off">Inativo</span>'} ${a.acesso_ativo?'<span class="tag g">Acesso ativo</span>':'<span class="tag">Aguardando ativação</span>'}
+        <div style="color:var(--mut);font-size:13px;margin-top:4px"><a href="https://wa.me/${a.whatsapp}" target="_blank" style="color:var(--wa)">${fmtF(a.whatsapp)}</a> · PIX: ${esc(a.pix)} · Comissão <b style="color:var(--gold2)">${Number(a.comissao_pct).toLocaleString('pt-BR')}%</b></div>
+        <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap"><input value="${link}" readonly style="width:300px;padding:7px 10px"><button class="btn ghost" data-copy="${link}" style="padding:7px 12px">Copiar link</button></div></div>
+      <div style="display:flex;gap:16px;text-align:right"><div><div style="color:var(--mut);font-size:11px">VENDAS</div><b style="font-size:18px">${a.vendas}</b></div><div><div style="color:var(--mut);font-size:11px">A PAGAR</div><b style="font-size:18px;color:var(--gold2)">${brl(a.a_pagar)}</b></div><div><div style="color:var(--mut);font-size:11px">PAGO</div><b style="font-size:18px">${brl(a.pago)}</b></div></div>
+    </div>
+    <div class="act" style="margin-top:12px;flex-wrap:wrap">
+      ${conv?`<a class="btn" style="padding:7px 12px;font-size:13px;text-decoration:none" target="_blank" href="https://wa.me/${a.whatsapp}?text=${encodeURIComponent(msgConv)}">Enviar acesso no WhatsApp</a>`:`<button data-conv="${a.id}">Gerar novo acesso (redefinir senha)</button>`}
+      <button data-edit-a="${a.id}">Editar</button>
+    </div>
+    ${a.comissoes.length?`<table style="margin-top:12px"><thead><tr><th>Data</th><th>Pedido</th><th>Venda</th><th>Comissão</th><th>Status</th><th>Pagar até</th><th></th></tr></thead><tbody>${a.comissoes.map(c=>{
+      const aviso=`Olá, ${a.nome.split(' ')[0]}! ${c.status==='paga'?'Sua comissão de '+brl(c.valor)+' do pedido '+c.codigo+' foi paga no PIX '+a.pix+'. Obrigado!':'Você fez uma venda pela Nota Perfumaria! Pedido '+c.codigo+' · comissão de '+brl(c.valor)+', paga até '+dBR(c.prevista)+'.'}`;
+      return `<tr><td>${dBR(c.data)}</td><td>${c.codigo}</td><td>${brl(c.base)}</td><td><b>${brl(c.valor)}</b></td><td><span class="tag ${c.status==='paga'?'g':c.status==='cancelada'?'off':''}">${CST[c.status]||c.status}</span></td>
+      <td style="${c.status==='a_pagar'&&c.prevista<=new Date().toISOString().slice(0,10)?'color:#ff9f9f;font-weight:700':''}">${c.status==='paga'?'Paga '+dBR(c.paga_em):dBR(c.prevista)}</td>
+      <td><div class="act">${c.status==='a_pagar'?`<button data-pagar="${c.pedido_id}">Marcar paga</button>`:c.status==='paga'?`<button data-despagar="${c.pedido_id}">Desfazer</button>`:''}${c.status!=='cancelada'?`<a class="tag" style="color:var(--wa);text-decoration:none" target="_blank" href="https://wa.me/${a.whatsapp}?text=${encodeURIComponent(aviso)}">Avisar</a>`:''}</div></td></tr>`}).join('')}</tbody></table>`:'<p style="color:var(--mut);margin:12px 0 0;font-size:13px">Nenhuma venda ainda.</p>'}
+  </div>`}).join('')||'<div class="card" style="color:var(--mut)">Nenhum afiliado ainda. Clique em <b>+ Novo afiliado</b>.</div>';
+}
+$('#alist').addEventListener('click',async e=>{const t=e.target;
+  if(t.dataset.copy){navigator.clipboard.writeText(t.dataset.copy).then(()=>toast('Link copiado'));return}
+  if(t.dataset.pagar||t.dataset.despagar){const paga=!!t.dataset.pagar;if(paga&&!confirm('Confirmar que a comissão foi paga via PIX?'))return;try{await api('comissao',{method:'POST',body:{pedido_id:+(t.dataset.pagar||t.dataset.despagar),paga}});toast(paga?'Comissão marcada como paga':'Pagamento desfeito');loadAfis()}catch(err){toast(err.message)}return}
+  if(t.dataset.conv){if(!confirm('Gerar novo link de acesso? A senha atual do afiliado deixa de funcionar.'))return;try{await api('afiliado-convite',{method:'POST',body:{id:+t.dataset.conv}});toast('Novo acesso gerado — envie pelo WhatsApp');loadAfis()}catch(err){toast(err.message)}return}
+  if(t.dataset.editA){formAfi(AFIS.find(a=>a.id==t.dataset.editA))}});
+$('#anovo').onclick=()=>formAfi(null);
+function formAfi(a){
+  const m=document.createElement('div');m.className='modal';m.innerHTML=`<div class="card" style="max-width:480px"><h2>${a?'Editar afiliado':'Novo afiliado'}</h2>
+   <form id="faf"><label>Nome completo</label><input id="af-nome" required value="${a?esc(a.nome):''}">
+   <label>WhatsApp</label><input id="af-tel" required inputmode="tel" placeholder="(11) 98888-7777" value="${a?fmtF(a.whatsapp):''}">
+   <label>Chave PIX (para receber as comissões)</label><input id="af-pix" required value="${a?esc(a.pix):''}">
+   <label>Comissão (%) sobre o valor dos produtos</label><input id="af-pct" required inputmode="decimal" placeholder="10" value="${a?a.comissao_pct:''}">
+   ${a?`<label style="display:flex;gap:8px;align-items:center;text-transform:none;font-size:14px;color:var(--txt)"><input type="checkbox" id="af-ativo" style="width:auto" ${a.ativo?'checked':''}> Ativo (link gera comissão)</label>`:''}
+   <div style="display:flex;gap:10px;margin-top:16px"><button class="btn">${a?'Salvar':'Cadastrar e gerar link'}</button><button type="button" class="btn ghost" id="af-x">Cancelar</button></div><div class="msg err" id="af-msg"></div></form></div>`;
+  document.body.appendChild(m);m.querySelector('#af-x').onclick=()=>m.remove();
+  m.querySelector('#faf').onsubmit=async e=>{e.preventDefault();try{await api('afiliado',{method:'POST',body:{id:a?a.id:null,nome:m.querySelector('#af-nome').value,whatsapp:m.querySelector('#af-tel').value,pix:m.querySelector('#af-pix').value,comissao_pct:m.querySelector('#af-pct').value,ativo:a?m.querySelector('#af-ativo').checked:true}});
+    m.remove();toast(a?'Afiliado atualizado':'Afiliado cadastrado — envie o acesso pelo WhatsApp');loadAfis()}catch(err){m.querySelector('#af-msg').textContent=err.message}}}
 
 /* ---------- INIT ---------- */
 (async()=>{try{const m=await api('me');if(m.ok){show('dash');ativarWebhook()}else{show('login');if(m.setup)modoSetup(m.setup)}}catch(e){show('login')}})();

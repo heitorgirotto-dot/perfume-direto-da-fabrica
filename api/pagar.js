@@ -90,7 +90,7 @@ module.exports = async (req, res) => {
     // pedido
     const pedido = { produto_id: linhas.length === 1 ? linhas[0].id : null, produto_nome: resumo.slice(0, 160), quantidade: qtd, valor_unit: linhas.length === 1 ? linhas[0].unit : subtotal,
       frete, frete_nome: frete > 0 ? freteNome : null, taxa: c.taxa || 0, total: c.total, metodo, parcelas: c.n || 1, endereco: endTxt || null,
-      itens: linhas.map(l => ({ id: l.id, marca: l.marca, nome: l.nome, quantidade: l.q, valor_unit: l.unit })) };
+      itens: linhas.map(l => ({ id: l.id, marca: l.marca, nome: l.nome, quantidade: l.q, valor_unit: l.unit })), ref: String(b.ref || A.getCookie(req, 'nota_ref') || '').replace(/[^A-Za-z0-9]/g, '').slice(0, 20) };
     const codigo = await db.rpc('pedido_criar', { p: pedido, p_tok: tok || '' });
     db.rpc('pedido_pagador', { p_codigo: codigo, p_cpf: cpf, p_nome: nome }).catch(() => {});
     db.rpc('lead_registrar', { p: { nome, whatsapp: '55' + fone, email, origem: 'compra' } }).catch(() => {});

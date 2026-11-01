@@ -14,7 +14,8 @@ const MSG = {
   SETUP_INDISPONIVEL: 'Cadastro de administrador indisponível para este e-mail.',
   IMAGEM_INVALIDA: 'Imagem inválida ou muito grande.',
   NAO_ENCONTRADO: 'Registro não encontrado.',
-  TOKEN_INVALIDO: 'Token inválido.'
+  TOKEN_INVALIDO: 'Token inválido.',
+  CONVITE_INVALIDO: 'Este link de ativação já foi usado ou expirou. Peça um novo à loja.'
 };
 
 class DbError extends Error { constructor(code, msg, status) { super(msg); this.code = code; this.status = status; } }

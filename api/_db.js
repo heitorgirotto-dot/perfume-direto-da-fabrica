@@ -41,6 +41,6 @@ module.exports = {
   select: (table, query) => req('GET', table + '?' + query),
   rpc: (fn, args) => req('POST', 'rpc/' + fn, args || {}),
   toSite(p) {
-    return { id: p.id, b: p.marca, n: p.nome, g: p.genero, p: p.preco == null ? null : Number(p.preco), notes: p.notas || '', like: p.lembra || null, desc: p.descricao || null, pics: Array.isArray(p.fotos) && p.fotos.length ? p.fotos : null, best: !!p.mais_vendido, top5: p.top5 || null, ativo: p.ativo };
+    return { id: p.id, b: p.marca, n: p.nome, g: p.genero, p: p.preco == null ? null : Number(p.preco), notes: p.notas || '', like: p.lembra || null, desc: p.descricao || null, pics: Array.isArray(p.fotos) && p.fotos.length ? p.fotos : null, best: !!p.mais_vendido, top5: p.top5 || null, ativo: p.ativo, custo: p.custo == null ? undefined : Number(p.custo) };
   }
 };

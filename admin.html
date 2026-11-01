@@ -59,6 +59,10 @@ tr:hover td{background:#141414}
 .bar{display:flex;align-items:center;gap:10px;font-size:13px;margin:6px 0}.bar .n{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bar .b{height:8px;border-radius:4px;background:var(--gold)}.bar .v{color:var(--mut);min-width:34px;text-align:right}
 .funil{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center}.funil div{background:#0b0b0b;border:1px solid var(--line);border-radius:10px;padding:10px}.funil b{display:block;font-size:20px;color:var(--gold2)}.funil span{font-size:11px;color:var(--mut)}.funil small{display:block;color:var(--ok);font-size:12px}
 @media(max-width:760px){.funil{grid-template-columns:1fr 1fr}}
+.ftabs{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 16px}.ftabs button{background:#111;border:1px solid var(--line);color:var(--mut);padding:8px 14px;border-radius:999px;cursor:pointer;font:inherit}.ftabs button.on{color:var(--gold2);border-color:var(--gold);background:#1a1609}
+.dre{width:100%;border-collapse:collapse}.dre td{padding:9px 6px;border-bottom:1px solid var(--line)}.dre td:last-child{text-align:right;white-space:nowrap}.dre tr.sub td{color:var(--mut);font-size:13px}.dre tr.tot td{font-weight:700;color:var(--gold2);font-size:16px;border-top:1px solid var(--gold3)}
+.neg{color:#ff9f9f!important}.pos{color:#7ee2a8!important}
+.ce{cursor:pointer;border-bottom:1px dashed var(--gold3)}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1a1609;border:1px solid var(--gold);color:var(--gold2);padding:10px 16px;border-radius:10px;z-index:30}
 </style>
 </head>
@@ -71,6 +75,7 @@ tr:hover td{background:#141414}
     <button data-v="prod">Produtos</button>
     <button data-v="cli">Clientes</button>
     <button data-v="afi">Afiliados</button>
+    <button data-v="fin">Financeiro</button>
     <button data-v="leads">Leads</button>
     <button id="trocar" title="Trocar senha">Senha</button>
     <button id="sair" title="Sair">Sair</button>
@@ -140,6 +145,20 @@ tr:hover td{background:#141414}
     <div id="alist"></div>
   </section>
 
+  <!-- FINANCEIRO -->
+  <section id="v-fin" class="hidden">
+    <h1 style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">Financeiro
+      <select id="fper" style="width:auto;margin-left:auto;font-size:14px"><option value="mes">Este mês</option><option value="ant">Mês passado</option><option value="90">Últimos 90 dias</option><option value="ano">Este ano</option><option value="tudo">Desde o início</option><option value="custom">Personalizado</option></select>
+      <input type="date" id="fini" style="width:auto;font-size:14px" hidden><input type="date" id="ffim" style="width:auto;font-size:14px" hidden></h1>
+    <div class="ftabs" id="ftabs"><button data-ft="res" class="on">Resultado</button><button data-ft="prd">Rentabilidade por produto</button><button data-ft="pag">Contas a pagar</button><button data-ft="rec">Contas a receber</button><button data-ft="soc">Divisão de lucros</button></div>
+    <div id="ft-res"></div>
+    <div id="ft-prd" hidden><div class="tools"><input id="fpq" placeholder="Buscar produto…"><select id="fpf"><option value="">Todos os produtos</option><option value="vend">Vendidos no período</option><option value="semcusto">Sem custo cadastrado</option></select><span style="color:var(--mut);font-size:13px">Clique no custo para editar.</span></div>
+      <div class="card" style="padding:0;overflow:auto"><table><thead><tr><th>Produto</th><th>Custo</th><th>Venda</th><th>Lucro / un.</th><th>Margem</th><th>Qtd vendida</th><th>Receita</th><th>Lucro total</th></tr></thead><tbody id="fplist"></tbody></table></div></div>
+    <div id="ft-pag" hidden></div>
+    <div id="ft-rec" hidden></div>
+    <div id="ft-soc" hidden></div>
+  </section>
+
   <!-- LEADS -->
   <section id="v-leads" class="hidden">
     <h1 style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">Leads <span id="lcount" style="color:var(--mut);font-size:14px"></span>
@@ -158,7 +177,8 @@ tr:hover td{background:#141414}
       <div><label>Nome *</label><input id="f-nome" required></div>
     </div>
     <div class="row c3">
-      <div><label>Preço (R$) — vazio = "Consultar"</label><input id="f-preco" inputmode="decimal" placeholder="299,00"></div>
+      <div><label>Preço de venda (R$) — vazio = "Consultar"</label><input id="f-preco" inputmode="decimal" placeholder="299,00"></div>
+      <div><label>Valor de compra / custo (R$)</label><input id="f-custo" inputmode="decimal" placeholder="150,00"></div>
       <div><label>Gênero</label><select id="f-genero"><option value="M">Masculino</option><option value="F">Feminino</option><option value="U">Unissex</option></select></div>
       <div><label>Top 5 da semana (posição)</label><select id="f-top5"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
     </div>
@@ -192,9 +212,9 @@ async function api(a,opt={}){const r=await fetch('/api/admin?a='+a+(opt.q||''),{
 
 function show(v){
   $('#login').classList.toggle('hidden',v!=='login');$('#nav').classList.toggle('hidden',v==='login');
-  ['dash','ped','prod','cli','afi','leads'].forEach(k=>$('#v-'+k).classList.toggle('hidden',v!==k));
+  ['dash','ped','prod','cli','afi','fin','leads'].forEach(k=>$('#v-'+k).classList.toggle('hidden',v!==k));
   document.querySelectorAll('#nav [data-v]').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
-  if(v==='dash')loadStats();if(v==='prod')loadProds();if(v==='leads')loadLeads();if(v==='ped')loadPeds();if(v==='cli')loadClis();if(v==='afi')loadAfis();
+  if(v==='dash')loadStats();if(v==='prod')loadProds();if(v==='leads')loadLeads();if(v==='ped')loadPeds();if(v==='cli')loadClis();if(v==='afi')loadAfis();if(v==='fin')loadFin();
 }
 $('#nav').addEventListener('click',e=>{const b=e.target.closest('[data-v]');if(b)show(b.dataset.v)});
 $('#trocar').onclick=async()=>{const atual=prompt('Senha atual:');if(!atual)return;const nova=prompt('Nova senha (mínimo 10 caracteres):');if(!nova)return;try{await api('senha',{method:'POST',body:{atual,nova}});toast('Senha alterada')}catch(e){toast(e.message)}};
@@ -256,7 +276,7 @@ $('#novo').onclick=()=>openModal(null);
 let FOTOS=[];
 function openModal(p){
   $('#mtitle').textContent=p?'Editar produto':'Novo produto';$('#fmsg').textContent='';$('#fmsg').className='msg';
-  $('#f-id').value=p?p.id:'';$('#f-marca').value=p?p.b:'';$('#f-nome').value=p?p.n:'';$('#f-preco').value=p&&p.p!=null?String(p.p).replace('.',','):'';
+  $('#f-id').value=p?p.id:'';$('#f-marca').value=p?p.b:'';$('#f-nome').value=p?p.n:'';$('#f-preco').value=p&&p.p!=null?String(p.p).replace('.',','):'';$('#f-custo').value=p&&p.custo!=null?String(p.custo).replace('.',','):'';
   $('#f-genero').value=p?p.g:'U';$('#f-top5').value=p&&p.top5?p.top5:'';$('#f-notas').value=p?p.notes||'':'';$('#f-lembra').value=p?p.like||'':'';$('#f-desc').value=p?p.desc||'':'';
   $('#f-ativo').checked=p?p.ativo!==false:true;$('#f-best').checked=!!(p&&p.best);$('#excluir').classList.toggle('hidden',!p);
   FOTOS=p&&p.pics?[...p.pics]:[];renderFotos();$('#modal').classList.remove('hidden');
@@ -278,7 +298,7 @@ async function upload(files){
 }
 $('#fprod').onsubmit=async e=>{
   e.preventDefault();$('#salvar').disabled=true;$('#fmsg').className='msg';$('#fmsg').textContent='Salvando…';
-  const body={id:$('#f-id').value||null,marca:$('#f-marca').value,nome:$('#f-nome').value,preco:$('#f-preco').value.trim(),genero:$('#f-genero').value,top5:$('#f-top5').value||null,notas:$('#f-notas').value,lembra:$('#f-lembra').value,descricao:$('#f-desc').value,fotos:FOTOS,ativo:$('#f-ativo').checked,mais_vendido:$('#f-best').checked};
+  const body={id:$('#f-id').value||null,marca:$('#f-marca').value,nome:$('#f-nome').value,preco:$('#f-preco').value.trim(),custo:$('#f-custo').value.trim(),genero:$('#f-genero').value,top5:$('#f-top5').value||null,notas:$('#f-notas').value,lembra:$('#f-lembra').value,descricao:$('#f-desc').value,fotos:FOTOS,ativo:$('#f-ativo').checked,mais_vendido:$('#f-best').checked};
   try{const p=await api('produto',{method:'POST',body});const i=PRODS.findIndex(x=>x.id===p.id);if(i>=0)PRODS[i]=p;else PRODS.push(p);if(p.top5)PRODS.forEach(x=>{if(x.id!==p.id&&x.top5===p.top5)x.top5=null});renderProds();$('#modal').classList.add('hidden');toast('Produto salvo. O site atualiza em até 1 minuto.')}
   catch(err){$('#fmsg').className='msg err';$('#fmsg').textContent=err.message}
   $('#salvar').disabled=false;
@@ -394,6 +414,100 @@ function formAfi(a){
   document.body.appendChild(m);m.querySelector('#af-x').onclick=()=>m.remove();
   m.querySelector('#faf').onsubmit=async e=>{e.preventDefault();try{await api('afiliado',{method:'POST',body:{id:a?a.id:null,nome:m.querySelector('#af-nome').value,whatsapp:m.querySelector('#af-tel').value,pix:m.querySelector('#af-pix').value,comissao_pct:m.querySelector('#af-pct').value,ativo:a?m.querySelector('#af-ativo').checked:true}});
     m.remove();toast(a?'Afiliado atualizado':'Afiliado cadastrado — envie o acesso pelo WhatsApp');loadAfis()}catch(err){m.querySelector('#af-msg').textContent=err.message}}}
+
+
+/* ---------- FINANCEIRO ---------- */
+let FIN=null,LANC=[],SOC=[],FTAB='res';
+const iso=d=>d.toISOString().slice(0,10);
+function periodo(){const v=$('#fper').value,h=new Date(Date.now()-3*3600e3);const y=h.getUTCFullYear(),m=h.getUTCMonth();
+  $('#fini').hidden=$('#ffim').hidden=v!=='custom';
+  if(v==='mes')return[iso(new Date(Date.UTC(y,m,1))),iso(h)];if(v==='ant')return[iso(new Date(Date.UTC(y,m-1,1))),iso(new Date(Date.UTC(y,m,0)))];
+  if(v==='90')return[iso(new Date(h-89*864e5)),iso(h)];if(v==='ano')return[iso(new Date(Date.UTC(y,0,1))),iso(h)];if(v==='tudo')return['2026-01-01',iso(h)];
+  return[$('#fini').value||iso(new Date(Date.UTC(y,m,1))),$('#ffim').value||iso(h)]}
+$('#fper').onchange=loadFin;$('#fini').onchange=loadFin;$('#ffim').onchange=loadFin;
+$('#ftabs').onclick=e=>{const b=e.target.closest('[data-ft]');if(!b)return;FTAB=b.dataset.ft;document.querySelectorAll('#ftabs button').forEach(x=>x.classList.toggle('on',x===b));['res','prd','pag','rec','soc'].forEach(k=>$('#ft-'+k).hidden=k!==FTAB);renderFin()};
+async function loadFin(){const[a,b]=periodo();try{const r=await Promise.all([api('financeiro',{q:`&ini=${a}&fim=${b}`}),api('lancamentos'),api('socios'),PRODS.length?Promise.resolve(PRODS):api('produtos')]);[FIN,LANC,SOC]=r;PRODS=r[3];renderFin()}catch(e){toast(e.message)}}
+const pct=(a,b)=>b?Math.round(a/b*1000)/10+'%':'—';
+function renderFin(){if(!FIN)return;const t=FIN.totais,ab=FIN.em_aberto;
+ if(FTAB==='res'){const ll=Number(t.lucro_liquido);
+  $('#ft-res').innerHTML=`<div class="kpis">${[['Faturamento',brl(t.faturamento_bruto),t.pedidos+' pedidos pagos'],['Ticket médio',brl(t.ticket_medio),''],['Lucro bruto',brl(t.lucro_bruto),'margem '+pct(t.lucro_bruto,t.receita_produtos)],['Lucro líquido',brl(ll),'margem '+pct(ll,t.receita_produtos)]].map(([k,v,s])=>`<div class="kpi"><span>${k}</span><b class="${k==='Lucro líquido'?(ll<0?'neg':'pos'):''}">${v}</b><small>${s}</small></div>`).join('')}</div>
+  <div class="row c2"><div class="card"><h2>Resultado do período</h2><table class="dre">
+   <tr><td>Venda de produtos</td><td>${brl(t.receita_produtos)}</td></tr>
+   <tr class="sub"><td>(−) Custo dos produtos vendidos</td><td class="neg">− ${brl(t.cmv)}</td></tr>
+   <tr><td><b>= Lucro bruto</b></td><td><b>${brl(t.lucro_bruto)}</b></td></tr>
+   <tr class="sub"><td>(−) Comissões de afiliados</td><td class="neg">− ${brl(t.comissoes)}</td></tr>
+   <tr class="sub"><td>(−) Despesas (contas a pagar do período)</td><td class="neg">− ${brl(t.despesas_total)}</td></tr>
+   <tr class="sub"><td>(+) Outras receitas (contas a receber do período)</td><td class="pos">+ ${brl(t.outras_receitas_total)}</td></tr>
+   <tr class="tot"><td>= Lucro líquido</td><td class="${ll<0?'neg':''}">${brl(ll)}</td></tr></table>
+   <p style="color:var(--mut);font-size:12px;margin:10px 0 0">Frete (${brl(t.frete_recebido)}) e taxas de pagamento (${brl(t.taxas_repassadas)}) são cobrados do cliente e repassados — não entram no lucro.${t.produtos_sem_custo?` <b style="color:#ffcf7a">Atenção: ${t.produtos_sem_custo} produto(s) vendido(s) sem custo cadastrado — o lucro está superestimado.</b>`:''}</p></div>
+   <div><div class="card" style="margin-bottom:14px"><h2>Em aberto (hoje)</h2><table class="dre">
+     <tr><td>Contas a pagar</td><td>${brl(ab.a_pagar)}</td></tr><tr class="sub"><td>… vencidas</td><td class="${ab.a_pagar_vencido>0?'neg':''}">${brl(ab.a_pagar_vencido)}</td></tr>
+     <tr><td>Comissões de afiliados a pagar</td><td>${brl(ab.comissoes_a_pagar)}</td></tr><tr><td>Contas a receber</td><td>${brl(ab.a_receber)}</td></tr></table></div>
+   <div class="card"><h2>Despesas por categoria</h2><div id="fcat"></div></div></div></div>`;
+  bars('#fcat',(FIN.categorias||[]).map(c=>[c.categoria,Number(c.valor)]));}
+ if(FTAB==='prd')renderFP();
+ if(FTAB==='pag'||FTAB==='rec')renderLanc(FTAB==='pag'?'pagar':'receber');
+ if(FTAB==='soc')renderSoc();}
+// rentabilidade por produto
+['#fpq','#fpf'].forEach(s=>$(s).addEventListener('input',renderFP));
+function renderFP(){const vend={};(FIN.produtos||[]).forEach(p=>vend[p.pid]=p);const q=norm($('#fpq').value),f=$('#fpf').value;
+ const rows=PRODS.map(p=>{const v=vend[p.id]||{};const lu=p.p!=null&&p.custo!=null?p.p-p.custo:null;return{p,v,lu,lt:v.qtd&&p.custo!=null?(Number(v.receita)-Number(v.cmv)):null}})
+  .filter(r=>(!q||norm(r.p.b+' '+r.p.n).includes(q))&&(f===''||(f==='vend'&&r.v.qtd)||(f==='semcusto'&&r.p.custo==null))).sort((a,b)=>(Number(b.v.receita||0)-Number(a.v.receita||0))||a.p.n.localeCompare(b.p.n));
+ $('#fplist').innerHTML=rows.slice(0,400).map(r=>`<tr><td><div style="font-size:12px;color:var(--mut)">${esc(r.p.b)}</div>${esc(r.p.n)}</td>
+  <td><span class="ce" data-custo="${r.p.id}">${r.p.custo!=null?brl(r.p.custo):'<span style="color:#ffcf7a">cadastrar</span>'}</span></td><td>${brl(r.p.p)}</td>
+  <td class="${r.lu<0?'neg':''}">${r.lu!=null?brl(r.lu):'—'}</td><td>${r.lu!=null&&r.p.p?pct(r.lu,r.p.p):'—'}</td><td>${r.v.qtd||0}</td><td>${r.v.qtd?brl(r.v.receita):'—'}</td><td class="${r.lt<0?'neg':r.lt>0?'pos':''}">${r.lt!=null?brl(r.lt):r.v.qtd?'<span style="color:#ffcf7a">cadastre o custo</span>':'—'}</td></tr>`).join('')}
+$('#fplist').addEventListener('click',async e=>{const c=e.target.closest('[data-custo]');if(!c)return;const p=PRODS.find(x=>x.id==c.dataset.custo);
+ const v=prompt(`Valor de compra (custo) de ${p.n}:`,p.custo!=null?String(p.custo).replace('.',','):'');if(v===null)return;
+ try{await api('custo',{method:'POST',body:{id:p.id,custo:v.trim()}});p.custo=v.trim()===''?null:Number(v.replace(',','.'));loadFin();toast('Custo salvo')}catch(err){toast(err.message)}});
+// contas a pagar / receber
+function renderLanc(tipo){const box=$('#ft-'+(tipo==='pagar'?'pag':'rec'));const hoje=iso(new Date(Date.now()-3*3600e3));
+ const L=LANC.filter(l=>l.tipo===tipo);const ab=L.filter(l=>!l.quitado_em),qt=L.filter(l=>l.quitado_em);const venc=ab.filter(l=>l.vencimento<hoje);
+ const verbo=tipo==='pagar'?'paga':'recebida';
+ box.innerHTML=`<div class="kpis">${[['Em aberto',brl(ab.reduce((a,l)=>a+Number(l.valor),0)),ab.length+' conta(s)'],['Vencidas',brl(venc.reduce((a,l)=>a+Number(l.valor),0)),venc.length+' conta(s)'],[tipo==='pagar'?'Pago (total)':'Recebido (total)',brl(qt.reduce((a,l)=>a+Number(l.valor),0)),qt.length+' conta(s)']].map(([k,v,s])=>`<div class="kpi"><span>${k}</span><b>${v}</b><small>${s}</small></div>`).join('')}</div>
+  <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap"><button class="btn" data-novo="${tipo}">+ Nova conta a ${tipo}</button><button class="btn ghost" data-csv="${tipo}">Exportar CSV</button></div>
+  <div class="card" style="padding:0;overflow:auto"><table><thead><tr><th>Vencimento</th><th>Descrição</th><th>Categoria</th><th>Valor</th><th>Situação</th><th></th></tr></thead><tbody>${L.sort((a,b)=>(!!a.quitado_em-!!b.quitado_em)||a.vencimento.localeCompare(b.vencimento)).map(l=>`<tr>
+   <td style="white-space:nowrap;${!l.quitado_em&&l.vencimento<hoje?'color:#ff9f9f;font-weight:700':''}">${dBR(l.vencimento)}</td><td>${esc(l.descricao)}${l.obs?`<div style="font-size:12px;color:var(--mut)">${esc(l.obs)}</div>`:''}</td><td>${l.categoria?`<span class="tag">${esc(l.categoria)}</span>`:''}</td>
+   <td style="white-space:nowrap"><b>${brl(l.valor)}</b></td><td>${l.quitado_em?`<span class="tag g">${verbo[0].toUpperCase()+verbo.slice(1)} ${dBR(l.quitado_em)}</span>`:l.vencimento<hoje?'<span class="tag off">Vencida</span>':'<span class="tag">Em aberto</span>'}</td>
+   <td><div class="act">${l.quitado_em?`<button data-reabrir="${l.id}">Reabrir</button>`:`<button data-quitar="${l.id}">Marcar ${verbo}</button>`}<button data-edl="${l.id}">Editar</button><button data-dell="${l.id}">Excluir</button></div></td></tr>`).join('')||`<tr><td colspan="6" style="color:var(--mut)">Nenhuma conta a ${tipo} cadastrada.</td></tr>`}</tbody></table></div>`}
+['#ft-pag','#ft-rec'].forEach(sel=>$(sel).addEventListener('click',async e=>{const t=e.target;const L=id=>LANC.find(l=>l.id==id);
+ const salvar=async l=>{const r=await api('lancamento',{method:'POST',body:l});const i=LANC.findIndex(x=>x.id===r.id);if(i>=0)LANC[i]=r;else LANC.push(r);loadFin()};
+ try{if(t.dataset.novo)formLanc({tipo:t.dataset.novo});
+  else if(t.dataset.edl)formLanc(L(t.dataset.edl));
+  else if(t.dataset.quitar){const l=L(t.dataset.quitar);await salvar(Object.assign({},l,{quitado_em:iso(new Date(Date.now()-3*3600e3))}));toast('Conta quitada')}
+  else if(t.dataset.reabrir){const l=L(t.dataset.reabrir);await salvar(Object.assign({},l,{quitado_em:''}));toast('Conta reaberta')}
+  else if(t.dataset.dell){if(!confirm('Excluir esta conta?'))return;await api('lancamento',{method:'DELETE',q:'&id='+t.dataset.dell});LANC=LANC.filter(l=>l.id!=t.dataset.dell);loadFin()}
+  else if(t.dataset.csv){const rows=[['tipo','descricao','categoria','valor','vencimento','quitado_em','obs']].concat(LANC.filter(l=>l.tipo===t.dataset.csv).map(l=>[l.tipo,l.descricao,l.categoria||'',String(l.valor).replace('.',','),l.vencimento,l.quitado_em||'',l.obs||'']));
+   const csv='﻿'+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='contas-a-'+t.dataset.csv+'.csv';a.click()}}
+ catch(err){toast(err.message)}}));
+const CATS={pagar:['Compra de estoque','Embalagens','Frete / Correios','Marketing / Anúncios','Taxas e tarifas','Impostos','Aluguel','Salários / Pró-labore','Sistemas e ferramentas','Outros'],receber:['Venda fora do site','Aporte de sócio','Reembolso','Outros']};
+function formLanc(l){const m=document.createElement('div');m.className='modal';const tipo=l.tipo;
+ m.innerHTML=`<div class="card" style="max-width:480px"><h2>${l.id?'Editar':'Nova'} conta a ${tipo}</h2><form id="fl">
+  <label>Descrição</label><input id="l-desc" required value="${esc(l.descricao||'')}" placeholder="${tipo==='pagar'?'Ex.: Compra de 20 perfumes fornecedor X':'Ex.: Venda presencial'}">
+  <div class="row c2"><div><label>Valor (R$)</label><input id="l-val" required inputmode="decimal" value="${l.valor!=null?String(l.valor).replace('.',','):''}"></div><div><label>Vencimento</label><input type="date" id="l-ven" required value="${l.vencimento||iso(new Date(Date.now()-3*3600e3))}"></div></div>
+  <label>Categoria</label><input id="l-cat" list="l-cats" value="${esc(l.categoria||'')}"><datalist id="l-cats">${CATS[tipo].map(c=>`<option value="${c}">`).join('')}</datalist>
+  <label style="display:flex;gap:8px;align-items:center;text-transform:none;font-size:14px;color:var(--txt);margin-top:12px"><input type="checkbox" id="l-q" style="width:auto" ${l.quitado_em?'checked':''}> Já foi ${tipo==='pagar'?'paga':'recebida'}</label>
+  <div id="l-qw" ${l.quitado_em?'':'hidden'}><label>Data</label><input type="date" id="l-qd" value="${l.quitado_em||iso(new Date(Date.now()-3*3600e3))}"></div>
+  <label>Observação</label><input id="l-obs" value="${esc(l.obs||'')}">
+  <div style="display:flex;gap:10px;margin-top:16px"><button class="btn">Salvar</button><button type="button" class="btn ghost" id="l-x">Cancelar</button></div><div class="msg err" id="l-msg"></div></form></div>`;
+ document.body.appendChild(m);m.querySelector('#l-x').onclick=()=>m.remove();m.querySelector('#l-q').onchange=e=>m.querySelector('#l-qw').hidden=!e.target.checked;
+ m.querySelector('#fl').onsubmit=async e=>{e.preventDefault();try{await api('lancamento',{method:'POST',body:{id:l.id||null,tipo,descricao:m.querySelector('#l-desc').value,valor:m.querySelector('#l-val').value,vencimento:m.querySelector('#l-ven').value,categoria:m.querySelector('#l-cat').value,quitado_em:m.querySelector('#l-q').checked?m.querySelector('#l-qd').value:'',obs:m.querySelector('#l-obs').value}});m.remove();toast('Conta salva');loadFin()}catch(err){m.querySelector('#l-msg').textContent=err.message}}}
+// divisão de lucros
+function renderSoc(){const ll=Number(FIN.totais.lucro_liquido);const tot=SOC.reduce((a,s)=>a+Number(s.percentual),0);
+ $('#ft-soc').innerHTML=`<div class="kpis"><div class="kpi"><span>Lucro líquido do período</span><b class="${ll<0?'neg':'pos'}">${brl(ll)}</b></div><div class="kpi"><span>Percentual distribuído</span><b class="${Math.abs(tot-100)>0.01?'neg':''}">${tot.toLocaleString('pt-BR')}%</b><small>${Math.abs(tot-100)>0.01?'A soma deve fechar em 100%':'OK'}</small></div></div>
+ <div style="margin-bottom:12px"><button class="btn" id="snovo">+ Adicionar sócio ou empresa</button></div>
+ <div class="card" style="padding:0;overflow:auto"><table><thead><tr><th>Nome</th><th>Tipo</th><th>Participação</th><th>Valor no período</th><th></th></tr></thead><tbody>${SOC.map(s=>`<tr><td>${esc(s.nome)}${s.obs?`<div style="font-size:12px;color:var(--mut)">${esc(s.obs)}</div>`:''}</td><td><span class="tag">${s.tipo==='empresa'?'Empresa':'Sócio'}</span></td><td>${Number(s.percentual).toLocaleString('pt-BR')}%</td>
+  <td><b class="${ll<0?'neg':''}">${brl(ll*Number(s.percentual)/100)}</b></td><td><div class="act"><button data-eds="${s.id}">Editar</button><button data-dels="${s.id}">Excluir</button></div></td></tr>`).join('')||'<tr><td colspan="5" style="color:var(--mut)">Cadastre os sócios e empresas e a participação de cada um.</td></tr>'}</tbody></table></div>
+ <p style="color:var(--mut);font-size:12px">Valores calculados sobre o lucro líquido do período selecionado. ${ll<0?'Período com prejuízo: o valor negativo indica a parte de cada um no resultado.':''}</p>`;
+ $('#snovo').onclick=()=>formSoc({});}
+$('#ft-soc').addEventListener('click',async e=>{const t=e.target;if(t.dataset.eds)formSoc(SOC.find(s=>s.id==t.dataset.eds));
+ if(t.dataset.dels){if(!confirm('Remover da divisão?'))return;try{await api('socio',{method:'DELETE',q:'&id='+t.dataset.dels});loadFin()}catch(err){toast(err.message)}}});
+function formSoc(s){const m=document.createElement('div');m.className='modal';m.innerHTML=`<div class="card" style="max-width:440px"><h2>${s.id?'Editar':'Novo'} participante</h2><form id="fs">
+  <label>Nome</label><input id="s-nome" required value="${esc(s.nome||'')}"><div class="row c2"><div><label>Tipo</label><select id="s-tipo"><option value="socio">Sócio</option><option value="empresa" ${s.tipo==='empresa'?'selected':''}>Empresa</option></select></div>
+  <div><label>Participação (%)</label><input id="s-pct" required inputmode="decimal" value="${s.percentual!=null?String(s.percentual).replace('.',','):''}"></div></div>
+  <label>Observação (ex.: chave PIX, CNPJ)</label><input id="s-obs" value="${esc(s.obs||'')}">
+  <div style="display:flex;gap:10px;margin-top:16px"><button class="btn">Salvar</button><button type="button" class="btn ghost" id="s-x">Cancelar</button></div><div class="msg err" id="s-msg"></div></form></div>`;
+ document.body.appendChild(m);m.querySelector('#s-x').onclick=()=>m.remove();
+ m.querySelector('#fs').onsubmit=async e=>{e.preventDefault();try{await api('socio',{method:'POST',body:{id:s.id||null,nome:m.querySelector('#s-nome').value,tipo:m.querySelector('#s-tipo').value,percentual:m.querySelector('#s-pct').value,obs:m.querySelector('#s-obs').value}});m.remove();toast('Salvo');loadFin()}catch(err){m.querySelector('#s-msg').textContent=err.message}}}
 
 /* ---------- INIT ---------- */
 (async()=>{try{const m=await api('me');if(m.ok){show('dash');ativarWebhook()}else{show('login');if(m.setup)modoSetup(m.setup)}}catch(e){show('login')}})();

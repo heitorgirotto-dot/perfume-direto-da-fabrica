@@ -72,7 +72,7 @@ module.exports = async (req, res) => {
           if (preco !== '' && !(+preco >= 0)) return res.status(400).json({ error: 'Preço inválido' });
           const p = { id: b.id == null ? '' : String(b.id), marca: String(b.marca).trim().slice(0, 80), nome: String(b.nome).trim().slice(0, 160), genero: ['M', 'F', 'U'].includes(b.genero) ? b.genero : 'U', preco,
             notas: String(b.notas || '').slice(0, 400) || null, lembra: String(b.lembra || '').slice(0, 120) || null, descricao: String(b.descricao || '').slice(0, 2000) || null,
-            fotos: Array.isArray(b.fotos) ? b.fotos.filter(x => typeof x === 'string' && x.length < 500).slice(0, 8) : [], ativo: b.ativo !== false, mais_vendido: !!b.mais_vendido, top5: b.top5 ? String(Math.min(5, Math.max(1, +b.top5))) : '' };
+            fotos: Array.isArray(b.fotos) ? b.fotos.filter(x => typeof x === 'string' && x.length < 500).slice(0, 8) : [], ativo: b.ativo !== false, custo: b.custo === '' || b.custo == null ? '' : String(Math.round(Number(String(b.custo).replace(',', '.')) * 100) / 100), mais_vendido: !!b.mais_vendido, top5: b.top5 ? String(Math.min(5, Math.max(1, +b.top5))) : '' };
           return res.status(200).json(db.toSite(await P('adm_produto_salvar', { p })));
         }
       case 'upload': {
@@ -108,6 +108,34 @@ module.exports = async (req, res) => {
       }
       case 'afiliado-convite': return res.status(200).json({ convite: await P('adm_afiliado_novo_convite', { p_id: +b.id }) });
       case 'comissao': await P('adm_comissao_pagar', { p_pedido: +b.pedido_id, p_paga: !!b.paga }); return res.status(200).json({ ok: true });
+      case 'financeiro': {
+        const iso = d => /^\d{4}-\d{2}-\d{2}$/.test(String(d || '')) ? d : null;
+        const hoje = new Date(Date.now() - 3 * 3600e3).toISOString().slice(0, 10);
+        return res.status(200).json(await P('adm_financeiro', { p_ini: iso(req.query.ini) || hoje.slice(0, 8) + '01', p_fim: iso(req.query.fim) || hoje }));
+      }
+      case 'lancamentos': return res.status(200).json(await P('adm_lancamentos'));
+      case 'lancamento': {
+        if (req.method === 'DELETE') { await P('adm_lancamento_excluir', { p_id: +req.query.id }); return res.status(200).json({ ok: true }); }
+        const valor = Math.round(Number(String(b.valor || '').replace(/\./g, '').replace(',', '.')) * 100) / 100;
+        if (!['pagar', 'receber'].includes(b.tipo)) return res.status(400).json({ error: 'Tipo inválido' });
+        if (!String(b.descricao || '').trim()) return res.status(400).json({ error: 'Informe a descrição' });
+        if (!(valor >= 0)) return res.status(400).json({ error: 'Valor inválido' });
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(String(b.vencimento || ''))) return res.status(400).json({ error: 'Informe o vencimento' });
+        return res.status(200).json(await P('adm_lancamento_salvar', { p: { id: b.id == null ? '' : String(b.id), tipo: b.tipo, descricao: String(b.descricao).trim(), categoria: String(b.categoria || '').trim(), valor: String(valor), vencimento: b.vencimento, quitado_em: b.quitado_em || '', obs: String(b.obs || '') } }));
+      }
+      case 'socios': return res.status(200).json(await P('adm_socios'));
+      case 'socio': {
+        if (req.method === 'DELETE') { await P('adm_socio_excluir', { p_id: +req.query.id }); return res.status(200).json({ ok: true }); }
+        const pct = Number(String(b.percentual || '').replace(',', '.'));
+        if (!String(b.nome || '').trim()) return res.status(400).json({ error: 'Informe o nome' });
+        if (!(pct >= 0 && pct <= 100)) return res.status(400).json({ error: 'Percentual entre 0 e 100' });
+        return res.status(200).json(await P('adm_socio_salvar', { p: { id: b.id == null ? '' : String(b.id), nome: String(b.nome).trim(), tipo: b.tipo === 'empresa' ? 'empresa' : 'socio', percentual: String(pct), obs: String(b.obs || '') } }));
+      }
+      case 'custo': {
+        const c = b.custo === '' || b.custo == null ? null : Math.round(Number(String(b.custo).replace(',', '.')) * 100) / 100;
+        if (c != null && !(c >= 0)) return res.status(400).json({ error: 'Custo inválido' });
+        await P('adm_custo', { p_id: +b.id, p_custo: c }); return res.status(200).json({ ok: true });
+      }
       case 'webhook': return res.status(200).json(await garantirWebhook(tok, req));
     }
     return res.status(404).json({ error: 'ação desconhecida' });

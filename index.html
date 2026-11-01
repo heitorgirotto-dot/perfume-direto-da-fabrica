@@ -335,7 +335,6 @@ footer{background:#020202;border-top:1px solid var(--line);padding-block:44px 24
 <style>img{max-width:100%}[hidden]{display:none!important}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}</style>
 </head>
 <body>
-<div class="promo"><div class="track"><span id="mq"></span><span id="mq2" aria-hidden="true"></span></div></div>
 
 <header class="top"><div class="wrap">
   <div class="hrow two">
@@ -501,7 +500,7 @@ function waLink(it){
 }
 
 // promo marquee
-$('#mq').innerHTML=PROMO.map(t=>`<span>✦ ${t}</span>`).join('');$('#mq2').innerHTML=$('#mq').innerHTML;
+
 
 const bottle=`<svg viewBox="0 0 100 130" fill="none"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#3a2d18"/><stop offset=".45" stop-color="#8a6a2a"/><stop offset=".5" stop-color="#f5dd95"/><stop offset=".55" stop-color="#8a6a2a"/><stop offset="1" stop-color="#2a1f10"/></linearGradient></defs><rect x="36" y="4" width="28" height="18" rx="3" fill="#d9b25a"/><rect x="40" y="22" width="20" height="12" fill="#2a241a"/><path d="M22 36h56a10 10 0 0 1 10 10v66a10 10 0 0 1-10 10H22a10 10 0 0 1-10-10V46a10 10 0 0 1 10-10z" fill="url(#g)" stroke="#d9b25a" stroke-opacity=".6"/><rect x="28" y="66" width="44" height="30" fill="#050505" fill-opacity=".7" stroke="#d9b25a"/></svg>`;
 function card(it,o={}){

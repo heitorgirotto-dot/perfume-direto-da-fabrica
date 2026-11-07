@@ -691,7 +691,9 @@ section{padding-block:0}
 #grid>.h-full{grid-column:1/-1;margin:16px calc(50% - 50vw)}
 .h-colecoes{overflow-x:clip}
 body.modo-lista #grid>.h-full{display:none}
-.h-home>.h-full-m{display:none}
+.h-home>.h-full-m,.h-home>#ocasioes{display:none}
+#grid>.h-oc{grid-column:1/-1;padding:28px 0 20px}#grid>.h-oc>.h-w{max-width:none;padding:0}
+body.modo-lista #grid>.h-oc{display:none}
 .h-full a{display:flex;flex-direction:column;align-items:center;justify-content:center;height:clamp(220px,31vw,420px);background:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.45)),url(/img/hero.jpg) center 30%/cover no-repeat;color:#fff;text-decoration:none;text-align:center}
 .h-full span{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(3.4rem,11vw,9.5rem);line-height:.9;letter-spacing:.04em;font-weight:500}
 .h-full em{font-style:normal;font-size:clamp(.9rem,1.6vw,1.3rem);opacity:.9;margin-top:10px}
@@ -1165,8 +1167,8 @@ function render(reset){
 }
 /* faixa PERFUMES: entra na lista depois de linhas completas (6 no celular/tablet, 8 no computador) */
 let FAIXA=null;
-function faixaGeo(){const g=$('#grid');const cols=g?getComputedStyle(g).gridTemplateColumns.split(' ').filter(Boolean).length||4:4;const n=cols>=4?cols*2:6;const B=Math.ceil(40/cols)*cols;return {n,B,pos:[n,n+B],min:n+B+n}}
-function placeFaixa(){FAIXA=FAIXA||['fem-faixa','masc-faixa'].map(id=>document.getElementById(id)).filter(Boolean);const g=$('#grid');if(!FAIXA.length||!g)return;
+function faixaGeo(){const g=$('#grid');const cols=g?getComputedStyle(g).gridTemplateColumns.split(' ').filter(Boolean).length||4:4;const n=cols>=4?cols*2:6;const B=Math.ceil(40/cols)*cols;return {n,B,pos:[n,n+B,n+2*B],min:n+3*B}}
+function placeFaixa(){FAIXA=FAIXA||['fem-faixa','masc-faixa','ocasioes'].map(id=>document.getElementById(id)).filter(Boolean);const g=$('#grid');if(!FAIXA.length||!g)return;
   const G=faixaGeo();
   FAIXA.forEach((fx,k)=>{const cs=g.querySelectorAll(':scope>.h-card'),i=G.pos[k];if(cs.length>i){if(cs[i].previousElementSibling!==fx)g.insertBefore(fx,cs[i])}else if(fx.parentNode===g)fx.remove()})}
 addEventListener('resize',()=>{clearTimeout(placeFaixa._t);placeFaixa._t=setTimeout(placeFaixa,150)});

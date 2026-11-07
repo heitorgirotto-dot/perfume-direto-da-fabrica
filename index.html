@@ -849,6 +849,31 @@ body.pg-p .h-banner{display:none}
 .h-aro-mais{text-align:center;margin:22px 0 0}
 .h-aro-all{display:inline-block;padding:12px 28px;border:1.5px solid #000;border-radius:999px;color:#000;text-decoration:none;font-size:13px;letter-spacing:.08em}
 .h-aro-all:hover{background:#000;color:#fff}
+
+/* vídeos da Nota */
+.h-nvid{padding:20px 0 34px}
+.h-nv-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin-top:10px}
+.h-nv{margin:0;cursor:pointer}
+.h-nv-m{position:relative;display:block;width:100%;aspect-ratio:2/3;border:0;padding:0;border-radius:16px;overflow:hidden;background:#111;cursor:pointer}
+.h-nv-m img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
+.h-nv:hover .h-nv-m img{transform:scale(1.04)}
+.h-nv-m::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 60%,rgba(0,0,0,.35))}
+.h-nv-m .pl{position:absolute;left:50%;top:50%;z-index:1;width:58px;height:58px;margin:-29px 0 0 -29px;border-radius:50%;background:rgba(255,255,255,.22);border:2px solid rgba(255,255,255,.8);backdrop-filter:blur(4px);display:grid;place-items:center}
+.h-nv-m .pl::after{content:"";border-left:15px solid #fff;border-top:9px solid transparent;border-bottom:9px solid transparent;margin-left:5px}
+.h-nv h3{margin:12px 0 4px;font-size:16px;line-height:1.25;color:#000;font-weight:600}
+.h-nv p{margin:0;font-size:13px;line-height:1.45;color:#555}
+@media(max-width:900px){.h-nv-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}}
+@media(max-width:560px){.h-nvid .h-vid-hd{flex-direction:column;align-items:flex-start;gap:2px}.h-nvid .h-vid-hd .h-title{text-align:left!important}.h-nv h3{font-size:14px}.h-nv p{font-size:12px}}
+.h-nvm{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;padding:16px}
+.h-nvm[hidden]{display:none}
+.h-nvm-box{position:relative;display:flex;gap:26px;align-items:flex-end;justify-content:center;max-width:1180px;width:100%}
+.h-nvm-box video{height:min(86vh,760px);max-width:calc(100% - 326px);border-radius:14px;background:#000;display:block;flex:0 1 auto;object-fit:contain}
+.h-nvm-tx{color:#fff;padding-bottom:10px;width:300px;flex:none}
+.h-nvm-tx h3{margin:0 0 8px;font-size:22px;line-height:1.2}
+.h-nvm-tx p{margin:0 0 16px;font-size:14px;line-height:1.5;opacity:.85}
+.h-nvm-tx a{display:inline-block;background:#d9b25a;color:#140f05;text-decoration:none;font-weight:700;font-size:13px;padding:11px 20px;border-radius:999px}
+.h-nvm-x{position:absolute;top:-6px;right:-6px;z-index:2;width:38px;height:38px;border-radius:50%;border:0;background:#fff;color:#111;font-size:24px;line-height:1;cursor:pointer}
+@media(max-width:760px){.h-nvm{padding:0}.h-nvm-box{flex-direction:column;align-items:stretch;gap:0;height:100%;max-width:none}.h-nvm-box video{height:auto;flex:1;min-height:0;width:100%;max-width:none;border-radius:0;object-fit:contain}.h-nvm-tx{padding:14px 16px 20px;background:#000;width:auto}.h-nvm-tx h3{font-size:18px}.h-nvm-tx p{margin-bottom:12px}.h-nvm-x{top:10px;right:10px}}
 /* player estilo stories */
 .h-story{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center}
 .h-story[hidden]{display:none}
@@ -970,6 +995,20 @@ body.pg-blog main#home,body.pg-blog .h-colecoes,body.pg-blog .h-quiz{display:non
     <div class="h-track h-vid-track" id="vids"></div>
     <button class="h-car-btn r" type="button" data-car="1" aria-label="Próximo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg></button></div>
 </div></section>
+<section class="h-nvid" id="videos" aria-label="Vídeos da Nota Perfumaria"><div class="h-w">
+  <div class="h-vid-hd"><h2 class="h-title">Vídeos da Nota</h2><span>Conheça as nossas fragrâncias</span></div>
+  <div class="h-nv-grid">
+    <article class="h-nv" data-nv="0"><button class="h-nv-m" type="button" aria-label="Assistir: Bem-vindo à Nota Perfumaria"><img src="/videos/nota-boas-vindas.webp" alt="Bem-vindo à Nota Perfumaria" loading="lazy"><span class="pl"></span></button>
+      <h3>Bem-vindo à Nota Perfumaria</h3><p>Conheça a nossa curadoria de perfumes árabes e importados originais, com atendimento especializado pelo WhatsApp e envio para todo o Brasil.</p></article>
+    <article class="h-nv" data-nv="1"><button class="h-nv-m" type="button" aria-label="Assistir: Perfumes árabes femininos e autocuidado"><img src="/videos/nota-femininos.webp" alt="Perfumes árabes femininos e autocuidado" loading="lazy"><span class="pl"></span></button>
+      <h3>Perfumes árabes femininos e autocuidado</h3><p>Fragrâncias árabes femininas para transformar o seu momento de autocuidado: notas doces, florais e envolventes em frascos que são verdadeiras joias.</p></article>
+    <article class="h-nv" data-nv="2"><button class="h-nv-m" type="button" aria-label="Assistir: Perfumes árabes masculinos"><img src="/videos/nota-masculinos.webp" alt="Perfumes árabes masculinos" loading="lazy"><span class="pl"></span></button>
+      <h3>Perfumes árabes masculinos</h3><p>Elegância, presença e sofisticação: fragrâncias árabes masculinas intensas e marcantes, para quem gosta de ser lembrado.</p></article>
+    <article class="h-nv" data-nv="3"><button class="h-nv-m" type="button" aria-label="Assistir: O presente que marca presença"><img src="/videos/nota-presente.webp" alt="O presente que marca presença" loading="lazy"><span class="pl"></span></button>
+      <h3>O presente que marca presença</h3><p>Perfume árabe na embalagem de presente da Nota Perfumaria: a escolha certa para surpreender quem você ama.</p></article>
+  </div>
+</div></section>
+
 <section class="h-list"><div class="h-w">
   <h2 class="h-title">Os mais desejados da Nota</h2>
   <div class="h-car"><button class="h-car-btn l" type="button" data-car="-1" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 5l-7 7 7 7"/></svg></button>
@@ -1643,6 +1682,18 @@ if(document.body.classList.contains('pg-blog')){
 }
 /* busca vinda do blog (?q=) */
 (function(){var q=new URLSearchParams(location.search).get('q');if(q&&!document.body.classList.contains('pg-blog')){var i=document.getElementById('q');i.value=q;document.getElementById('sform').dispatchEvent(new Event('submit',{cancelable:true}))}})();
+</script>
+<script>
+/* vídeos da Nota: abre o vídeo inteiro em tela com título, descrição e atalho para a categoria */
+(function(){var V=[{"src": "/videos/nota-boas-vindas.mp4", "poster": "/videos/nota-boas-vindas.webp", "t": "Bem-vindo à Nota Perfumaria", "d": "Conheça a nossa curadoria de perfumes árabes e importados originais, com atendimento especializado pelo WhatsApp e envio para todo o Brasil.", "cat": "arabes", "cta": "Ver perfumes árabes"}, {"src": "/videos/nota-femininos.mp4", "poster": "/videos/nota-femininos.webp", "t": "Perfumes árabes femininos e autocuidado", "d": "Fragrâncias árabes femininas para transformar o seu momento de autocuidado: notas doces, florais e envolventes em frascos que são verdadeiras joias.", "cat": "femininos", "cta": "Ver perfumes femininos"}, {"src": "/videos/nota-masculinos.mp4", "poster": "/videos/nota-masculinos.webp", "t": "Perfumes árabes masculinos", "d": "Elegância, presença e sofisticação: fragrâncias árabes masculinas intensas e marcantes, para quem gosta de ser lembrado.", "cat": "masculinos", "cta": "Ver perfumes masculinos"}, {"src": "/videos/nota-presente.mp4", "poster": "/videos/nota-presente.webp", "t": "O presente que marca presença", "d": "Perfume árabe na embalagem de presente da Nota Perfumaria: a escolha certa para surpreender quem você ama.", "cat": "mais-desejados", "cta": "Ver os mais desejados"}];var M=null;
+function fechar(){if(!M)return;var v=M.querySelector('video');if(v)v.pause();M.hidden=true;document.body.style.overflow=''}
+function abrir(k){var x=V[k];if(!x)return;if(!M){M=document.createElement('div');M.className='h-nvm';document.body.appendChild(M);
+  M.addEventListener('click',function(e){if(e.target===M||e.target.closest('[data-nvx]'))fechar();var c=e.target.closest('[data-nvcat]');if(c){e.preventDefault();fechar();if(window.setCat)setCat(c.dataset.nvcat,true);else location.href='/c/'+c.dataset.nvcat}});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&M&&!M.hidden)fechar()})}
+  M.innerHTML='<div class="h-nvm-box"><button class="h-nvm-x" type="button" data-nvx aria-label="Fechar">&times;</button><video src="'+x.src+'" poster="'+x.poster+'" controls autoplay playsinline></video><div class="h-nvm-tx"><h3>'+x.t+'</h3><p>'+x.d+'</p><a href="/c/'+x.cat+'" data-nvcat="'+x.cat+'">'+x.cta+'</a></div></div>';
+  M.hidden=false;document.body.style.overflow='hidden';var v=M.querySelector('video');v.play().catch(function(){})}
+document.addEventListener('click',function(e){var c=e.target.closest('[data-nv]');if(c&&!e.target.closest('a')){e.preventDefault();abrir(+c.dataset.nv)}});
+})();
 </script>
 </body>
 </html>

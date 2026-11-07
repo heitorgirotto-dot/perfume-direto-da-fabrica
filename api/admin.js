@@ -82,6 +82,12 @@ module.exports = async (req, res) => {
         const id = await P('adm_foto_salvar', { p_mime: m[1], p_b64: m[3] });
         return res.status(200).json({ url: '/api/foto?id=' + id });
       }
+      case 'videos': return res.status(200).json(await P('adm_videos'));
+      case 'video-token': return res.status(200).json({ token: await P('adm_video_token'), url: db.URL, key: db.KEY });
+      case 'video': {
+        if (req.method === 'DELETE' || b.excluir) { await P('adm_video_excluir', { p_id: +(b.id || req.query.id) }); return res.status(200).json({ ok: true }); }
+        return res.status(200).json(await P('adm_video_salvar', { p: { id: b.id || null, src: String(b.src || ''), poster: String(b.poster || ''), nome: String(b.nome || '').slice(0, 80), produto_id: b.produto_id === '' || b.produto_id == null ? null : +b.produto_id, ativo: b.ativo !== false, ordem: +b.ordem || 0 } }));
+      }
       case 'stats': return res.status(200).json(await P('adm_stats', { p_dias: Math.min(365, Math.max(1, +req.query.dias || 30)) }));
       case 'leads': return res.status(200).json(await P('adm_leads'));
       case 'lead': await P('adm_lead_excluir', { p_id: +req.query.id }); return res.status(200).json({ ok: true });

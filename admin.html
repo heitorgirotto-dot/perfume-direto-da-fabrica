@@ -78,6 +78,7 @@ tr:hover td{background:#141414}
     <button data-v="afi">Afiliados</button>
     <button data-v="fin">Financeiro</button>
     <button data-v="leads">Leads</button>
+    <button data-v="vid">Vídeos</button>
     <button id="trocar" title="Trocar senha">Senha</button>
     <button id="sair" title="Sair">Sair</button>
   </nav>
@@ -166,6 +167,28 @@ tr:hover td{background:#141414}
       <input id="lq" placeholder="Buscar…" style="width:auto;margin-left:auto"><button class="btn ghost" id="csv">Exportar CSV</button></h1>
     <div class="card" style="padding:0;overflow:auto"><table><thead><tr><th>Data</th><th>Nome</th><th>WhatsApp</th><th>Cidade/UF</th><th>Interesse</th><th>Origem</th><th></th></tr></thead><tbody id="llist"></tbody></table></div>
   </section>
+
+  <!-- VÍDEOS DE CLIENTES -->
+  <section id="v-vid" class="hidden">
+    <h1 style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">Vídeos de clientes <span id="vcount" style="color:var(--mut);font-size:14px"></span></h1>
+    <div class="card" style="margin-bottom:16px">
+      <h2 style="margin-top:0">Adicionar vídeo</h2>
+      <p style="color:var(--mut);font-size:14px;margin:-4px 0 12px">Envie o vídeo do cliente (MP4 ou MOV do celular, até 50 MB) <b>ou</b> cole o link de um Short do YouTube ou Reel do Instagram. Tenha a autorização do cliente para publicar.</p>
+      <form id="fvid">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div><label>Arquivo do vídeo</label><input id="vfile" type="file" accept="video/mp4,video/quicktime,video/webm"></div>
+          <div><label>ou link (YouTube / Instagram)</label><input id="vlink" type="url" placeholder="https://youtube.com/shorts/..."></div>
+          <div><label>Nome do cliente (opcional)</label><input id="vnome" maxlength="80" placeholder="Ex.: Ana, Mogi das Cruzes"></div>
+          <div><label>Perfume que aparece no vídeo</label><select id="vprod"><option value="">— nenhum —</option></select></div>
+          <div><label>Ordem (menor aparece primeiro)</label><input id="vordem" type="number" value="0"></div>
+          <div style="display:flex;align-items:flex-end"><label style="display:flex;gap:8px;align-items:center;margin:0"><input id="vativo" type="checkbox" checked style="width:auto"> Publicado no site</label></div>
+        </div>
+        <div style="margin-top:14px;display:flex;gap:10px;align-items:center"><button class="btn" id="vgo">Enviar vídeo</button><span id="vmsg" class="msg"></span></div>
+        <div id="vbar" style="height:6px;background:#2a2a2a;border-radius:99px;margin-top:10px;overflow:hidden" hidden><i style="display:block;height:100%;width:0;background:var(--gold,#d9b25a)"></i></div>
+      </form>
+    </div>
+    <div id="vlist" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px"></div>
+  </section>
 </main>
 
 <!-- MODAL PRODUTO -->
@@ -213,9 +236,9 @@ async function api(a,opt={}){const r=await fetch('/api/admin?a='+a+(opt.q||''),{
 
 function show(v){
   $('#login').classList.toggle('hidden',v!=='login');$('#nav').classList.toggle('hidden',v==='login');
-  ['dash','ped','prod','cli','afi','fin','leads'].forEach(k=>$('#v-'+k).classList.toggle('hidden',v!==k));
+  ['dash','ped','prod','cli','afi','fin','leads','vid'].forEach(k=>$('#v-'+k).classList.toggle('hidden',v!==k));
   document.querySelectorAll('#nav [data-v]').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
-  if(v==='dash')loadStats();if(v==='prod')loadProds();if(v==='leads')loadLeads();if(v==='ped')loadPeds();if(v==='cli')loadClis();if(v==='afi')loadAfis();if(v==='fin')loadFin();
+  if(v==='dash')loadStats();if(v==='prod')loadProds();if(v==='leads')loadLeads();if(v==='vid')loadVids();if(v==='ped')loadPeds();if(v==='cli')loadClis();if(v==='afi')loadAfis();if(v==='fin')loadFin();
 }
 $('#nav').addEventListener('click',e=>{const b=e.target.closest('[data-v]');if(b)show(b.dataset.v)});
 $('#trocar').onclick=async()=>{const atual=prompt('Senha atual:');if(!atual)return;const nova=prompt('Nova senha (mínimo 10 caracteres):');if(!nova)return;try{await api('senha',{method:'POST',body:{atual,nova}});toast('Senha alterada')}catch(e){toast(e.message)}};
@@ -512,6 +535,47 @@ function formSoc(s){const m=document.createElement('div');m.className='modal';m.
 
 /* ---------- INIT ---------- */
 (async()=>{try{const m=await api('me');if(m.ok){show('dash');ativarWebhook()}else{show('login');if(m.setup)modoSetup(m.setup)}}catch(e){show('login')}})();
+</script>
+
+<script>
+/* ===== Vídeos de clientes ===== */
+let VIDS_ADM=[],PRODS_VID=[];
+const vesc=x=>String(x==null?'':x).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function ytId(u){const m=String(u).match(/(?:youtu\.be\/|shorts\/|v=|embed\/)([A-Za-z0-9_-]{6,})/);return m?m[1]:''}
+async function loadVids(){
+  try{
+    if(!PRODS_VID.length){PRODS_VID=await api('produtos');$('#vprod').innerHTML='<option value="">— nenhum —</option>'+PRODS_VID.slice().sort((a,b)=>(a.b+a.n).localeCompare(b.b+b.n)).map(p=>`<option value="${p.id}">${vesc(p.b)} · ${vesc(p.n)}</option>`).join('')}
+    VIDS_ADM=await api('videos');renderVids();
+  }catch(e){toast(e.message)}
+}
+function renderVids(){
+  $('#vcount').textContent=VIDS_ADM.length?`${VIDS_ADM.length} vídeo(s)`:'';
+  $('#vlist').innerHTML=VIDS_ADM.length?VIDS_ADM.map(v=>{const p=PRODS_VID.find(x=>x.id===v.produto_id);const yt=ytId(v.src);
+    const th=v.poster||(yt?`https://i.ytimg.com/vi/${yt}/hqdefault.jpg`:'');
+    return `<div class="card" style="padding:10px"><div style="aspect-ratio:9/14;border-radius:10px;overflow:hidden;background:#111;margin-bottom:8px">${/\.(mp4|mov|webm)(\?|$)/i.test(v.src)?`<video src="${vesc(v.src)}#t=0.5" ${th?`poster="${vesc(th)}"`:''} controls preload="metadata" style="width:100%;height:100%;object-fit:cover"></video>`:(th?`<img src="${vesc(th)}" style="width:100%;height:100%;object-fit:cover">`:`<a href="${vesc(v.src)}" target="_blank" style="display:grid;place-items:center;height:100%;color:#ddd">Abrir link</a>`)}</div>
+      <div style="font-weight:600;font-size:14px">${vesc(v.nome||'Sem nome')}</div><div style="font-size:12px;color:var(--mut)">${p?vesc(p.n):'Sem perfume'} · ordem ${v.ordem}${v.ativo?'':' · <b style="color:#ff9f43">oculto</b>'}</div>
+      <div style="display:flex;gap:6px;margin-top:8px"><button class="btn ghost" data-vtog="${v.id}" style="flex:1;padding:6px">${v.ativo?'Ocultar':'Publicar'}</button><button class="btn ghost" data-vdel="${v.id}" style="padding:6px 10px">Excluir</button></div></div>`}).join(''):'<p style="color:var(--mut)">Nenhum vídeo ainda. Enquanto não houver vídeos, o site mostra o convite “Envie seu vídeo” para os clientes.</p>';
+}
+function posterDe(file){return new Promise(res=>{try{const v=document.createElement('video');v.muted=true;v.playsInline=true;v.preload='auto';v.src=URL.createObjectURL(file);
+  v.onloadeddata=()=>{v.currentTime=Math.min(1,(v.duration||2)/3)};v.onseeked=()=>{try{const W=540,H=Math.round(W*v.videoHeight/v.videoWidth)||960;const c=document.createElement('canvas');c.width=W;c.height=H;c.getContext('2d').drawImage(v,0,0,W,H);c.toBlob(b=>{URL.revokeObjectURL(v.src);res(b)},'image/jpeg',.82)}catch(e){res(null)}};v.onerror=()=>res(null);setTimeout(()=>res(null),12000)}catch(e){res(null)}})}
+function enviar(url,key,path,blob,tipo,onp){return new Promise((ok,ko)=>{const x=new XMLHttpRequest();x.open('POST',`${url}/storage/v1/object/videos/${path}`);x.setRequestHeader('apikey',key);x.setRequestHeader('Authorization','Bearer '+key);x.setRequestHeader('Content-Type',tipo);x.setRequestHeader('x-upsert','false');
+  x.upload.onprogress=e=>{if(e.lengthComputable&&onp)onp(e.loaded/e.total)};x.onload=()=>{if(x.status>=200&&x.status<300)ok(`${url}/storage/v1/object/public/videos/${path}`);else{let m='Falha no envio ('+x.status+')';try{m=JSON.parse(x.responseText).message||m}catch(e){}ko(new Error(m))}};x.onerror=()=>ko(new Error('Falha de conexão no envio'));x.send(blob)})}
+$('#fvid').onsubmit=async e=>{e.preventDefault();const f=$('#vfile').files[0],link=$('#vlink').value.trim();const msg=$('#vmsg'),btn=$('#vgo'),bar=$('#vbar'),bi=bar.querySelector('i');
+  if(!f&&!link){msg.textContent='Escolha um arquivo ou cole um link.';return}
+  if(f&&f.size>50*1024*1024){msg.textContent='Vídeo acima de 50 MB. Corte ou exporte em qualidade menor.';return}
+  btn.disabled=true;msg.textContent='Enviando…';
+  try{
+    let src=link,poster='';
+    if(f){const t=await api('video-token');const ext=(f.name.split('.').pop()||'mp4').toLowerCase().replace(/[^a-z0-9]/g,'');const base=`${t.token}/${Date.now()}`;
+      const tipo=f.type||(ext==='mov'?'video/quicktime':'video/mp4');bar.hidden=false;bi.style.width='0';
+      src=await enviar(t.url,t.key,`${base}.${ext}`,f,tipo,p=>{bi.style.width=Math.round(p*100)+'%';msg.textContent='Enviando… '+Math.round(p*100)+'%'});
+      const pb=await posterDe(f);if(pb){try{poster=await enviar(t.url,t.key,`${base}.jpg`,pb,'image/jpeg')}catch(_){}}}
+    await api('video',{method:'POST',body:{src,poster,nome:$('#vnome').value.trim(),produto_id:$('#vprod').value,ordem:$('#vordem').value,ativo:$('#vativo').checked}});
+    toast('Vídeo publicado');$('#fvid').reset();$('#vativo').checked=true;msg.textContent='';bar.hidden=true;await loadVids();
+  }catch(err){msg.textContent=err.message}finally{btn.disabled=false}};
+$('#vlist').onclick=async e=>{const t=e.target.closest('[data-vtog]'),d=e.target.closest('[data-vdel]');
+  try{if(t){const v=VIDS_ADM.find(x=>x.id===+t.dataset.vtog);await api('video',{method:'POST',body:Object.assign({},v,{ativo:!v.ativo})});await loadVids()}
+  if(d){if(!confirm('Excluir este vídeo do site?'))return;await api('video',{method:'POST',body:{id:+d.dataset.vdel,excluir:true}});await loadVids()}}catch(err){toast(err.message)}};
 </script>
 </body>
 </html>

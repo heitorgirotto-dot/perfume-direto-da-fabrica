@@ -628,7 +628,7 @@ section{padding-block:0}
 /* banner */
 .h-banner{padding:20px 0}
 .h-banner .h-w{position:relative}
-.h-slides{position:relative;aspect-ratio:1200/366;background:#0a0a0a;overflow:hidden}
+.h-slides{position:relative;aspect-ratio:3/1;background:#0a0a0a;overflow:hidden}
 .h-slide{position:absolute;inset:0;opacity:0;transition:opacity .6s;background:#0a0a0a center/cover no-repeat;color:#fff;text-decoration:none;display:flex;align-items:center}
 .h-slide.on{opacity:1;z-index:1}
 .h-slide-tx{margin-left:auto;margin-right:6%;max-width:46%;display:flex;flex-direction:column;align-items:flex-start;gap:12px}
@@ -639,6 +639,9 @@ section{padding-block:0}
 .h-slide2{background:radial-gradient(800px 400px at 30% 50%,#2a2114,#0a0a0a 70%)}
 .h-slide2 .h-slide-tx{margin-left:6%;margin-right:auto}
 .h-slide2 img{position:absolute;right:0;top:0;height:100%;width:48%;object-fit:cover;object-position:50% 20%;-webkit-mask-image:linear-gradient(90deg,transparent,#000 35%);mask-image:linear-gradient(90deg,transparent,#000 35%)}
+.h-slide picture,.h-slide img{display:block;width:100%;height:100%}.h-slide img{object-fit:cover}
+.h-dots{position:absolute;left:0;right:0;bottom:10px;z-index:3;display:flex;justify-content:center;gap:7px}.h-dots button{width:9px;height:9px;border-radius:50%;border:0;padding:0;background:rgba(255,255,255,.45);cursor:pointer;transition:.3s}.h-dots button.on{background:#e7c66f;width:24px;border-radius:5px}
+@media(max-width:700px){.h-slides{aspect-ratio:3/1!important}.h-dots{bottom:5px}.h-dots button{width:6px;height:6px}.h-dots button.on{width:16px}}
 .h-arr{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:36px;height:36px;border:0;border-radius:6px;background:var(--h-ac);color:#fff;display:grid;place-items:center;cursor:pointer}
 .h-arr svg{width:16px;height:16px}.h-arr-l{left:26px}.h-arr-r{right:26px}
 @media(max-width:700px){.h-slides{aspect-ratio:4/5}.h-slide{align-items:flex-end;background-position:28% center}.h-slide-tx,.h-slide2 .h-slide-tx{margin:0 14px 24px;max-width:none;padding:18px;background:rgba(0,0,0,.55);border-radius:10px}.h-slide2 img{width:100%;opacity:.5;-webkit-mask-image:none;mask-image:none}.h-arr{display:none}}
@@ -887,11 +890,12 @@ body.pg-blog main#home,body.pg-blog .h-colecoes,body.pg-blog .h-quiz{display:non
 <div class="h-home">
 <section class="h-banner"><div class="h-w">
   <div class="h-slides" id="slides">
-    <a class="h-slide on" href="/c/arabes" data-cat="arabes" style="background-image:url(/img/capa.jpg)">
-      <div class="h-slide-tx"><p>ALTA PERFUMARIA ORIGINAL</p><h2>Fragrâncias que<br><em>marcam presença</em></h2><b>CONFIRA!</b></div></a>
-    <a class="h-slide h-slide2" href="/c/ofertas" data-cat="ofertas">
-      <div class="h-slide-tx"><p>OFERTAS DA SEMANA</p><h2>Perfumes árabes a partir de <em>R$ 71</em></h2><b>CONFIRA!</b></div><img src="/img/hero.jpg" alt="" loading="lazy"></a>
+    <a class="h-slide on" href="/c/arabes" data-cat="arabes"><picture><source media="(max-width:760px)" srcset="/img/banner-arabes-m.webp"><img src="/img/banner-arabes.webp" alt="Perfumes árabes a partir de R$ 99,90, em até 12x no cartão ou 10% de desconto no PIX" width="2172" height="724" fetchpriority="high" decoding="async"></picture></a>
+    <a class="h-slide" href="/c/femininos" data-cat="femininos"><picture><source media="(max-width:760px)" srcset="/img/banner-femininos-m.webp"><img src="/img/banner-femininos.webp" alt="Os melhores perfumes femininos árabes e importados a partir de R$ 99,90" width="2172" height="724" loading="lazy" decoding="async"></picture></a>
+    <a class="h-slide" href="/c/masculinos" data-cat="masculinos"><picture><source media="(max-width:760px)" srcset="/img/banner-masculinos-m.webp"><img src="/img/banner-masculinos.webp" alt="Os melhores perfumes masculinos árabes e importados a partir de R$ 99,90" width="2172" height="724" loading="lazy" decoding="async"></picture></a>
+    <a class="h-slide" href="/c/romantico" data-cat="romantico"><picture><source media="(max-width:760px)" srcset="/img/banner-casais-m.webp"><img src="/img/banner-casais.webp" alt="Perfumes árabes para casais a partir de R$ 99,90" width="2172" height="724" loading="lazy" decoding="async"></picture></a>
   </div>
+  <div class="h-dots"><button type="button" data-dot="0" class=on aria-label="Banner 1"></button><button type="button" data-dot="1" aria-label="Banner 2"></button><button type="button" data-dot="2" aria-label="Banner 3"></button><button type="button" data-dot="3" aria-label="Banner 4"></button></div>
   <button class="h-arr h-arr-l" type="button" data-slide="-1" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 5l-7 7 7 7"/></svg></button>
   <button class="h-arr h-arr-r" type="button" data-slide="1" aria-label="Próximo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg></button>
 </div></section>
@@ -1460,9 +1464,14 @@ render(true);rota();
 <script>
 (function(){
   const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
-  let si=0;const sl=$$('#slides .h-slide');function go(n){si=(n+sl.length)%sl.length;sl.forEach((e,k)=>e.classList.toggle('on',k===si))}
-  let T=setInterval(()=>go(si+1),6000);
-  $$('[data-slide]').forEach(b=>b.onclick=e=>{e.preventDefault();go(si+ +b.dataset.slide);clearInterval(T);T=setInterval(()=>go(si+1),6000)});
+  let si=0;const sl=$$('#slides .h-slide'),dt=$$('[data-dot]');function go(n){si=(n+sl.length)%sl.length;sl.forEach((e,k)=>e.classList.toggle('on',k===si));dt.forEach((e,k)=>e.classList.toggle('on',k===si))}
+  let T;const play=()=>{clearInterval(T);T=setInterval(()=>go(si+1),5500)};play();
+  $$('[data-slide]').forEach(b=>b.onclick=e=>{e.preventDefault();go(si+ +b.dataset.slide);play()});
+  dt.forEach(b=>b.onclick=e=>{e.preventDefault();go(+b.dataset.dot);play()});
+  const SB=$('#slides');if(SB){SB.addEventListener('mouseenter',()=>clearInterval(T));SB.addEventListener('mouseleave',play);
+    let x0=null,sw=false;SB.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;sw=false},{passive:true});
+    SB.addEventListener('touchend',e=>{if(x0==null)return;const d=e.changedTouches[0].clientX-x0;x0=null;if(Math.abs(d)>40){sw=true;go(si+(d<0?1:-1));play()}},{passive:true});
+    SB.addEventListener('click',e=>{if(sw){e.preventDefault();e.stopPropagation();sw=false}},true)}
   document.addEventListener('click',e=>{const b=e.target.closest('[data-car]');if(b){const tr=b.parentNode.querySelector('.h-track');if(tr)tr.scrollBy({left:(+b.dataset.car)*tr.clientWidth*.75,behavior:'smooth'})}});
   if($('#burger'))$('#burger').onclick=()=>document.body.classList.toggle('nav-open');
   document.addEventListener('click',e=>{const j=e.target.closest('[data-jump]');if(j){e.preventDefault();e.stopPropagation();document.body.classList.remove('nav-open');if(j.dataset.jump==='colecoes'){setCat('all',true,false)}window.setModo('home');const t=document.getElementById(j.dataset.jump);if(t)setTimeout(()=>t.scrollIntoView({behavior:'smooth'}),40);return}

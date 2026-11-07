@@ -682,9 +682,14 @@ section{padding-block:0}
 .h-buy:hover{background:var(--h-ac)}
 /* banner largo */
 .h-full{margin:20px 0}
+.h-full.h-full-m a{padding:0 16px;background:radial-gradient(38% 60% at 50% 50%,rgba(0,0,0,.45),rgba(0,0,0,0) 100%),url(/img/faixa-masculinos.webp) center/cover no-repeat}
+.h-full.h-full-m em{max-width:min(560px,46vw)}
+.h-full.h-full-m span{font-size:clamp(2rem,6.2vw,6.6rem);background:linear-gradient(180deg,#fff 30%,#e7c66f);-webkit-background-clip:text;background-clip:text;color:transparent}
+@media(max-width:700px){.h-full.h-full-m em{max-width:none}.h-full.h-full-m a{background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.55)),url(/img/faixa-masculinos-m.webp) left center/cover no-repeat}}
 #grid>.h-full{grid-column:1/-1;margin:16px calc(50% - 50vw)}
 .h-colecoes{overflow-x:clip}
 body.modo-lista #grid>.h-full{display:none}
+.h-home>#masc-faixa{display:none}
 .h-full a{display:flex;flex-direction:column;align-items:center;justify-content:center;height:clamp(220px,31vw,420px);background:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.45)),url(/img/hero.jpg) center 30%/cover no-repeat;color:#fff;text-decoration:none;text-align:center}
 .h-full span{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(3.4rem,11vw,9.5rem);line-height:.9;letter-spacing:.04em;font-weight:500}
 .h-full em{font-style:normal;font-size:clamp(.9rem,1.6vw,1.3rem);opacity:.9;margin-top:10px}
@@ -965,6 +970,7 @@ body.pg-blog main#home,body.pg-blog .h-colecoes,body.pg-blog .h-quiz{display:non
     <button class="h-oc-arr r" type="button" data-ocar="1" aria-label="Próximo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l7 7-7 7"/></svg></button></div>
 </div></section>
 <section class="h-full" id="perf-faixa"><a href="/c/arabes" data-cat="arabes"><span>PERFUMES</span><em>Originais e lacrados, das casas mais desejadas</em></a></section>
+<section class="h-full h-full-m" id="masc-faixa"><a href="/c/masculinos" data-cat="masculinos"><span>MASCULINOS</span><em>Amadeirados, intensos e marcantes: fragrâncias que impõem presença</em></a></section>
 </div>
 
 <section class="h-list h-colecoes" id="colecoes"><div class="h-w">
@@ -1157,9 +1163,9 @@ function render(reset){
 }
 /* faixa PERFUMES: entra na lista depois de linhas completas (6 no celular/tablet, 8 no computador) */
 let FAIXA=null;
-function placeFaixa(){FAIXA=FAIXA||document.getElementById('perf-faixa');const g=$('#grid');if(!FAIXA||!g)return;const cs=g.querySelectorAll(':scope>.h-card');
+function placeFaixa(){FAIXA=FAIXA||['perf-faixa','masc-faixa'].map(id=>document.getElementById(id)).filter(Boolean);const g=$('#grid');if(!FAIXA.length||!g)return;
   const cols=getComputedStyle(g).gridTemplateColumns.split(' ').filter(Boolean).length||4;const n=cols>=4?cols*2:6;
-  if(cs.length>n){if(cs[n].previousElementSibling!==FAIXA)g.insertBefore(FAIXA,cs[n])}else if(FAIXA.parentNode===g)g.appendChild(FAIXA)}
+  FAIXA.forEach((fx,k)=>{const cs=g.querySelectorAll(':scope>.h-card'),i=n*(k+1);if(cs.length>i){if(cs[i].previousElementSibling!==fx)g.insertBefore(fx,cs[i])}else if(fx.parentNode===g)fx.remove()})}
 addEventListener('resize',()=>{clearTimeout(placeFaixa._t);placeFaixa._t=setTimeout(placeFaixa,150)});
 window.setModo=function(m){document.body.classList.toggle('modo-lista',m==='lista');document.body.classList.toggle('modo-quiz',m==='quiz');if(m==='quiz'){document.title='Descubra o seu perfume · Nota Perfumaria';(function(){try{history.pushState(null,'','/#descubra')}catch(e){}})()}};
 function setF(v,scroll){f=v;FAMF='';OCCF='';CAT=Object.keys(CATS).find(k=>CATS[k].f===v)||'all';catHead();render(true);setModo('lista');if(CAT!=='all'){(function(){try{history.replaceState(null,'','/c/'+CAT)}catch(e){}})()}}

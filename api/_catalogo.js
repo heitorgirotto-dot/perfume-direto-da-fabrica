@@ -16,14 +16,15 @@ const FAM = {
 };
 const FAM_L = { doce: ['Doce & envolvente', 'Baunilha, caramelo, frutas', 'Perfumes doces'], amadeirado: ['Amadeirado & marcante', 'Oud, sândalo, cedro', 'Perfumes amadeirados'], fresco: ['Fresco & cítrico', 'Bergamota, limão, aquático', 'Perfumes frescos e cítricos'], floral: ['Floral & delicado', 'Rosa, jasmim, peônia', 'Perfumes florais'], oriental: ['Oriental & intenso', 'Âmbar, especiarias, incenso', 'Perfumes orientais'] };
 const OCC = { dia: { t: 'Para o dia', s: 'Leves, frescos e fáceis de usar', f: ['fresco', 'floral'] }, noite: { t: 'Para a noite', s: 'Intensos, marcantes e sensuais', f: ['oriental', 'doce'] }, trabalho: { t: 'Para o trabalho', s: 'Elegantes, discretos e sofisticados', f: ['amadeirado', 'fresco'] }, romantico: { t: 'Encontro romântico', s: 'Doces, quentes e envolventes', f: ['doce', 'floral'] } };
-const CATS = { masculinos: { f: 'M', t: 'Perfumes masculinos', s: 'Fragrâncias para ele: amadeirados, frescos e orientais das melhores casas' }, femininos: { f: 'F', t: 'Perfumes femininos', s: 'Fragrâncias para ela: doces, florais e marcantes' }, unissex: { f: 'U', t: 'Perfumes unissex', s: 'Fragrâncias compartilhadas, para quem não se prende a rótulos' }, arabes: { f: 'arabe', t: 'Perfumes árabes', s: 'Lattafa, Armaf, Al Haramain, Rasasi, Afnan e as casas mais desejadas do Oriente Médio' }, importados: { f: 'import', t: 'Importados & grifes', s: 'Grifes internacionais 100% originais' }, kits: { f: 'kit', t: 'Kits e presentes', s: 'Conjuntos prontos para presentear' }, 'body-splash': { f: 'splash', t: 'Body splash & mists', s: 'Leves, refrescantes, para o dia a dia' }, ofertas: { f: 'sale', t: 'Ofertas', s: 'Fragrâncias originais com o melhor preço da curadoria' }, 'mais-desejados': { f: 'best', t: 'Os mais desejados', s: 'As fragrâncias que nossos clientes mais escolhem' } };
+const CATS = { masculinos: { f: 'M', t: 'Perfumes masculinos', s: 'Fragrâncias para ele: amadeirados, frescos e orientais das melhores casas' }, femininos: { f: 'F', t: 'Perfumes femininos', s: 'Fragrâncias para ela: doces, florais e marcantes' }, unissex: { f: 'U', t: 'Perfumes unissex', s: 'Fragrâncias compartilhadas, para quem não se prende a rótulos' }, arabes: { f: 'arabe', t: 'Perfumes árabes', s: 'Lattafa, Armaf, Al Haramain, Rasasi, Afnan e as casas mais desejadas do Oriente Médio' }, importados: { f: 'import', t: 'Importados & grifes', s: 'Grifes internacionais 100% originais' }, kits: { f: 'kit', t: 'Kits e presentes', s: 'Conjuntos prontos para presentear' }, 'body-splash': { f: 'splash', t: 'Body splash & mists', s: 'Leves, refrescantes, para o dia a dia' }, ofertas: { f: 'sale', t: 'Ofertas', s: 'Fragrâncias originais com o melhor preço da curadoria' }, 'mais-desejados': { f: 'best', t: 'Os mais desejados', s: 'As fragrâncias que nossos clientes mais escolhem' }, aromatizadores: { f: 'carro', t: 'Aromatizadores automotivos', s: 'Linhas KING e GIRLS: fragrâncias árabes para o seu carro, R$ 59,90 cada' }, 'aromatizadores-masculinos': { f: 'carro-M', t: 'Aromatizadores KING · masculinos', s: '20 fragrâncias árabes masculinas para pendurar no retrovisor' }, 'aromatizadores-femininos': { f: 'carro-F', t: 'Aromatizadores GIRLS · femininos', s: '20 fragrâncias árabes femininas para pendurar no retrovisor' } };
 Object.keys(FAM_L).forEach(k => CATS[k] = { fam: k, t: FAM_L[k][2], s: 'Fragrâncias ' + FAM_L[k][0].toLowerCase().replace(' & ', ' e ') + 's: ' + FAM_L[k][1].toLowerCase() });
 Object.keys(OCC).forEach(k => { CATS[k] = { occ: k, t: OCC[k].t, s: OCC[k].s }; [['masculino', 'M', 'masculinos'], ['feminino', 'F', 'femininos']].forEach(([n, g, pl]) => CATS[k + '-' + n] = { occ: k, f: g, t: OCC[k].t + ' · perfumes ' + pl, s: OCC[k].s }); });
 
 const norm0 = s => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 const slug = s => norm0(s).replace(/&/g, ' e ').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-const pslug = it => slug(norm0(it.n).startsWith(norm0(it.b)) ? it.n : it.b + ' ' + it.n);
-const nomeCompleto = it => norm0(it.n).startsWith(norm0(it.b)) ? it.n : it.b + ' ' + it.n;
+const proprio = it => /^aromatizador/i.test(it.n) || norm0(it.n).startsWith(norm0(it.b));
+const pslug = it => slug(proprio(it) ? it.n : it.b + ' ' + it.n);
+const nomeCompleto = it => proprio(it) ? it.n : it.b + ' ' + it.n;
 const brl = v => 'R$ ' + Number(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const pix = p => Math.round(p * (1 - PIX_OFF) * 100) / 100;
 const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -34,7 +35,8 @@ function decorate(items) {
     if (it.id == null) it.id = i;
     if (it.pics) it.pics = it.pics.map(x => /^(https?:|\/|data:)/.test(x) ? x : '/' + x);
     it.img = it.pics ? it.pics[0] : null;
-    it.splash = /body|splash|mist|desodorante|perfume oil/i.test(it.n) || it.b === 'Aroma Luxe';
+    it.carro = /^aromatizador/i.test(it.n);
+    it.splash = !it.carro && (/body|splash|mist|desodorante|perfume oil/i.test(it.n) || it.b === 'Aroma Luxe');
     it.kit = /kit/i.test(it.n);
     it.imp = IMPORT.includes(it.b);
     it.slug = pslug(it);
@@ -63,7 +65,9 @@ async function produtos() {
 function filtrar(items, cat) {
   const d = CATS[cat];
   if (d) {
+    if (String(d.f).startsWith('carro')) return items.filter(i => i.carro && (d.f === 'carro' || i.g === d.f.slice(6)));
     return items.filter(i => {
+      if (i.carro) return false;
       if (d.fam && !i.fam.includes(d.fam)) return false;
       if (d.occ && !OCC[d.occ].f.includes(i.fam[0])) return false;
       switch (d.f) {

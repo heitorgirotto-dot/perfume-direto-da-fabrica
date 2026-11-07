@@ -836,6 +836,29 @@ body.pg-p .h-banner{display:none}
 .h-st-prod .bt2{display:flex;gap:6px;margin-top:8px}.h-st-prod .bt2 button{margin:0;flex:1}
 .h-st-prod .bt2 .buy{background:#d9b25a;color:#140f05}
 
+
+/* aromatizadores automotivos KING / GIRLS */
+.h-aro{padding:34px 0;margin:10px 0;background:radial-gradient(70% 90% at 75% 40%,#2a2012,#0b0906 70%);color:#f3e7c6}
+.h-aro-girls{background:radial-gradient(70% 90% at 75% 40%,#3a1430,#12060f 70%);color:#f7dbe6}
+.h-aro[hidden]{display:none}
+.h-aro-in{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.6fr);gap:32px;align-items:center}
+.h-aro-ban{display:block;border-radius:14px;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.45)}
+.h-aro-ban img{display:block;width:100%;height:auto;transition:transform .5s}.h-aro-ban:hover img{transform:scale(1.03)}
+.h-aro-side{min-width:0}
+.h-aro-k{margin:0 0 8px;font-size:12px;letter-spacing:.24em;color:#d9b25a;font-weight:600}
+.h-aro-girls .h-aro-k{color:#f0a6c2}
+.h-aro h2{margin:0 0 8px!important;font-family:'Cormorant Garamond',Georgia,serif!important;font-weight:500!important;font-size:clamp(1.9rem,3.4vw,3rem)!important;line-height:1.05;color:#fff!important}
+.h-aro-s{margin:0 0 18px;font-size:15px;opacity:.88}.h-aro-s b{color:#e7c66f}
+.h-aro-girls .h-aro-s b{color:#f5b6cf}
+.h-aro .h-track{gap:14px;grid-auto-columns:calc((100% - 2*14px)/3)}
+@media(max-width:900px){.h-aro .h-track{grid-auto-columns:calc((100% - 14px)/2)}}
+@media(max-width:520px){.h-aro .h-track{grid-auto-columns:62%}}
+.h-aro .h-card{background:#fff;border-radius:12px;padding:12px;color:#111}
+.h-aro .h-car-btn{background:#d9b25a;color:#140f05}
+.h-aro-all{display:inline-block;margin-top:16px;padding:12px 26px;border:1.5px solid currentColor;border-radius:999px;color:inherit;text-decoration:none;font-size:13px;letter-spacing:.08em}
+.h-aro-all:hover{background:#d9b25a;border-color:#d9b25a;color:#140f05}
+.h-aro-girls .h-aro-all:hover{background:#f0a6c2;border-color:#f0a6c2}
+@media(max-width:900px){.h-aro-in{grid-template-columns:1fr;gap:20px}.h-aro-ban{max-width:520px;margin:0 auto}}
 /* player estilo stories */
 .h-story{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center}
 .h-story[hidden]{display:none}
@@ -963,6 +986,31 @@ body.pg-blog main#home,body.pg-blog .h-colecoes,body.pg-blog .h-quiz{display:non
     <div class="h-track" id="best"></div>
     <button class="h-car-btn r" type="button" data-car="1" aria-label="Próximo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg></button></div>
 </div></section>
+<section class="h-aro h-aro-king" id="aromatizador-king" hidden><div class="h-w h-aro-in">
+  <a class="h-aro-ban" href="/c/aromatizadores-masculinos" data-cat="aromatizadores-masculinos"><img src="/img/aromatizadores/king-poster.webp" alt="Aromatizador automotivo KING: o seu veículo pode ter o seu cheiro marcante" width="1199" height="1312" loading="lazy"></a>
+  <div class="h-aro-side">
+    <p class="h-aro-k">AROMATIZADOR AUTOMOTIVO · LINHA KING</p>
+    <h2>O seu carro com o seu cheiro marcante</h2>
+    <p class="h-aro-s">20 fragrâncias árabes masculinas para pendurar no retrovisor. <b>R$ 59,90</b> cada.</p>
+    <div class="h-car"><button class="h-car-btn l" type="button" data-car="-1" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <div class="h-track h-aro-track" id="aro-M"></div>
+      <button class="h-car-btn r" type="button" data-car="1" aria-label="Próximo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg></button></div>
+    <a class="h-aro-all" href="/c/aromatizadores-masculinos" data-cat="aromatizadores-masculinos">Ver os 20 aromatizadores KING</a>
+  </div>
+</div></section>
+<section class="h-aro h-aro-girls" id="aromatizador-girls" hidden><div class="h-w h-aro-in">
+  <a class="h-aro-ban" href="/c/aromatizadores-femininos" data-cat="aromatizadores-femininos"><img src="/img/aromatizadores/girls-poster.webp" alt="Aromatizador automotivo GIRLS feminino: o seu veículo pode ter o seu cheiro marcante" width="1199" height="1312" loading="lazy"></a>
+  <div class="h-aro-side">
+    <p class="h-aro-k">AROMATIZADOR AUTOMOTIVO · LINHA GIRLS</p>
+    <h2>Elegância e feminilidade no seu carro</h2>
+    <p class="h-aro-s">20 fragrâncias árabes femininas para pendurar no retrovisor. <b>R$ 59,90</b> cada.</p>
+    <div class="h-car"><button class="h-car-btn l" type="button" data-car="-1" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <div class="h-track h-aro-track" id="aro-F"></div>
+      <button class="h-car-btn r" type="button" data-car="1" aria-label="Próximo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg></button></div>
+    <a class="h-aro-all" href="/c/aromatizadores-femininos" data-cat="aromatizadores-femininos">Ver os 20 aromatizadores GIRLS</a>
+  </div>
+</div></section>
+
 
 
 <section class="h-oc" id="ocasioes"><div class="h-w h-oc-in">
@@ -1014,7 +1062,7 @@ body.pg-blog main#home,body.pg-blog .h-colecoes,body.pg-blog .h-quiz{display:non
     <details id="pol-rastreio"><summary>Rastreamento do pedido</summary><p>Assim que o pedido é postado, você recebe o código de rastreio pelo WhatsApp informado na compra. Quem compra logado também acompanha o status (pagamento, separação, envio e entrega) em <b>Minha conta</b>.</p></details>
     <details id="pol-trocas"><summary>Trocas e devoluções</summary><p>Você pode desistir da compra em até 7 dias corridos após o recebimento, conforme o art. 49 do Código de Defesa do Consumidor, desde que o produto esteja lacrado e sem uso. Nesse caso devolvemos o valor integral, incluindo o frete, pelo mesmo meio de pagamento.</p><p>Produtos com defeito de fabricação ou danificados no transporte são trocados sem custo. Fotografe a embalagem e o produto no recebimento e nos chame no WhatsApp em até 7 dias.</p><p>Por questões de higiene e segurança, não aceitamos troca de perfumes abertos ou com lacre rompido quando o motivo for gosto pessoal. Para evitar isso, use a consultoria antes de comprar: é de graça.</p></details>
     <details id="pol-pagamento"><summary>Pagamento e preços</summary><p>Aceitamos PIX (com 10% de desconto sobre o preço de tabela), boleto bancário e cartão de crédito em até 12x. No cartão, a taxa da operadora é repassada e exibida parcela por parcela antes de você confirmar. Todo pagamento é processado pelo Asaas; a loja não armazena número, validade ou código do cartão.</p><p>Os preços podem mudar sem aviso, mas o valor que vale é sempre o exibido no momento da confirmação do pedido.</p></details>
-    <details id="pol-originalidade"><summary>Originalidade dos produtos</summary><p>Vendemos exclusivamente perfumes originais, adquiridos de importadores e distribuidores autorizados, lacrados e com selo do importador quando aplicável. Não trabalhamos com decants, frascos abertos, réplicas ou contratipos. Se você receber um produto que não corresponda ao anunciado, devolvemos o valor integral.</p></details>
+    <details id="pol-originalidade"><summary>Originalidade dos produtos</summary><p>Vendemos exclusivamente perfumes originais, adquiridos de importadores e distribuidores autorizados, lacrados e com selo do importador quando aplicável. Não trabalhamos com decants, frascos abertos, réplicas ou contratipos. Se você receber um produto que não corresponda ao anunciado, devolvemos o valor integral.</p><p>Os aromatizadores automotivos KING e GIRLS são uma linha própria da Nota Perfumaria, não são perfumes. A indicação “perfil olfativo próximo a” é apenas uma referência de estilo para ajudar na escolha e não indica vínculo com as marcas citadas.</p></details>
     <details id="pol-privacidade"><summary>Privacidade e dados (LGPD)</summary><p>Usamos nome, CPF, e-mail, WhatsApp e endereço apenas para processar o pagamento, enviar o pedido e atender você. Os dados ficam em ambiente seguro e não são vendidos nem compartilhados com terceiros, exceto o necessário para pagamento (Asaas) e entrega (Correios).</p><p>Você pode pedir a correção ou a exclusão dos seus dados a qualquer momento pelo WhatsApp. Mensagens de ofertas só são enviadas com o seu consentimento, e você pode cancelar quando quiser.</p></details>
     <details id="pol-contato"><summary>Contato</summary><p>Atendimento pelo WhatsApp <b>(11) 98265-9792</b>, de segunda a sábado, das 9h às 18h. Fora desse horário, deixe sua mensagem que respondemos no próximo dia útil.</p></details>
 </div>
@@ -1081,7 +1129,7 @@ const IMPORT= ["Animale","Azzaro","Britney Spears","Burberry","Dolce & Gabbana",
 // Catálogo embarcado: carregado de /produtos.js (cache) e atualizado por /api/produtos
 // ==================
 const slug=s=>String(s).normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/&/g,' e ').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-const pslug=it=>slug(norm0(it.n).startsWith(norm0(it.b))?it.n:it.b+' '+it.n);const norm0=s=>String(s).normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+const pslug=it=>slug(/^aromatizador/i.test(it.n)||norm0(it.n).startsWith(norm0(it.b))?it.n:it.b+' '+it.n);const norm0=s=>String(s).normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
 const FAM={doce:/baunilha|caramelo|chocolate|mel\b|tonka|café|algodão|pistache|cereja|tâmara|açúcar|gourmand|frutas vermelhas|framboesa|morango/i,
   amadeirado:/madeira|cedro|sândalo|vetiver|patchouli|oud|bétula|guaiaco/i,
   fresco:/bergamota|limão|toranja|aquátic|marinh|hortelã|mandarina|yuzu|cítric|lavanda|chá|gengibre/i,
@@ -1089,12 +1137,12 @@ const FAM={doce:/baunilha|caramelo|chocolate|mel\b|tonka|café|algodão|pistache
   oriental:/oud|açafrão|âmbar|incenso|canela|pimenta|couro|tabaco|especiaria|cardamomo/i};
 const FAM_L={doce:['Doce & envolvente','Baunilha, caramelo, frutas','Perfumes doces'],amadeirado:['Amadeirado & marcante','Oud, sândalo, cedro','Perfumes amadeirados'],fresco:['Fresco & cítrico','Bergamota, limão, aquático','Perfumes frescos e cítricos'],floral:['Floral & delicado','Rosa, jasmim, peônia','Perfumes florais'],oriental:['Oriental & intenso','Âmbar, especiarias, incenso','Perfumes orientais']};
 const OCC={dia:{t:'Para o dia',s:'Leves, frescos e fáceis de usar',f:['fresco','floral']},noite:{t:'Para a noite',s:'Intensos, marcantes e sensuais',f:['oriental','doce']},trabalho:{t:'Para o trabalho',s:'Elegantes, discretos e sofisticados',f:['amadeirado','fresco']},romantico:{t:'Encontro romântico',s:'Doces, quentes e envolventes',f:['doce','floral']}};
-const CATS={all:{f:'all',t:'A coleção Nota'},masculinos:{f:'M',t:'Perfumes masculinos',s:'Fragrâncias para ele: amadeirados, frescos e orientais das melhores casas'},femininos:{f:'F',t:'Perfumes femininos',s:'Fragrâncias para ela: doces, florais e marcantes'},unissex:{f:'U',t:'Perfumes unissex',s:'Fragrâncias compartilhadas, para quem não se prende a rótulos'},arabes:{f:'arabe',t:'Perfumes árabes',s:'Lattafa, Armaf, Al Haramain, Rasasi, Afnan e as casas mais desejadas do Oriente Médio'},importados:{f:'import',t:'Importados & grifes',s:'Grifes internacionais 100% originais'},kits:{f:'kit',t:'Kits e presentes',s:'Conjuntos prontos para presentear'},'body-splash':{f:'splash',t:'Body splash & mists',s:'Leves, refrescantes, para o dia a dia'},ofertas:{f:'sale',t:'Ofertas',s:'Fragrâncias originais com o melhor preço da curadoria'},'mais-desejados':{f:'best',t:'Os mais desejados',s:'As fragrâncias que nossos clientes mais escolhem'}};
+const CATS={all:{f:'all',t:'A coleção Nota'},masculinos:{f:'M',t:'Perfumes masculinos',s:'Fragrâncias para ele: amadeirados, frescos e orientais das melhores casas'},femininos:{f:'F',t:'Perfumes femininos',s:'Fragrâncias para ela: doces, florais e marcantes'},unissex:{f:'U',t:'Perfumes unissex',s:'Fragrâncias compartilhadas, para quem não se prende a rótulos'},arabes:{f:'arabe',t:'Perfumes árabes',s:'Lattafa, Armaf, Al Haramain, Rasasi, Afnan e as casas mais desejadas do Oriente Médio'},importados:{f:'import',t:'Importados & grifes',s:'Grifes internacionais 100% originais'},kits:{f:'kit',t:'Kits e presentes',s:'Conjuntos prontos para presentear'},'body-splash':{f:'splash',t:'Body splash & mists',s:'Leves, refrescantes, para o dia a dia'},ofertas:{f:'sale',t:'Ofertas',s:'Fragrâncias originais com o melhor preço da curadoria'},'mais-desejados':{f:'best',t:'Os mais desejados',s:'As fragrâncias que nossos clientes mais escolhem'},aromatizadores:{f:'carro',t:'Aromatizadores automotivos',s:'Linhas KING e GIRLS: fragrâncias árabes para o seu carro, R$ 59,90 cada'},'aromatizadores-masculinos':{f:'carro-M',t:'Aromatizadores KING · masculinos',s:'20 fragrâncias árabes masculinas para pendurar no retrovisor'},'aromatizadores-femininos':{f:'carro-F',t:'Aromatizadores GIRLS · femininos',s:'20 fragrâncias árabes femininas para pendurar no retrovisor'}};
 Object.keys(FAM_L).forEach(k=>CATS[k]={fam:k,t:FAM_L[k][2],s:'Fragrâncias '+FAM_L[k][0].toLowerCase().replace(' & ',' e ')+'s: '+FAM_L[k][1].toLowerCase()});
 Object.keys(OCC).forEach(k=>{CATS[k]={occ:k,t:OCC[k].t,s:OCC[k].s};[['masculino','M','masculinos'],['feminino','F','femininos']].forEach(([n,g,pl])=>CATS[k+'-'+n]={occ:k,f:g,t:OCC[k].t+' · perfumes '+pl,s:OCC[k].s})});
 const famOf=it=>{const sc=Object.keys(FAM).map(k=>[k,((it.notes||'').match(new RegExp(FAM[k].source,'gi'))||[]).length]).filter(x=>x[1]).sort((a,b)=>b[1]-a[1]);return sc.slice(0,2).map(x=>x[0])};
 const BYID={};
-function decorate(){BYID&&Object.keys(BYID).forEach(k=>delete BYID[k]);ITEMS.forEach((it,i)=>{if(it.id==null)it.id=i;BYID[it.id]=it;it.img=it.pics?it.pics[0]:null;it.splash=/body|splash|mist|desodorante|perfume oil/i.test(it.n)||it.b==='Aroma Luxe';it.kit=/kit/i.test(it.n);it.imp=IMPORT.includes(it.b);it.slug=pslug(it);it.fam=famOf(it);if(it.pics)it.pics=it.pics.map(x=>/^(https?:|\/|data:)/.test(x)?x:'/'+x);it.img=it.pics?it.pics[0]:null;});}
+function decorate(){BYID&&Object.keys(BYID).forEach(k=>delete BYID[k]);ITEMS.forEach((it,i)=>{if(it.id==null)it.id=i;BYID[it.id]=it;it.img=it.pics?it.pics[0]:null;it.splash=/body|splash|mist|desodorante|perfume oil/i.test(it.n)||it.b==='Aroma Luxe';it.kit=/kit/i.test(it.n);it.carro=/^aromatizador/i.test(it.n);if(it.carro)it.splash=false;it.imp=IMPORT.includes(it.b);it.slug=pslug(it);it.fam=famOf(it);if(it.pics)it.pics=it.pics.map(x=>/^(https?:|\/|data:)/.test(x)?x:'/'+x);it.img=it.pics?it.pics[0]:null;});}
 decorate();
 const G={M:"Masculino",F:"Feminino",U:"Unissex"};
 const $=s=>document.querySelector(s);
@@ -1123,19 +1171,20 @@ function card(it,o={}){
   if(it.best)tags.push(`<span class="h-tag dk">Mais vendido</span>`);
   const price=it.p==null?`<div class="h-pr">Consultar</div>`:`${off?`<div class="h-cmp">${brl(it.po)}</div>`:''}<div class="h-pr">${brl(pix(it.p))}<small>no PIX</small></div><div class="h-ins">ou ${brl(it.p)} em até 12x</div>`;
   return `<div class="h-card"><a class="h-ph" href="/p/${it.slug}" data-open="${it.id}">${it.img?`<img src="${it.img}" alt="${it.b} ${it.n}" loading="lazy">`:`<span class="h-ph0">${bottle}</span>`}<span class="h-tags">${tags.join('')}</span></a>
-   <a class="h-n" href="/p/${it.slug}" data-open="${it.id}">${it.n} - ${it.b} - Perfume ${G[it.g]}</a>${price}
+   <a class="h-n" href="/p/${it.slug}" data-open="${it.id}">${it.carro?it.n:`${it.n} - ${it.b} - Perfume ${G[it.g]}`}</a>${price}
    ${it.p!=null?`<button class="h-buy" type="button" data-add="${it.id}">Comprar</button>`:`<a class="h-buy ask" href="${waLink(it)}" target="_blank" rel="noopener">Consultar</a>`}</div>`;
 }
 const byName=n=>{const [b,nm]=n.includes("|")?n.split("|"):[null,n];return ITEMS.find(i=>i.n===nm&&(!b||i.b===b))};
 function renderFixos(){
   const best=ITEMS.some(i=>i.best)?ITEMS.filter(i=>i.best):BEST.map(byName).filter(Boolean);
-  const extra=ITEMS.filter(i=>i.img&&i.p!=null&&!best.includes(i)&&!i.splash&&!i.kit).slice(0,6);
+  const extra=ITEMS.filter(i=>i.img&&i.p!=null&&!best.includes(i)&&!i.splash&&!i.kit&&!i.carro).slice(0,6);
+  ['M','F'].forEach(g=>{const el=$('#aro-'+g);if(!el)return;const l=ITEMS.filter(i=>i.carro&&i.g===g);el.innerHTML=l.map(i=>card(i)).join('');el.closest('.h-aro').hidden=!l.length});
   $('#best').innerHTML=[...best,...extra].slice(0,14).map(i=>card(i)).join('');
   const marcas=[...new Set(ITEMS.map(i=>i.b))].sort((a,b)=>a.localeCompare(b));
   const sel=$('#brand'),cur=sel.value;sel.innerHTML='<option value="">Todas as marcas</option>'+marcas.map(b=>`<option>${b}</option>`).join('');sel.value=cur;
   if($('#nav-marcas'))$('#nav-marcas').innerHTML=marcas.map(b=>`<a href="/c/${slug(b)}" data-cat="${slug(b)}">${b}</a>`).join('');
   const porQtd=[...marcas].sort((a,b)=>ITEMS.filter(i=>i.b===b).length-ITEMS.filter(i=>i.b===a).length);
-  $('#brands').innerHTML=porQtd.map(b=>`<a href="/c/${slug(b)}" data-cat="${slug(b)}">${b}</a>`).join('');
+  $('#brands').innerHTML=porQtd.filter(b=>!ITEMS.some(i=>i.b===b&&i.carro)).map(b=>`<a href="/c/${slug(b)}" data-cat="${slug(b)}">${b}</a>`).join('');
 }
 renderFixos();
 // Catálogo dinâmico: o painel administrativo edita os produtos; o site busca a versão mais recente.
@@ -1147,11 +1196,12 @@ fetch('/api/produtos',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(list=
 
 let f='all',page=1,FAMF='',OCCF='',CAT='all';const PAGE=40;
 const norm=s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
-function passF(i){switch(f){case'M':case'F':return i.g===f||(!!OCCF&&i.g==='U');case'U':return i.g===f;case'arabe':return!i.imp&&!i.splash;case'import':return i.imp;case'splash':return i.splash;case'kit':return i.kit;case'p99':return i.p!=null&&i.p<=99;case'p199':return i.p!=null&&i.p<=199;case'sale':return i.p!=null&&(i.p<=149||i.po>i.p);case'best':return!!i.best||BEST.map(byName).includes(i);default:return true}}
+function passF(i){if(f==='carro')return i.carro;if(f==='carro-M')return i.carro&&i.g==='M';if(f==='carro-F')return i.carro&&i.g==='F';switch(f){case'M':case'F':return i.g===f||(!!OCCF&&i.g==='U');case'U':return i.g===f;case'arabe':return!i.imp&&!i.splash;case'import':return i.imp;case'splash':return i.splash;case'kit':return i.kit;case'p99':return i.p!=null&&i.p<=99;case'p199':return i.p!=null&&i.p<=199;case'sale':return i.p!=null&&(i.p<=149||i.po>i.p);case'best':return!!i.best||BEST.map(byName).includes(i);default:return true}}
 function passFam(i){if(FAMF&&!i.fam.includes(FAMF))return false;if(OCCF&&!OCC[OCCF].f.includes(i.fam[0]))return false;return true}
 function filtered(){
   const q=norm($('#q').value.trim()),b=$('#brand').value,r=$('#range').value,s=$('#sort').value;
-  let out=ITEMS.filter(i=>passF(i)&&passFam(i)&&(!b||i.b===b)&&(!q||norm(i.n+' '+i.b).includes(q)));
+  const comCarro=String(f).startsWith('carro')||!!q||(!!b&&ITEMS.some(i=>i.b===b&&i.carro));
+  let out=ITEMS.filter(i=>(comCarro||!i.carro)&&passF(i)&&passFam(i)&&(!b||i.b===b)&&(!q||norm(i.n+' '+i.b+' '+(i.like||'')).includes(q)));
   if(r){const [lo,hi]=r.split('-').map(Number);out=out.filter(i=>i.p!=null&&i.p>=lo&&i.p<hi)}
   if(s==='asc')out.sort((a,c)=>(a.p??1e9)-(c.p??1e9));else if(s==='desc')out.sort((a,c)=>(c.p??0)-(a.p??0));else if(s==='az')out.sort((a,c)=>a.n.localeCompare(c.n));else out.sort((a,c)=>(!!c.img-!!a.img));
   return out;
@@ -1196,7 +1246,7 @@ function openPV(id){const it=BYID[id];if(!it)return;PV.id=id;PV.qty=1;PV.met='PI
   $('#pv-thumbs').innerHTML=(it.pics||[]).map((u,k)=>`<img src="${u}" class="${k?'':'on'}" data-src="${u}" alt="">`).join('');
   $('#pv-main').innerHTML=it.img?`<img src="${it.img}" alt="${it.n}">`:bottle;
   $('#pv-brand').textContent=it.b;$('#pv-name').textContent=it.n;$('#pv-g').textContent=G[it.g];$('#pv-g').className='pill '+it.g;
-  $('#pv-notes').innerHTML=`<b>Notas:</b> ${it.notes||''}`;$('#pv-like').innerHTML=it.like?`Perfil olfativo próximo a <b>${it.like}</b>`:'';$('#pv-desc').hidden=!it.desc;$('#pv-desc').textContent=it.desc||'';
+  $('#pv-notes').innerHTML=`<b>Notas:</b> ${it.notes||''}`;$('#pv-like').innerHTML=it.like?`Perfil olfativo próximo a <b>${it.like}</b>${it.carro?'<br><small style="opacity:.7">Referência de estilo, sem vínculo com a marca citada.</small>':''}`:'';$('#pv-desc').hidden=!it.desc;$('#pv-desc').textContent=it.desc||'';
   $('#pv-ask').href=waLink(it);$('#cep').value='';$('#num').value='';$('#comp').value='';$('#end').textContent='';$('#opts').innerHTML='';$('#fmsg').textContent='';
   renderPV();$('#pv').hidden=false;document.body.style.overflow='hidden';
   if(!PV_ROTA){PV_ROTA=location.pathname+location.search;history.pushState({pv:1},'','/p/'+it.slug)}else history.replaceState({pv:1},'','/p/'+it.slug);
@@ -1316,7 +1366,7 @@ const _FAM_quiz={doce:/baunilha|caramelo|chocolate|mel\b|tonka|café|algodão|pi
   oriental:/oud|açafrão|âmbar|incenso|canela|pimenta|couro|tabaco|especiaria|cardamomo/i};
 const QZ={g:'',f:''};
 function renderQuiz(){const box=$('#qz-res');if(!QZ.f){box.innerHTML='<p class="qz-hint">Escolha um estilo para ver as sugestões.</p>';$('#qz-cta').hidden=true;return}
-  const re=FAM[QZ.f];const out=ITEMS.filter(i=>i.p!=null&&!i.splash&&!i.kit&&(!QZ.g||i.g===QZ.g||i.g==='U')).map(i=>({i,m:((i.notes||'').match(new RegExp(re.source,'gi'))||[]).length})).filter(x=>x.m>=1).map(x=>Object.assign(x,{s:x.m+(x.i.img?2:0)+(x.i.best?0.7:0)+(QZ.g&&x.i.g===QZ.g?1:0)})).sort((a,b)=>b.s-a.s).filter((x,k,arr)=>arr.findIndex(y=>y.i.notes===x.i.notes&&y.i.b===x.i.b)===k).slice(0,8).map(x=>x.i);
+  const re=FAM[QZ.f];const out=ITEMS.filter(i=>i.p!=null&&!i.splash&&!i.kit&&!i.carro&&(!QZ.g||i.g===QZ.g||i.g==='U')).map(i=>({i,m:((i.notes||'').match(new RegExp(re.source,'gi'))||[]).length})).filter(x=>x.m>=1).map(x=>Object.assign(x,{s:x.m+(x.i.img?2:0)+(x.i.best?0.7:0)+(QZ.g&&x.i.g===QZ.g?1:0)})).sort((a,b)=>b.s-a.s).filter((x,k,arr)=>arr.findIndex(y=>y.i.notes===x.i.notes&&y.i.b===x.i.b)===k).slice(0,8).map(x=>x.i);
   box.innerHTML=out.length?out.map(i=>card(i)).join(''):'<p class="qz-hint">Não encontramos agora — fale com um especialista.</p>';
   const lab={doce:'doce e envolvente',amadeirado:'amadeirado e marcante',fresco:'fresco e cítrico',floral:'floral e delicado',oriental:'oriental e intenso'}[QZ.f];
   $('#qz-wa').href=`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(`Olá! Quero uma consultoria. Procuro um perfume ${lab}${QZ.g==='M'?' para ele':QZ.g==='F'?' para ela':''}.`)}`;$('#qz-cta').hidden=false}
@@ -1546,7 +1596,7 @@ render(true);rota();
   const RL='<svg class="rl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M3 8h18M8 3l3 5M13 3l3 5"/><path d="M10 11.5v5l4-2.5z" fill="currentColor"/></svg>';
   const preco=it=>it&&it.p!=null?`<s>${brl(it.po>it.p?it.po:it.p)}</s><b>${brl(pix(it.p))}</b>`:'';
   function maisVendidos(){const bs=ITEMS.some(i=>i.best)?ITEMS.filter(i=>i.best):BEST.map(byName).filter(Boolean);
-    return bs.concat(ITEMS.filter(i=>!bs.includes(i)&&!i.splash&&!i.kit)).filter(i=>i.img&&i.p!=null)}
+    return bs.concat(ITEMS.filter(i=>!bs.includes(i)&&!i.splash&&!i.kit&&!i.carro)).filter(i=>i.img&&i.p!=null)}
   let IO=null;
   function render(){
     const box=$('#vids');if(!box)return;

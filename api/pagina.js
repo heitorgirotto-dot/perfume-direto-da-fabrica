@@ -34,7 +34,7 @@ const cardHTML = it => {
   const tag = off ? `${off}% OFF` : (it.p != null ? '10% OFF no PIX' : '');
   const price = it.p == null ? '<div class="h-pr">Consultar</div>' : `${off ? `<div class="h-cmp">${C.brl(it.po)}</div>` : ''}<div class="h-pr">${C.brl(C.pix(it.p))}<small>no PIX</small></div><div class="h-ins">ou ${C.brl(it.p)} em até 12x</div>`;
   return `<div class="h-card"><a class="h-ph" href="/p/${it.slug}" data-open="${it.id}">${it.img ? `<img src="${it.img}" alt="${C.esc(it.b + ' ' + it.n)}" loading="lazy">` : ''}${tag ? `<span class="h-tags"><span class="h-tag">${tag}</span></span>` : ''}</a>
-  <a class="h-n" href="/p/${it.slug}" data-open="${it.id}">${C.esc(it.n)} - ${C.esc(it.b)} - Perfume ${C.G[it.g]}</a>${price}${it.p != null ? `<button class="h-buy" type="button" data-add="${it.id}">Comprar</button>` : ''}</div>`;
+  <a class="h-n" href="/p/${it.slug}" data-open="${it.id}">${it.carro ? C.esc(it.n) : `${C.esc(it.n)} - ${C.esc(it.b)} - Perfume ${C.G[it.g]}`}</a>${price}${it.p != null ? `<button class="h-buy" type="button" data-add="${it.id}">Comprar</button>` : ''}</div>`;
 };
 
 module.exports = async (req, res) => {
@@ -115,7 +115,7 @@ ${outros.length ? `<section class="b-lista b-rel"><div class="h-w"><h2 class="h-
     const nome = C.nomeCompleto(it);
     const url = `${C.BASE}/p/${it.slug}`;
     const image = it.img ? `${C.BASE}${it.img}` : null;
-    const desc = `${nome} ${C.G[it.g].toLowerCase()} 100% original${it.p != null ? ` por ${C.brl(C.pix(it.p))} no PIX ou em até 12x no cartão` : ''}. Notas: ${it.notes || ''}.${it.like ? ' Lembra ' + it.like + '.' : ''} Envio para todo o Brasil.`.slice(0, 300);
+    const desc = it.carro ? `${nome}: aromatizador automotivo ${C.G[it.g].toLowerCase()} da Nota Perfumaria por ${C.brl(C.pix(it.p))} no PIX ou em até 12x no cartão. Notas: ${it.notes || ''}.${it.like ? ' Perfil olfativo próximo a ' + it.like + '.' : ''} Envio para todo o Brasil.`.slice(0, 300) : `${nome} ${C.G[it.g].toLowerCase()} 100% original${it.p != null ? ` por ${C.brl(C.pix(it.p))} no PIX ou em até 12x no cartão` : ''}. Notas: ${it.notes || ''}.${it.like ? ' Lembra ' + it.like + '.' : ''} Envio para todo o Brasil.`.slice(0, 300);
     const ld = {
       '@context': 'https://schema.org', '@type': 'Product', name: nome, brand: { '@type': 'Brand', name: it.b }, image: it.pics ? it.pics.map(p => `${C.BASE}${p}`) : undefined,
       description: desc, sku: String(it.id), url,
@@ -134,10 +134,10 @@ ${outros.length ? `<section class="b-lista b-rel"><div class="h-w"><h2 class="h-
     <div class="ssr-m">${it.img ? `<img src="${it.img}" alt="${C.esc(nome)}">` : ''}</div>
     <div class="ssr-i">
       <div class="brand">${C.esc(it.b)}</div><h1>${C.esc(nome)}</h1><span class="pill ${it.g}" style="position:static;display:inline-block">${C.G[it.g]}</span>
-      <p class="notes"><b>Notas:</b> ${C.esc(it.notes || '')}</p>${it.like ? `<p class="like">Perfil olfativo próximo a <b>${C.esc(it.like)}</b></p>` : ''}${it.desc ? `<p class="pv-desc">${C.esc(it.desc)}</p>` : ''}
+      <p class="notes"><b>Notas:</b> ${C.esc(it.notes || '')}</p>${it.like ? `<p class="like">Perfil olfativo próximo a <b>${C.esc(it.like)}</b>${it.carro ? '<br><small style="opacity:.7">Referência de estilo, sem vínculo com a marca citada.</small>' : ''}</p>` : ''}${it.desc ? `<p class="pv-desc">${C.esc(it.desc)}</p>` : ''}
       ${it.p == null ? '<div class="pix">Consultar</div>' : `${off ? `<div class="old">de ${C.brl(it.po)} · ${off}% OFF</div>` : ''}<div class="pix">${C.brl(C.pix(it.p))}<small>no PIX</small></div><div class="full">${C.brl(it.p)} no cartão (até 12x) ou boleto</div>`}
       <div class="acts" style="margin-top:18px"><a class="buy" href="/p/${it.slug}" data-open="${it.id}">Comprar</a><a class="ask" href="https://wa.me/5511982659792?text=${encodeURIComponent('Olá! Tenho uma dúvida sobre ' + nome)}" target="_blank" rel="noopener">Falar com especialista</a></div>
-      <p class="msg" style="margin-top:14px">100% original e lacrado · PIX, boleto ou cartão em até 12x · Envio pelos Correios com rastreio</p>
+      <p class="msg" style="margin-top:14px">${it.carro ? 'Linha exclusiva Nota Perfumaria' : '100% original e lacrado'} · PIX, boleto ou cartão em até 12x · Envio pelos Correios com rastreio</p>
     </div>
   </div>
 </div></section>`;

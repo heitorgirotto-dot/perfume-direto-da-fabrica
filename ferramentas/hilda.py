@@ -38,7 +38,6 @@ I = {
 BODY = f'''<body>
 <header class="h-head" id="topo">
   <div class="h-top"><div class="h-w h-top-in">
-    <button class="h-burger" type="button" id="burger" aria-label="Menu">{I['menu']}</button>
     <a class="h-logo" href="/" data-cat="all" aria-label="Nota Perfumaria"><img src="/img/logo-branco.jpg?v=1" alt="Nota Perfumaria" width="900" height="352"></a>
     <form class="h-search" id="sform" role="search"><span class="h-s-ic">{I['search']}</span><input id="q" type="search" placeholder="Busque seu perfume, marca ou nota" aria-label="Buscar"><button type="submit" aria-label="Buscar">{I['search']}</button></form>
     <div class="h-acts">
@@ -47,21 +46,6 @@ BODY = f'''<body>
       <button class="h-ic h-cart" id="cart-btn" type="button" aria-label="Carrinho">{I['cart']}<span class="h-cq" id="cart-q">0</span><span id="cart-v" class="sr">R$ 0,00</span></button>
     </div>
   </div></div>
-  <nav class="h-nav" id="nav" aria-label="Menu da loja"><ul class="h-w">
-    <li><a href="/c/ofertas" data-cat="ofertas">OFERTAS</a></li>
-    <li class="h-dd"><a href="/c/mais-desejados" data-cat="mais-desejados">PERFUMES</a><div class="h-dd-box"><div class="h-w h-dd-cols">
-      <div><b>Gênero</b><a href="/c/masculinos" data-cat="masculinos">Masculinos</a><a href="/c/femininos" data-cat="femininos">Femininos</a><a href="/c/unissex" data-cat="unissex">Unissex</a></div>
-      <div><b>Famílias olfativas</b><a href="/c/fresco" data-cat="fresco">Cítricos e frescos</a><a href="/c/amadeirado" data-cat="amadeirado">Amadeirados</a><a href="/c/doce" data-cat="doce">Doces</a><a href="/c/floral" data-cat="floral">Florais</a><a href="/c/oriental" data-cat="oriental">Orientais</a></div>
-      <div><b>Ocasiões</b><a href="/c/dia" data-cat="dia">Dia</a><a href="/c/noite" data-cat="noite">Noite</a><a href="/c/trabalho" data-cat="trabalho">Trabalho</a><a href="/c/romantico" data-cat="romantico">Encontros românticos</a></div>
-      <div><b>Ajuda para escolher</b><a href="#assinatura" data-modo="quiz">Descubra o seu perfume</a><a href="/c/mais-desejados" data-cat="mais-desejados">Mais desejados</a></div>
-    </div></div></li>
-    <li><a href="/c/arabes" data-cat="arabes">PERFUMES ÁRABES</a></li>
-    <li><a href="/c/importados" data-cat="importados">IMPORTADOS</a></li>
-    <li class="h-dd"><a href="#marcas" data-jump="marcas">MARCAS</a><div class="h-dd-box"><div class="h-w h-dd-marcas" id="nav-marcas"></div></div></li>
-    <li><a href="/c/kits" data-cat="kits">KITS</a></li>
-    <li><a href="/c/body-splash" data-cat="body-splash">BODY SPLASH</a></li>
-    <li><a href="/" data-jump="colecoes">MOSTRAR TODOS</a></li>
-  </ul></nav>
 </header>
 
 <main id="home">
@@ -151,7 +135,7 @@ BODY = f'''<body>
   let T=setInterval(()=>go(si+1),6000);
   $$('[data-slide]').forEach(b=>b.onclick=e=>{{e.preventDefault();go(si+ +b.dataset.slide);clearInterval(T);T=setInterval(()=>go(si+1),6000)}});
   document.addEventListener('click',e=>{{const b=e.target.closest('[data-car]');if(b){{const tr=b.parentNode.querySelector('.h-track');if(tr)tr.scrollBy({{left:(+b.dataset.car)*tr.clientWidth*.75,behavior:'smooth'}})}}}});
-  $('#burger').onclick=()=>document.body.classList.toggle('nav-open');
+  if($('#burger'))$('#burger').onclick=()=>document.body.classList.toggle('nav-open');
   document.addEventListener('click',e=>{{const j=e.target.closest('[data-jump]');if(j){{e.preventDefault();e.stopPropagation();document.body.classList.remove('nav-open');if(j.dataset.jump==='colecoes'){{setCat('all',true,false)}}window.setModo('home');const t=document.getElementById(j.dataset.jump);if(t)setTimeout(()=>t.scrollIntoView({{behavior:'smooth'}}),40);return}}
     const m=e.target.closest('[data-modo]');if(m){{e.preventDefault();e.stopPropagation();document.body.classList.remove('nav-open');window.setModo(m.dataset.modo);scrollTo({{top:0,behavior:'smooth'}})}}
     if(e.target.closest('#nav a[data-cat]'))document.body.classList.remove('nav-open');}},true);
@@ -375,7 +359,7 @@ out = out[:rs] + r"""function renderFixos(){
   $('#best').innerHTML=[...best,...extra].slice(0,14).map(i=>card(i)).join('');
   const marcas=[...new Set(ITEMS.map(i=>i.b))].sort((a,b)=>a.localeCompare(b));
   const sel=$('#brand'),cur=sel.value;sel.innerHTML='<option value="">Todas as marcas</option>'+marcas.map(b=>`<option>${b}</option>`).join('');sel.value=cur;
-  $('#nav-marcas').innerHTML=marcas.map(b=>`<a href="/c/${slug(b)}" data-cat="${slug(b)}">${b}</a>`).join('');
+  if($('#nav-marcas'))$('#nav-marcas').innerHTML=marcas.map(b=>`<a href="/c/${slug(b)}" data-cat="${slug(b)}">${b}</a>`).join('');
   const porQtd=[...marcas].sort((a,b)=>ITEMS.filter(i=>i.b===b).length-ITEMS.filter(i=>i.b===a).length);
   $('#brands').innerHTML=porQtd.map(b=>`<a href="/c/${slug(b)}" data-cat="${slug(b)}">${b}</a>`).join('');
 }

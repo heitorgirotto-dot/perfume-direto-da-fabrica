@@ -215,13 +215,6 @@ BODY = f'''<body>
     <div><h6>ATENDIMENTO PELO WHATSAPP</h6><p class="l8-foot-note">{ICON['wa']} <span id="f-wa">(11) 98265-9792</span></p><p class="l8-foot-note">Segunda a sábado, das 9h às 18h.</p><p class="l8-foot-note">Loja 100% online, envio para todo o Brasil.</p>
       <h6 style="margin-top:22px">SEGURANÇA</h6><div class="l8-seals"><span>{ICON['lock']} SSL</span><span>Asaas</span><span>PIX</span><span>12x</span></div></div>
   </div>
-  <div class="l8-foot-cats"><p class="l8-foot-sep"><span>TODAS AS CATEGORIAS</span></p>
-    <div class="l8-foot-cols">
-      <div><h6>PRODUTOS</h6><a href="/c/masculinos" data-cat="masculinos">Perfumes masculinos</a><a href="/c/femininos" data-cat="femininos">Perfumes femininos</a><a href="/c/unissex" data-cat="unissex">Perfumes unissex</a><a href="/c/kits" data-cat="kits">Para presente</a><a href="/c/arabes" data-cat="arabes">Perfumes árabes</a></div>
-      <div><h6>LINHAS</h6><a href="/c/importados" data-cat="importados">Importados & grifes</a><a href="/c/body-splash" data-cat="body-splash">Body splash</a><a href="/c/ofertas" data-cat="ofertas">Ofertas</a><a href="/c/mais-desejados" data-cat="mais-desejados">Mais desejados</a></div>
-      <div><h6>OCASIÕES</h6><a href="/c/romantico-masculino" data-cat="romantico-masculino">Ocasiões perfumes masculinos</a><a href="/c/romantico-feminino" data-cat="romantico-feminino">Ocasiões perfumes femininos</a></div>
-      <div><h6>FAMÍLIAS OLFATIVAS</h6><a href="/c/fresco" data-cat="fresco">Perfume cítrico</a><a href="/c/amadeirado" data-cat="amadeirado">Perfume amadeirado</a><a href="/c/doce" data-cat="doce">Perfume doce</a><a href="/c/floral" data-cat="floral">Perfume floral</a><a href="/c/oriental" data-cat="oriental">Perfume oriental</a></div>
-    </div></div>
   <div class="l8-copy"><span>© 2026 Nota Perfumaria. Todos os direitos reservados. Preços sujeitos a alteração; vale o valor exibido na confirmação do pedido.</span><span>Pagamentos: Asaas · Envios: Correios</span></div>
 </div></footer>
 

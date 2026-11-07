@@ -682,6 +682,9 @@ section{padding-block:0}
 .h-buy:hover{background:var(--h-ac)}
 /* banner largo */
 .h-full{margin:20px 0}
+#grid>.h-full{grid-column:1/-1;margin:16px calc(50% - 50vw)}
+.h-colecoes{overflow-x:clip}
+body.modo-lista #grid>.h-full{display:none}
 .h-full a{display:flex;flex-direction:column;align-items:center;justify-content:center;height:clamp(220px,31vw,420px);background:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.45)),url(/img/hero.jpg) center 30%/cover no-repeat;color:#fff;text-decoration:none;text-align:center}
 .h-full span{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(3.4rem,11vw,9.5rem);line-height:.9;letter-spacing:.04em;font-weight:500}
 .h-full em{font-style:normal;font-size:clamp(.9rem,1.6vw,1.3rem);opacity:.9;margin-top:10px}
@@ -961,7 +964,7 @@ body.pg-blog main#home,body.pg-blog .h-colecoes,body.pg-blog .h-quiz{display:non
     <div class="h-oc-track" id="occ-tiles"><a class="h-oc-card" href="/c/romantico-masculino" data-occ="romantico" data-cat="romantico-masculino" style="background-image:url(https://images.unsplash.com/photo-1507363102828-2022ceba1dfe?auto=format&fit=crop&w=900&h=1000&q=70)"><b>Encontros Românticos</b><em>VER SELEÇÃO</em></a><a class="h-oc-card" href="/c/dia-masculino" data-occ="dia" data-cat="dia-masculino" style="background-image:url(https://images.unsplash.com/photo-1761834521474-003ed9af6bc7?auto=format&fit=crop&w=900&h=1000&q=70)"><b>Dia</b><em>VER SELEÇÃO</em></a><a class="h-oc-card" href="/c/noite-masculino" data-occ="noite" data-cat="noite-masculino" style="background-image:url(https://images.unsplash.com/photo-1530258614483-0185dc8d6632?auto=format&fit=crop&w=900&h=1000&q=70)"><b>Noite</b><em>VER SELEÇÃO</em></a><a class="h-oc-card" href="/c/trabalho-masculino" data-occ="trabalho" data-cat="trabalho-masculino" style="background-image:url(https://images.unsplash.com/photo-1758876017801-f5a892ee460a?auto=format&fit=crop&w=900&h=1000&q=70)"><b>Trabalho</b><em>VER SELEÇÃO</em></a></div>
     <button class="h-oc-arr r" type="button" data-ocar="1" aria-label="Próximo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l7 7-7 7"/></svg></button></div>
 </div></section>
-<section class="h-full"><a href="/c/arabes" data-cat="arabes"><span>PERFUMES</span><em>Originais e lacrados, das casas mais desejadas</em></a></section>
+<section class="h-full" id="perf-faixa"><a href="/c/arabes" data-cat="arabes"><span>PERFUMES</span><em>Originais e lacrados, das casas mais desejadas</em></a></section>
 </div>
 
 <section class="h-list h-colecoes" id="colecoes"><div class="h-w">
@@ -1150,7 +1153,14 @@ function render(reset){
   $('#count').textContent=`${out.length} ${out.length===1?'produto':'produtos'}`;
   $('#more').innerHTML=out.length>show.length?`<button type="button" id="morebtn">Carregar mais produtos (${out.length-show.length})</button>`:'';
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.f===f));
+  placeFaixa();
 }
+/* faixa PERFUMES: entra na lista depois de linhas completas (6 no celular/tablet, 8 no computador) */
+let FAIXA=null;
+function placeFaixa(){FAIXA=FAIXA||document.getElementById('perf-faixa');const g=$('#grid');if(!FAIXA||!g)return;const cs=g.querySelectorAll(':scope>.h-card');
+  const cols=getComputedStyle(g).gridTemplateColumns.split(' ').filter(Boolean).length||4;const n=cols>=4?cols*2:6;
+  if(cs.length>n){if(cs[n].previousElementSibling!==FAIXA)g.insertBefore(FAIXA,cs[n])}else if(FAIXA.parentNode===g)g.appendChild(FAIXA)}
+addEventListener('resize',()=>{clearTimeout(placeFaixa._t);placeFaixa._t=setTimeout(placeFaixa,150)});
 window.setModo=function(m){document.body.classList.toggle('modo-lista',m==='lista');document.body.classList.toggle('modo-quiz',m==='quiz');if(m==='quiz'){document.title='Descubra o seu perfume · Nota Perfumaria';(function(){try{history.pushState(null,'','/#descubra')}catch(e){}})()}};
 function setF(v,scroll){f=v;FAMF='';OCCF='';CAT=Object.keys(CATS).find(k=>CATS[k].f===v)||'all';catHead();render(true);setModo('lista');if(CAT!=='all'){(function(){try{history.replaceState(null,'','/c/'+CAT)}catch(e){}})()}}
 function catHead(){if(document.body.classList.contains('pg-blog'))return;const c=CATS[CAT]||{};const brandCat=!c.t&&CAT!=='all';const title=brandCat?($('#brand').value||'Marca'):(c.t||'Todos os perfumes');

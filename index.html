@@ -852,7 +852,11 @@ body.pg-p .h-banner{display:none}
 
 /* vídeos da Nota */
 .h-nvid{padding:20px 0 34px}
-.h-nv-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin-top:10px}
+.h-nv-wrap{position:relative;margin-top:10px}
+.h-nv-track{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 3*18px)/4.3);gap:18px;overflow-x:auto;scrollbar-width:none;overscroll-behavior-x:contain}
+.h-nv-track::-webkit-scrollbar{display:none}
+.h-nv-arr{position:absolute;top:calc(50% - 60px);z-index:3;width:40px;height:40px;border-radius:50%;border:0;background:#d9b25a;color:#140f05;display:grid;place-items:center;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.2)}
+.h-nv-arr svg{width:16px;height:16px}.h-nv-arr.l{left:-14px}.h-nv-arr.r{right:-14px}
 .h-nv{margin:0;cursor:pointer}
 .h-nv-m{position:relative;display:block;width:100%;aspect-ratio:2/3;border:0;padding:0;border-radius:16px;overflow:hidden;background:#111;cursor:pointer}
 .h-nv-m img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
@@ -862,7 +866,8 @@ body.pg-p .h-banner{display:none}
 .h-nv-m .pl::after{content:"";border-left:15px solid #fff;border-top:9px solid transparent;border-bottom:9px solid transparent;margin-left:5px}
 .h-nv h3{margin:12px 0 4px;font-size:16px;line-height:1.25;color:#000;font-weight:600}
 .h-nv p{margin:0;font-size:13px;line-height:1.45;color:#555}
-@media(max-width:900px){.h-nv-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}}
+@media(max-width:900px){.h-nv-track{grid-auto-columns:calc((100% - 2*14px)/2.6);gap:14px}}
+@media(max-width:560px){.h-nv-track{grid-auto-columns:46%;gap:12px}.h-nv-arr{display:none}}
 @media(max-width:560px){.h-nvid .h-vid-hd{flex-direction:column;align-items:flex-start;gap:2px}.h-nvid .h-vid-hd .h-title{text-align:left!important}.h-nv h3{font-size:14px}.h-nv p{font-size:12px}}
 .h-nvm{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;padding:16px}
 .h-nvm[hidden]{display:none}
@@ -997,7 +1002,8 @@ body.pg-blog main#home,body.pg-blog .h-colecoes,body.pg-blog .h-quiz{display:non
 </div></section>
 <section class="h-nvid" id="videos" aria-label="Vídeos da Nota Perfumaria"><div class="h-w">
   <div class="h-vid-hd"><h2 class="h-title">Vídeos da Nota</h2><span>Conheça as nossas fragrâncias</span></div>
-  <div class="h-nv-grid">
+  <div class="h-nv-wrap"><button class="h-nv-arr l" type="button" data-nvarr="-1" aria-label="Vídeo anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <div class="h-nv-track" id="nv-track">
     <article class="h-nv" data-nv="0"><button class="h-nv-m" type="button" aria-label="Assistir: Bem-vindo à Nota Perfumaria"><img src="/videos/nota-boas-vindas.webp" alt="Bem-vindo à Nota Perfumaria" loading="lazy"><span class="pl"></span></button>
       <h3>Bem-vindo à Nota Perfumaria</h3><p>Conheça a nossa curadoria de perfumes árabes e importados originais, com atendimento especializado pelo WhatsApp e envio para todo o Brasil.</p></article>
     <article class="h-nv" data-nv="1"><button class="h-nv-m" type="button" aria-label="Assistir: Perfumes árabes femininos e autocuidado"><img src="/videos/nota-femininos.webp" alt="Perfumes árabes femininos e autocuidado" loading="lazy"><span class="pl"></span></button>
@@ -1006,7 +1012,9 @@ body.pg-blog main#home,body.pg-blog .h-colecoes,body.pg-blog .h-quiz{display:non
       <h3>Perfumes árabes masculinos</h3><p>Elegância, presença e sofisticação: fragrâncias árabes masculinas intensas e marcantes, para quem gosta de ser lembrado.</p></article>
     <article class="h-nv" data-nv="3"><button class="h-nv-m" type="button" aria-label="Assistir: O presente que marca presença"><img src="/videos/nota-presente.webp" alt="O presente que marca presença" loading="lazy"><span class="pl"></span></button>
       <h3>O presente que marca presença</h3><p>Perfume árabe na embalagem de presente da Nota Perfumaria: a escolha certa para surpreender quem você ama.</p></article>
+
   </div>
+  <button class="h-nv-arr r" type="button" data-nvarr="1" aria-label="Próximo vídeo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg></button></div>
 </div></section>
 
 <section class="h-list"><div class="h-w">
@@ -1693,6 +1701,21 @@ function abrir(k){var x=V[k];if(!x)return;if(!M){M=document.createElement('div')
   M.innerHTML='<div class="h-nvm-box"><button class="h-nvm-x" type="button" data-nvx aria-label="Fechar">&times;</button><video src="'+x.src+'" poster="'+x.poster+'" controls autoplay playsinline></video><div class="h-nvm-tx"><h3>'+x.t+'</h3><p>'+x.d+'</p><a href="/c/'+x.cat+'" data-nvcat="'+x.cat+'">'+x.cta+'</a></div></div>';
   M.hidden=false;document.body.style.overflow='hidden';var v=M.querySelector('video');v.play().catch(function(){})}
 document.addEventListener('click',function(e){var c=e.target.closest('[data-nv]');if(c&&!e.target.closest('a')){e.preventDefault();abrir(+c.dataset.nv)}});
+/* carrossel: rolagem contínua e infinita; pausa ao passar o mouse, tocar ou com o vídeo aberto */
+var T=document.getElementById('nv-track');if(!T)return;
+var orig=[].slice.call(T.children);
+function clonar(){T.querySelectorAll('[data-clone]').forEach(function(x){x.remove()});var n=0;while(T.scrollWidth<T.clientWidth*2.2&&n<6){orig.forEach(function(x){var c=x.cloneNode(true);c.setAttribute('data-clone','');c.setAttribute('aria-hidden','true');c.querySelectorAll('img').forEach(function(i){i.loading='eager'});T.appendChild(c)});n++}}
+clonar();addEventListener('resize',function(){clearTimeout(clonar._t);clonar._t=setTimeout(clonar,200)});
+function ciclo(){var f=orig[0],l=T.querySelector('[data-clone]');return l?l.offsetLeft-f.offsetLeft:0}
+var parado=false,acc=0,ult=0,tm;
+T.addEventListener('mouseenter',function(){parado=true});T.addEventListener('mouseleave',function(){parado=false});
+T.addEventListener('touchstart',function(){parado=true;clearTimeout(tm)},{passive:true});
+T.addEventListener('touchend',function(){clearTimeout(tm);tm=setTimeout(function(){parado=false},3500)},{passive:true});
+function ajusta(){var c=ciclo();if(c>0){if(T.scrollLeft>=c)T.scrollLeft-=c;else if(T.scrollLeft<=0)T.scrollLeft+=c}}
+T.addEventListener('scroll',ajusta,{passive:true});
+document.addEventListener('click',function(e){var b=e.target.closest('[data-nvarr]');if(!b)return;var w=orig[0].getBoundingClientRect().width+18;if(T.scrollLeft<w)T.scrollLeft+=ciclo();T.scrollBy({left:(+b.dataset.nvarr)*w,behavior:'smooth'});parado=true;clearTimeout(tm);tm=setTimeout(function(){parado=false},4000)});
+function passo(ts){var dt=ult?Math.min(64,ts-ult):16;ult=ts;var aberto=M&&!M.hidden;if(!parado&&!aberto&&!document.hidden&&ciclo()>0){acc+=dt*0.04;if(acc>=1){var px=Math.floor(acc);acc-=px;T.scrollLeft+=px}}requestAnimationFrame(passo)}
+requestAnimationFrame(passo);
 })();
 </script>
 </body>

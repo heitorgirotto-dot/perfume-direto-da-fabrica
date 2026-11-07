@@ -69,7 +69,7 @@ BODY = f'''<body>
 </div></div>
 <header class="l8-head" id="topo"><div class="l8w l8-head-in">
   <button class="l8-burger" type="button" id="burger" aria-label="Menu">{ICON['menu']}</button>
-  <a class="l8-logo" href="/" data-cat="all" aria-label="Nota Perfumaria"><img src="/img/logo-t.png?v=1" alt="Nota Perfumaria" width="640" height="237"></a>
+  <a class="l8-logo" href="/" data-cat="all" aria-label="Nota Perfumaria"><img src="/img/logo-branco.jpg?v=1" alt="Nota Perfumaria" width="900" height="352"></a>
   <nav class="l8-nav" id="nav" aria-label="Navegação da loja">
     <a href="/" data-cat="all">INÍCIO</a>
     <div class="l8-dd"><a href="/c/mais-desejados" data-cat="mais-desejados">PERFUMES</a><div class="l8-dd-box"><div class="l8-dd-cols">
@@ -279,7 +279,7 @@ h1,h2,h3,h4,h5,h6{font-family:var(--l8)!important}
 /* header */
 .l8-head{position:sticky;top:0;z-index:30;background:#fff;border-bottom:1px solid #ececec}
 .l8-head-in{display:flex;align-items:center;gap:26px;height:72px}
-.l8-logo img{height:46px;width:auto;display:block}
+.l8-logo img{height:52px;width:auto;display:block}
 .l8-nav{display:flex;align-items:center;gap:26px;font-size:12.5px;font-weight:500;letter-spacing:.02em;flex:1;height:100%}
 .l8-nav>a,.l8-dd>a{color:#111;text-decoration:none;white-space:nowrap;display:flex;align-items:center;height:72px;border-bottom:2px solid transparent}
 .l8-nav>a:hover,.l8-dd:hover>a,.l8-nav a.on{border-bottom-color:#111}

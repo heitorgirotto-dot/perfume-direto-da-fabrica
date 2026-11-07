@@ -841,10 +841,13 @@ body.pg-p .h-banner{display:none}
 .h-aro{padding:0 0 26px}
 .h-aro[hidden]{display:none}
 body.modo-lista .h-aro,body.modo-quiz .h-aro,body.pg-blog .h-aro,body.pg-p .h-aro{display:none}
-.h-aro-grid{grid-template-columns:repeat(5,minmax(0,1fr))}
-@media(max-width:1100px){.h-aro-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
-@media(max-width:900px){.h-aro-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:620px){.h-aro-grid{grid-template-columns:1fr 1fr}}
+.h-baratos{padding:22px 0 10px}
+.h-baratos .h-vid-hd{margin-bottom:6px}
+.h-aro-track{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 4*18px)/5.3);gap:18px;overflow-x:auto;scrollbar-width:none;overscroll-behavior-x:contain}
+.h-aro-track::-webkit-scrollbar{display:none}
+@media(max-width:1100px){.h-aro-track{grid-auto-columns:calc((100% - 3*16px)/4.3);gap:16px}}
+@media(max-width:900px){.h-aro-track{grid-auto-columns:calc((100% - 2*14px)/2.6);gap:14px}}
+@media(max-width:560px){.h-aro-track{grid-auto-columns:46%;gap:12px}}
 .h-full.h-full-m.h-full-cku a{background:radial-gradient(38% 60% at 50% 50%,rgba(0,0,0,.4),rgba(0,0,0,0) 100%),url(/img/faixa-cheirinho-unissex.webp) center/cover no-repeat}
 .h-full.h-full-m.h-full-cku span{font-size:clamp(1.9rem,4.4vw,4.6rem)}
 @media(max-width:700px){.h-full.h-full-m.h-full-cku a{background:linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.6)),url(/img/faixa-cheirinho-unissex-m.webp) center/cover no-repeat}}
@@ -989,6 +992,12 @@ body.pg-blog main#home,body.pg-blog .h-colecoes,body.pg-blog .h-quiz{display:non
   <button class="h-arr h-arr-r" type="button" data-slide="1" aria-label="Próximo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg></button>
 </div></section>
 
+<section class="h-baratos" id="em-conta" hidden><div class="h-w">
+  <div class="h-vid-hd"><h2 class="h-title">Perfumes mais em conta</h2><span id="baratos-sub">Originais a partir de R$ 79</span></div>
+  <div class="h-nv-wrap"><button class="h-nv-arr l" type="button" data-acar="-1" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <div class="h-aro-track" id="baratos"></div>
+  <button class="h-nv-arr r" type="button" data-acar="1" aria-label="Próximo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg></button></div>
+</div></section>
 <section class="h-conds"><div class="h-w h-conds-in">
   <a href="https://wa.me/5511982659792" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.8-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.2-.2-.5-.3z"/></svg><b>Dúvidas ?</b><span>Chame nosso time no Whats</span></a>
   <a href="#" data-pol="pagamento"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M6 9h4v2H6zM6 13h2v2H6zM13 9h5v1.6h-5zM13 12h5v1.6h-5z" fill="#fff"/></svg><b>Em até 12x no cartão</b><span>ou 10% de desconto no PIX</span></a>
@@ -1085,8 +1094,10 @@ body.pg-blog main#home,body.pg-blog .h-colecoes,body.pg-blog .h-quiz{display:non
 
 <section class="h-aro" id="aromatizadores" hidden>
   <section class="h-full h-full-m h-full-cku"><a href="/c/aromatizadores" data-cat="aromatizadores"><span>CHEIRINHO UNISSEX</span><em>Aromatizadores automotivos KING e GIRLS: fragrâncias árabes para o seu carro por R$ 59,90</em></a></section>
-  <div class="h-w"><div class="h-grid h-aro-grid" id="aro-U"></div>
-  <p class="h-aro-mais"><a class="h-aro-all" href="/c/aromatizadores" data-cat="aromatizadores">Ver todos os 40 aromatizadores</a></p></div>
+  <div class="h-w"><div class="h-nv-wrap"><button class="h-nv-arr l" type="button" data-acar="-1" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <div class="h-aro-track" id="aro-U"></div>
+  <button class="h-nv-arr r" type="button" data-acar="1" aria-label="Próximo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg></button></div>
+  <p class="h-aro-mais"><a class="h-aro-all" href="/c/aromatizadores" data-cat="aromatizadores">Ver todos os aromatizadores</a></p></div>
 </section>
 <section class="h-news"><div class="h-w h-news-in">
   <div><h3>Fique por dentro de nossas novidades</h3><p>Cadastre-se agora mesmo e receba nossas promoções, lançamentos e indicações.</p></div>
@@ -1199,7 +1210,8 @@ const byName=n=>{const [b,nm]=n.includes("|")?n.split("|"):[null,n];return ITEMS
 function renderFixos(){
   const best=ITEMS.some(i=>i.best)?ITEMS.filter(i=>i.best):BEST.map(byName).filter(Boolean);
   const extra=ITEMS.filter(i=>i.img&&i.p!=null&&!best.includes(i)&&!i.splash&&!i.kit&&!i.carro).slice(0,6);
-  {const el=$('#aro-U');if(el){const K=ITEMS.filter(i=>i.carro&&i.g==='M'),Gs=ITEMS.filter(i=>i.carro&&i.g!=='M'),l=[];for(let k=0;l.length<10&&(k<K.length||k<Gs.length);k++){if(K[k])l.push(K[k]);if(Gs[k]&&l.length<10)l.push(Gs[k])}el.innerHTML=l.map(i=>card(i)).join('');el.closest('.h-aro').hidden=!l.length}}
+  {const el=$('#baratos');if(el){const l=ITEMS.filter(i=>i.img&&i.p!=null&&!i.carro&&!i.kit&&!i.splash&&!/body mist|body splash/i.test(i.notes||'')).sort((x,y)=>x.p-y.p).slice(0,20);el.innerHTML=l.map(i=>card(i)).join('');el.closest('section').hidden=!l.length;if(l.length){$('#baratos-sub').textContent='Originais a partir de '+brl(pix(l[0].p))+' no PIX'}if(window.autoCar)autoCar(el)}}
+  {const el=$('#aro-U');if(el){const K=ITEMS.filter(i=>i.carro&&i.g==='M'),Gs=ITEMS.filter(i=>i.carro&&i.g!=='M'),l=[];for(let k=0;k<10;k++){if(K[k])l.push(K[k]);if(Gs[k])l.push(Gs[k])}el.innerHTML=l.map(i=>card(i)).join('');el.closest('.h-aro').hidden=!l.length;if(window.autoCar)autoCar(el)}}
   $('#best').innerHTML=[...best,...extra].slice(0,14).map(i=>card(i)).join('');
   const marcas=[...new Set(ITEMS.map(i=>i.b))].sort((a,b)=>a.localeCompare(b));
   const sel=$('#brand'),cur=sel.value;sel.innerHTML='<option value="">Todas as marcas</option>'+marcas.map(b=>`<option>${b}</option>`).join('');sel.value=cur;
@@ -1715,6 +1727,27 @@ document.addEventListener('click',function(e){var b=e.target.closest('[data-nvar
 function passo(ts){var dt=ult?Math.min(64,ts-ult):16;ult=ts;var aberto=M&&!M.hidden;if(!parado&&!aberto&&!document.hidden&&ciclo()>0){acc+=dt*0.04;if(acc>=1){var px=Math.floor(acc);acc-=px;T.scrollLeft+=px}}requestAnimationFrame(passo)}
 requestAnimationFrame(passo);
 })();
+</script>
+<script>
+/* carrossel infinito com rolagem contínua (cheirinhos); pausa no mouse/toque; refaz os clones a cada novo render */
+window.autoCar=function(T){if(!T)return;
+  T.querySelectorAll('[data-clone]').forEach(function(x){x.remove()});
+  var orig=[].slice.call(T.children);if(!orig.length)return;
+  function clonar(){T.querySelectorAll('[data-clone]').forEach(function(x){x.remove()});var n=0;while((n<1||T.scrollWidth<T.clientWidth*2.2)&&n<6){orig.forEach(function(x){var c=x.cloneNode(true);c.setAttribute('data-clone','');c.setAttribute('aria-hidden','true');c.querySelectorAll('img').forEach(function(i){i.loading='eager'});c.querySelectorAll('a,button').forEach(function(b){b.tabIndex=-1});T.appendChild(c)});n++}}
+  clonar();T._orig=orig;
+  if(T._iniciado)return;T._iniciado=true;
+  addEventListener('resize',function(){clearTimeout(T._rt);T._rt=setTimeout(function(){if(T.offsetParent)clonar()},250)});
+  function ciclo(){var o=T._orig,l=T.querySelector('[data-clone]');return o&&o[0]&&l?l.offsetLeft-o[0].offsetLeft:0}
+  var parado=false,acc=0,ult=0,tm;
+  T.addEventListener('mouseenter',function(){parado=true});T.addEventListener('mouseleave',function(){parado=false});
+  T.addEventListener('touchstart',function(){parado=true;clearTimeout(tm)},{passive:true});
+  T.addEventListener('touchend',function(){clearTimeout(tm);tm=setTimeout(function(){parado=false},3500)},{passive:true});
+  T.addEventListener('scroll',function(){var c=ciclo();if(c>0){if(T.scrollLeft>=c)T.scrollLeft-=c;else if(T.scrollLeft<=0)T.scrollLeft+=c}},{passive:true});
+  var W=T.parentNode;W.addEventListener('click',function(e){var b=e.target.closest('[data-acar]');if(!b)return;var o=T._orig[0];var w=o.getBoundingClientRect().width+parseFloat(getComputedStyle(T).columnGap||16);if(T.scrollLeft<w)T.scrollLeft+=ciclo();T.scrollBy({left:(+b.dataset.acar)*w,behavior:'smooth'});parado=true;clearTimeout(tm);tm=setTimeout(function(){parado=false},4000)});
+  function passo(ts){var dt=ult?Math.min(64,ts-ult):16;ult=ts;var pv=document.getElementById('pv');var modal=pv&&!pv.classList.contains('hidden')&&getComputedStyle(pv).display!=='none';
+    if(!parado&&!modal&&!document.hidden&&T.offsetParent&&ciclo()>0){acc+=dt*0.04;if(acc>=1){var px=Math.floor(acc);acc-=px;T.scrollLeft+=px}}requestAnimationFrame(passo)}
+  requestAnimationFrame(passo)};
+autoCar(document.getElementById('aro-U'));autoCar(document.getElementById('baratos'));
 </script>
 </body>
 </html>

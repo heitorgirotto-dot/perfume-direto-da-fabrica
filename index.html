@@ -840,7 +840,7 @@ body.pg-p .h-banner{display:none}
 /* aromatizadores automotivos: faixa de ponta a ponta + produtos */
 .h-aro{padding:0 0 26px}
 .h-aro[hidden]{display:none}
-body.modo-lista .h-aro,body.modo-quiz .h-aro{display:none}
+body.modo-lista .h-aro,body.modo-quiz .h-aro,body.pg-blog .h-aro,body.pg-p .h-aro{display:none}
 .h-aro-grid{grid-template-columns:repeat(5,minmax(0,1fr))}
 @media(max-width:1100px){.h-aro-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:900px){.h-aro-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
@@ -1053,11 +1053,6 @@ body.pg-blog main#home,body.pg-blog .h-colecoes,body.pg-blog .h-quiz{display:non
   <div class="h-more" id="more"></div>
 </div></section>
 
-<section class="h-aro" id="aromatizadores" hidden>
-  <section class="h-full h-full-m h-full-cku"><a href="/c/aromatizadores" data-cat="aromatizadores"><span>CHEIRINHO UNISSEX</span><em>Aromatizadores automotivos KING e GIRLS: fragrâncias árabes para o seu carro por R$ 59,90</em></a></section>
-  <div class="h-w"><div class="h-grid h-aro-grid" id="aro-U"></div>
-  <p class="h-aro-mais"><a class="h-aro-all" href="/c/aromatizadores" data-cat="aromatizadores">Ver todos os 40 aromatizadores</a></p></div>
-</section>
 <section class="h-brands h-home" id="marcas"><div class="h-w">
   <h2 class="h-title">Filtre os produtos por fabricantes</h2>
   <p class="h-sub">Trabalhamos com as casas mais desejadas da perfumaria árabe e internacional</p>
@@ -1088,6 +1083,11 @@ body.pg-blog main#home,body.pg-blog .h-colecoes,body.pg-blog .h-quiz{display:non
     <details id="pol-contato"><summary>Contato</summary><p>Atendimento pelo WhatsApp <b>(11) 98265-9792</b>, de segunda a sábado, das 9h às 18h. Fora desse horário, deixe sua mensagem que respondemos no próximo dia útil.</p></details>
 </div>
 
+<section class="h-aro" id="aromatizadores" hidden>
+  <section class="h-full h-full-m h-full-cku"><a href="/c/aromatizadores" data-cat="aromatizadores"><span>CHEIRINHO UNISSEX</span><em>Aromatizadores automotivos KING e GIRLS: fragrâncias árabes para o seu carro por R$ 59,90</em></a></section>
+  <div class="h-w"><div class="h-grid h-aro-grid" id="aro-U"></div>
+  <p class="h-aro-mais"><a class="h-aro-all" href="/c/aromatizadores" data-cat="aromatizadores">Ver todos os 40 aromatizadores</a></p></div>
+</section>
 <section class="h-news"><div class="h-w h-news-in">
   <div><h3>Fique por dentro de nossas novidades</h3><p>Cadastre-se agora mesmo e receba nossas promoções, lançamentos e indicações.</p></div>
   <form class="h-news-f" id="nform"><input id="nnome" type="text" placeholder="Seu nome" autocomplete="name"><input id="nemail" type="email" placeholder="Seu e-mail" autocomplete="email"><button type="submit">Cadastrar</button><p id="nmsg"></p></form>

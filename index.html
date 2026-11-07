@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <link rel="canonical" href="https://notaperfumaria.com/">
 <meta property="og:url" content="https://notaperfumaria.com/">
+<meta name="theme-color" content="#0a0908">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Nota Perfumaria — alta perfumaria árabe e importada. Fragrâncias 100% originais, curadoria exclusiva e atendimento personalizado. PIX com desconto ou cartão em até 12x.">
 <meta property="og:title" content="Nota Perfumaria — Alta perfumaria original e exclusiva">
@@ -15,7 +16,7 @@
 /* Layout: loja virtual estilo "King of Parfums" — faixa promo, header com logo/busca, banner, vitrines por seção, barra de benefícios, rodapé institucional. Paleta tirada do logotipo Nota: preto absoluto + ouro polido. Single committed dark look. */
 :root{
   --bg:#050505; --bg2:#0e0c09; --card:#141210; --line:#2a241a;
-  --fg:#f5efe2; --muted:#a4987f; --gold:#d9b25a; --gold2:#f5dd95; --gold3:#9c7a2e; --wa:#25d366; --sale:#e23d3d;
+  --fg:#161412; --muted:#6b655a; --gold:#d9b25a; --gold2:#f5dd95; --gold3:#9c7a2e; --wa:#25d366; --sale:#e23d3d;
   --display:"Cormorant Garamond",Georgia,"Times New Roman",serif;
   --body:"Jost","Segoe UI",Helvetica,Arial,sans-serif;
   color-scheme:dark;
@@ -61,10 +62,10 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background
 .cover-wide{position:relative}
 .cw-txt{position:absolute;right:3.5%;top:50%;transform:translateY(-50%);width:38%;display:flex;flex-direction:column;align-items:center;text-align:center;gap:clamp(6px,1vw,14px);color:#f3ead7}
 .cw-k{font-size:clamp(.7rem,.95vw,.95rem);letter-spacing:.32em;text-transform:uppercase;color:var(--gold)}
-.cw-h{font-family:var(--display);font-size:clamp(2rem,4.3vw,4.6rem);line-height:1.02;font-weight:600;color:#f6efe0;text-shadow:0 4px 30px rgba(0,0,0,.6)}
+.cw-h{font-family:var(--display);font-size:clamp(2rem,4.3vw,4.6rem);line-height:1.02;font-weight:600;color:#161412;text-shadow:0 4px 30px rgba(0,0,0,.6)}
 .cw-h em{font-style:italic;background:linear-gradient(180deg,#fff3c4 0%,#e6c374 45%,#a8802f 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
 .cw-d{color:var(--gold);font-size:clamp(.8rem,1vw,1rem);display:flex;align-items:center;gap:12px;width:70%}.cw-d:before,.cw-d:after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold3),transparent)}
-.cw-s{font-size:clamp(.85rem,1.25vw,1.3rem);line-height:1.45;color:#e8dfcc}
+.cw-s{font-size:clamp(.85rem,1.25vw,1.3rem);line-height:1.45;color:#4a453c}
 .cw-b{margin-top:clamp(4px,.8vw,12px);padding:clamp(9px,.9vw,14px) clamp(20px,2vw,32px);border-radius:999px;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#140f05;font-weight:700;font-size:clamp(.8rem,1vw,1rem);box-shadow:0 10px 30px rgba(0,0,0,.45)}
 .cover-wide:hover .cw-b{filter:brightness(1.08)}
 .cover-wide img{display:block;width:100%;height:auto;max-width:100%}
@@ -323,7 +324,7 @@ footer{background:#020202;border-top:1px solid var(--line);padding-block:44px 24
 .tile::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,5,5,.05) 30%,rgba(5,5,5,.92));z-index:-1}
 .tile .tx{position:absolute;left:0;right:0;bottom:0;padding:18px}
 .tile .tx b{display:block;font-family:var(--display);font-size:1.55rem;line-height:1.05;color:var(--gold2)}
-.tile .tx span{display:block;color:#cfc6b2;font-size:.86rem;margin-top:4px}
+.tile .tx span{display:block;color:#4a453c;font-size:.86rem;margin-top:4px}
 .tile .tx em{display:inline-block;margin-top:10px;font-style:normal;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
 @media(max-width:1000px){.tiles-sec .tl{grid-template-columns:repeat(3,1fr)}.tiles-sec .tl.four{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:600px){.tiles-sec .tl{grid-template-columns:repeat(2,1fr)}.tile{aspect-ratio:4/4.4}.tile .tx{padding:14px}.tile .tx b{font-size:1.25rem}}
@@ -331,7 +332,7 @@ footer{background:#020202;border-top:1px solid var(--line);padding-block:44px 24
 .card .ph .off{position:absolute;left:10px;top:10px;background:var(--sale);color:#fff;font-size:.72rem;font-weight:800;padding:4px 8px;border-radius:6px;letter-spacing:.04em}
 .card .ph .fg{position:absolute;left:10px;top:38px;background:#1b3d22;color:#9be3a6;font-size:.68rem;font-weight:700;padding:3px 7px;border-radius:6px;letter-spacing:.04em;text-transform:uppercase}
 .card .old{color:var(--muted);font-size:.82rem;text-decoration:line-through;margin-top:6px}
-.card .parc{color:#cfc6b2;font-size:.8rem;margin-top:2px}
+.card .parc{color:#4a453c;font-size:.8rem;margin-top:2px}
 .pv-info .old{color:var(--muted);text-decoration:line-through;font-size:.95rem;margin-top:8px}
 /* cabeçalho de categoria */
 .cat-crumb{font-size:.78rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}.cat-crumb a{color:var(--gold);text-decoration:none}
@@ -345,7 +346,7 @@ footer{background:#020202;border-top:1px solid var(--line);padding-block:44px 24
 /* FAQ */
 .faq{max-width:900px;margin:0 auto}
 .faq details{border-bottom:1px solid var(--line);padding:4px 0}
-.faq summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 0;font-family:var(--display);font-size:1.25rem;font-weight:600;color:#f0e8d6}
+.faq summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 0;font-family:var(--display);font-size:1.25rem;font-weight:600;color:#161412}
 .faq summary::-webkit-details-marker{display:none}
 .faq summary::after{content:"+";color:var(--gold);font-size:1.5rem;font-weight:300;flex:none;transition:transform .2s}
 .faq details[open] summary::after{transform:rotate(45deg)}
@@ -358,7 +359,7 @@ footer{background:#020202;border-top:1px solid var(--line);padding-block:44px 24
 section{padding-block:72px}
 .sh{margin-bottom:34px}
 .sh h2{text-transform:none;letter-spacing:0;font-size:clamp(1.9rem,3.2vw,2.7rem);font-weight:600}
-h2.gold-text,h3.gold-text{background:none;-webkit-text-fill-color:#f3ecdc;color:#f3ecdc}
+h2.gold-text,h3.gold-text{background:none;-webkit-text-fill-color:#161412;color:#161412}
 .sh .rule{width:44px;height:1px;background:var(--gold3)}
 .kick{color:var(--gold)}
 .promo{background:#0a0908;color:#cdb77a;border-bottom:1px solid var(--line);font-size:.72rem;font-weight:500;letter-spacing:.14em}
@@ -371,33 +372,33 @@ h2.gold-text,h3.gold-text{background:none;-webkit-text-fill-color:#f3ecdc;color:
 .card .acts a.ask{display:none}
 .card .acts{gap:8px}
 .card h3{font-size:1rem}
-.like{font-size:.74rem;color:#8d8678}.like b{color:#b9ad8f;font-weight:500}
-.pix{font-size:1.35rem;color:#f3ecdc}.pix small{color:#9c8f70}
-.card .full{color:#a79d86;font-size:.84rem;margin-top:4px}
-.card .parc{color:#7f7765;font-size:.76rem}
+.like{font-size:.74rem;color:#7a7466}.like b{color:#6b655a;font-weight:500}
+.pix{font-size:1.35rem;color:#161412}.pix small{color:#6b655a}
+.card .full{color:#6b655a;font-size:.84rem;margin-top:4px}
+.card .parc{color:#8a8375;font-size:.76rem}
 .card .ph .fg{top:10px;left:auto;right:10px}
-.card .ph .off{background:#f3ecdc;color:#140f05}
+.card .ph .off{background:#161412;color:#140f05}
 .exp-g>div:before{background:var(--gold3);height:1px;opacity:.6}
-.exp-g h3{color:#f3ecdc}
+.exp-g h3{color:#161412}
 .ex-n{color:var(--gold3)}
-.bn .stats b{color:#f3ecdc}
-.tile .tx b{color:#f3ecdc}
+.bn .stats b{color:#161412}
+.tile .tx b{color:#161412}
 .benef .wrap{grid-template-columns:repeat(3,1fr);gap:22px 28px;padding-block:38px}
 .benef div{text-align:left;display:grid;grid-template-columns:28px 1fr;gap:12px;align-items:start}
 .benef svg{width:24px;height:24px;margin:2px 0 0;grid-row:1/3}
-.benef b{letter-spacing:.08em;color:#f3ecdc;font-size:.74rem}
-.benef span{font-size:.84rem;line-height:1.5;color:#a79d86}
+.benef b{letter-spacing:.08em;color:#161412;font-size:.74rem}
+.benef span{font-size:.84rem;line-height:1.5;color:#6b655a}
 @media(max-width:760px){.benef .wrap{grid-template-columns:1fr}}
 /* sobre + transparência */
 .sobre .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:start}
 .sobre h2{font-size:clamp(1.9rem,3vw,2.6rem);margin-top:10px}
-.sobre .lead{color:#c9c2b2;font-size:1.05rem;line-height:1.7;margin-top:16px;max-width:58ch}
+.sobre .lead{color:#4a453c;font-size:1.05rem;line-height:1.7;margin-top:16px;max-width:58ch}
 .sobre .lead+.lead{margin-top:12px}
 .nao{border:1px solid var(--line);border-radius:18px;padding:28px;background:#0a0908}
-.nao h3{font-size:1.4rem;color:#f3ecdc;margin-bottom:14px}
+.nao h3{font-size:1.4rem;color:#161412;margin-bottom:14px}
 .nao ul{list-style:none;padding:0;margin:0;display:grid;gap:12px}
-.nao li{display:grid;grid-template-columns:22px 1fr;gap:10px;color:#c9c2b2;line-height:1.55;font-size:.95rem}
-.nao li b{color:#f3ecdc;font-weight:600}
+.nao li{display:grid;grid-template-columns:22px 1fr;gap:10px;color:#4a453c;line-height:1.55;font-size:.95rem}
+.nao li b{color:#161412;font-weight:600}
 .nao li i{font-style:normal;color:var(--gold);font-weight:700}
 @media(max-width:860px){.sobre .wrap{grid-template-columns:1fr;gap:28px}}
 .pol .faq summary{font-size:1.15rem}
@@ -405,7 +406,7 @@ h2.gold-text,h3.gold-text{background:none;-webkit-text-fill-color:#f3ecdc;color:
 /* fab mais discreto */
 .fab-l{display:none}
 </style>
-<style>.pv-desc{color:#c9c2b2;font-size:.92rem;line-height:1.55;margin:8px 0 0;white-space:pre-line}</style>
+<style>.pv-desc{color:#4a453c;font-size:.92rem;line-height:1.55;margin:8px 0 0;white-space:pre-line}</style>
 <style>
 .hrow.two{grid-template-columns:auto 1fr auto auto!important;gap:12px}
 .acc{display:flex;align-items:center;gap:8px;background:transparent;border:1px solid var(--gold);color:var(--gold2);border-radius:999px;padding:9px 16px;font:inherit;font-weight:600;cursor:pointer;white-space:nowrap}
@@ -415,15 +416,15 @@ h2.gold-text,h3.gold-text{background:none;-webkit-text-fill-color:#f3ecdc;color:
 .mx[hidden]{display:none!important}
 .mx-box{position:relative;width:100%;max-width:460px;background:#0d0d0d;border:1px solid var(--line);border-radius:18px;padding:26px 22px}
 .mx-box.wide{max-width:720px}
-.mx-x{position:absolute;top:12px;right:14px;background:none;border:0;color:#bbb;font-size:22px;cursor:pointer}
-.mx h3{margin:0 0 4px;color:var(--gold2);font-size:1.3rem}.mx p.sub{margin:0 0 16px;color:#a9a294;font-size:.92rem}
+.mx-x{position:absolute;top:12px;right:14px;background:none;border:0;color:#777;font-size:22px;cursor:pointer}
+.mx h3{margin:0 0 4px;color:var(--gold2);font-size:1.3rem}.mx p.sub{margin:0 0 16px;color:#6b655a;font-size:.92rem}
 .mx-tabs{display:flex;gap:6px;margin:0 0 16px;background:#141414;border-radius:999px;padding:4px}
-.mx-tabs button{flex:1;background:none;border:0;color:#bdb6a6;padding:9px;border-radius:999px;font:inherit;font-weight:600;cursor:pointer}
+.mx-tabs button{flex:1;background:none;border:0;color:#5c564c;padding:9px;border-radius:999px;font:inherit;font-weight:600;cursor:pointer}
 .mx-tabs button.on{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#140f05}
-.mx label{display:block;font-size:.75rem;color:#9a9385;text-transform:uppercase;letter-spacing:.06em;margin:10px 0 4px}
+.mx label{display:block;font-size:.75rem;color:#6b655a;text-transform:uppercase;letter-spacing:.06em;margin:10px 0 4px}
 .mx input[type=text],.mx input[type=email],.mx input[type=password],.mx input[type=tel]{width:100%;padding:12px;border-radius:10px;border:1px solid #2a2a2a;background:#080808;color:#fff;font:inherit}
 .mx input:focus{outline:0;border-color:var(--gold)}
-.mx .ck{display:flex;gap:8px;align-items:flex-start;font-size:.85rem;color:#c9c2b2;margin-top:12px;text-transform:none;letter-spacing:0}
+.mx .ck{display:flex;gap:8px;align-items:flex-start;font-size:.85rem;color:#4a453c;margin-top:12px;text-transform:none;letter-spacing:0}
 .mx .ck input{margin-top:3px}
 .mx .go{width:100%;margin-top:16px;padding:13px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#140f05;font:inherit;font-weight:800;cursor:pointer}
 .mx .go:disabled{opacity:.6}
@@ -431,11 +432,11 @@ h2.gold-text,h3.gold-text{background:none;-webkit-text-fill-color:#f3ecdc;color:
 .mx .lnk{background:none;border:0;color:var(--gold);font:inherit;font-size:.88rem;cursor:pointer;padding:0;text-decoration:underline}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:480px){.row2{grid-template-columns:1fr}}
 .ped{border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:10px 0;background:#0a0a0a}
-.ped-h{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:.85rem;color:#a9a294}
+.ped-h{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:.85rem;color:#6b655a}
 .ped-h b{color:var(--gold2);font-size:.95rem}
 .ped-n{margin:6px 0;font-weight:600}
 .steps{display:flex;gap:4px;margin:12px 0 6px}.steps i{flex:1;height:6px;border-radius:3px;background:#262626}.steps i.on{background:linear-gradient(90deg,var(--gold),var(--gold2))}
-.steps-l{display:flex;justify-content:space-between;font-size:.7rem;color:#8d8678}
+.steps-l{display:flex;justify-content:space-between;font-size:.7rem;color:#7a7466}
 .st-badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:.78rem;font-weight:700;background:#1a1609;color:var(--gold2);border:1px solid var(--gold3)}
 .st-badge.cancelado{background:#2a0f0f;color:#ff9f9f;border-color:#6b1f1f}
 .spin{width:14px;height:14px;border:2px solid #444;border-top-color:var(--gold);border-radius:50%;display:inline-block;animation:sp 1s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
@@ -444,18 +445,18 @@ h2.gold-text,h3.gold-text{background:none;-webkit-text-fill-color:#f3ecdc;color:
 
 <style>
 .cartb{position:relative}.cartb .cq{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:var(--gold);color:#140f05;font-size:.75rem;font-weight:800}
-.cartb.vazio .cq{background:#2a2a2a;color:#9a9385}
+.cartb.vazio .cq{background:#2a2a2a;color:#6b655a}
 .cart-l{display:grid;grid-template-columns:64px 1fr auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
 .cart-l img,.cart-l .ph0{width:64px;height:64px;border-radius:10px;object-fit:cover;background:#1a1a1a}
-.cart-l .nm{font-weight:600;font-size:.92rem;line-height:1.3}.cart-l .br{font-size:.75rem;color:#9a9385;text-transform:uppercase;letter-spacing:.05em}
+.cart-l .nm{font-weight:600;font-size:.92rem;line-height:1.3}.cart-l .br{font-size:.75rem;color:#6b655a;text-transform:uppercase;letter-spacing:.05em}
 .cart-l .pr{font-size:.85rem;color:var(--gold2);margin-top:3px}
 .qt{display:flex;align-items:center;gap:6px}.qt button{width:28px;height:28px;border-radius:8px;border:1px solid var(--line);background:#141414;color:#fff;cursor:pointer;font-size:1rem}
-.qt b{min-width:18px;text-align:center}.rm{background:none;border:0;color:#9a9385;font-size:.78rem;cursor:pointer;text-decoration:underline;margin-top:6px}
-.cart-vazio{text-align:center;padding:30px 10px;color:#a9a294}.cart-vazio svg{width:54px;height:54px;color:var(--gold3);margin-bottom:8px}
-.ck-sec{margin-top:16px}.ck-sec h4{margin:0 0 8px;color:#e9e2d2;font-size:.95rem}
+.qt b{min-width:18px;text-align:center}.rm{background:none;border:0;color:#6b655a;font-size:.78rem;cursor:pointer;text-decoration:underline;margin-top:6px}
+.cart-vazio{text-align:center;padding:30px 10px;color:#6b655a}.cart-vazio svg{width:54px;height:54px;color:var(--gold3);margin-bottom:8px}
+.ck-sec{margin-top:16px}.ck-sec h4{margin:0 0 8px;color:#161412;font-size:.95rem}
 .ck-row{display:grid;grid-template-columns:1fr auto;gap:8px}.ck-row2{display:grid;grid-template-columns:110px 1fr;gap:8px;margin-top:8px}
 .mx .opt{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 13px;border:1px solid var(--line);border-radius:12px;margin:6px 0;cursor:pointer;font-size:.9rem}
-.mx .opt.on{border-color:var(--gold);background:#1a1609}.mx .opt small{color:#9a9385}
+.mx .opt.on{border-color:var(--gold);background:#1a1609}.mx .opt small{color:#6b655a}
 .mx select{width:100%;padding:11px;border-radius:10px;border:1px solid #2a2a2a;background:#080808;color:#fff;font:inherit;margin-top:6px}
 .tot{display:flex;justify-content:space-between;align-items:baseline;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}.tot b{font-size:1.35rem;color:var(--gold2)}
 .add-cart{background:transparent!important;color:var(--gold2)!important;border:1px solid var(--gold)!important}
@@ -471,21 +472,101 @@ h2.gold-text,h3.gold-text{background:none;-webkit-text-fill-color:#f3ecdc;color:
 .exp-g>div{position:relative;border:1px solid var(--line);border-radius:18px;padding:26px 22px;background:linear-gradient(180deg,#0e0c08,#070707);overflow:hidden}
 .exp-g>div:before{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
 .exp-g h3{margin:10px 0 8px;font-family:var(--display);font-size:1.4rem;color:var(--gold2);font-weight:600}
-.exp-g p{margin:0;color:#b9b2a3;font-size:.92rem;line-height:1.6}
+.exp-g p{margin:0;color:#5c564c;font-size:.92rem;line-height:1.6}
 .ex-n{font-family:var(--display);font-size:2.4rem;line-height:1;color:transparent;-webkit-text-stroke:1px var(--gold3)}
 @media(max-width:900px){.exp-g{grid-template-columns:1fr 1fr}}@media(max-width:520px){.exp-g{grid-template-columns:1fr}}
 .quiz{background:radial-gradient(ellipse at top,#16120a 0%,#050505 70%);border-block:1px solid var(--line)}
 .qz{display:grid;gap:18px;max-width:900px;margin:0 auto 26px;text-align:center}
-.qz-s b{display:block;color:#e9e2d2;margin-bottom:10px;font-weight:600;letter-spacing:.02em}
+.qz-s b{display:block;color:#161412;margin-bottom:10px;font-weight:600;letter-spacing:.02em}
 .chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
-.chips button{background:transparent;border:1px solid var(--gold3);color:#d9d2c2;border-radius:999px;padding:10px 18px;font:inherit;cursor:pointer;transition:.2s}
+.chips button{background:transparent;border:1px solid var(--gold3);color:#4a453c;border-radius:999px;padding:10px 18px;font:inherit;cursor:pointer;transition:.2s}
 .chips button:hover{border-color:var(--gold);color:var(--gold2)}
 .chips button.on{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#140f05;border-color:transparent;font-weight:700}
-.qz-cta{text-align:center;margin-top:26px}.qz-cta p{color:#b9b2a3;margin:0 0 12px}
-.qz-hint{text-align:center;color:#8d8678;grid-column:1/-1}
+.qz-cta{text-align:center;margin-top:26px}.qz-cta p{color:#5c564c;margin:0 0 12px}
+.qz-hint{text-align:center;color:#7a7466;grid-column:1/-1}
 .sh p{max-width:640px;margin-inline:auto}
 </style>
 <style>img{max-width:100%}[hidden]{display:none!important}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}</style>
+<style>
+/* ===== tema claro ===== */
+:root{--bg:#ffffff;--bg2:#f7f5f0;--card:#ffffff;--line:#e6e1d8;--fg:#161412;--muted:#6b655a;--gold:#b8923a;--gold2:#9c7a2e;--gold3:#7a5f22;color-scheme:light}
+body{background:#fff;color:var(--fg)}
+body::before{background:#0a0908}
+/* cabeçalho preto, logo dourado */
+.promo{background:#0a0908;color:#e8d9ad;border-bottom:0}
+header.top{background:#0a0908;border-bottom:1px solid #1e1b16}
+header.top .search{background:#17150f;border-color:#2a261e}header.top .search input{color:#f3ecdc}header.top .search button{background:#d9b25a;color:#140f05}
+header.top .acc{color:#f3ecdc;border-color:#3a3328}header.top .acc:hover{background:#1a1712}header.top .cartb .cq{background:#d9b25a;color:#140f05}
+.nav{border-top:1px solid #1e1b16;background:#0a0908}
+.nav>a,.nav>.dd>button{color:#efe8d8}.nav>a:hover,.nav>.dd>button:hover,.nav>a.on,.nav>.dd.on>button{color:#f5dd95;border-bottom-color:#d9b25a}
+.nav .hl{color:#f5dd95}
+.dd-box{background:#fff;border-color:var(--line);border-top:2px solid #0a0908;box-shadow:0 24px 50px rgba(0,0,0,.14)}
+.dd-box a{color:var(--fg)}.dd-box a:hover{color:var(--gold2)}.dd-box h5{color:#161412}
+.dd-box .tiles a{background:var(--bg2)}.dd-box .tiles a b{color:#161412}
+/* hero e capa continuam escuros (imagem) */
+.cover-wide{background:#0a0908;border-bottom:0}
+.hero{background:#0a0908}.hero h1,.hero .lead,.hero-benef{color:#f3ecdc}.hero .lead{color:#cfc6b2}.hero .kick{color:#d9b25a}
+.hero .btn-ghost{border-color:#d9b25a;color:#f5dd95}
+.cw-h{color:#f6efe0}.cw-s{color:#e8dfcc}.cw-txt{color:#f3ead7}.cw-k{color:#d9b25a}
+/* corpo */
+.gold-text{background:none;-webkit-text-fill-color:#161412;color:#161412}
+h2.gold-text,h3.gold-text{-webkit-text-fill-color:#161412;color:#161412}
+.kick{color:var(--gold)}
+.sh .rule{background:#161412;height:2px;width:40px}
+.exp{background:#fff}.exp-g>div{background:var(--bg2);border-color:var(--line)}.exp-g>div:before{display:none}.exp-g h3{color:#161412}.ex-n{color:var(--gold)}.exp-g p{color:#5c564c}
+.card{background:#fff;border-color:var(--line)}.card:hover{border-color:#161412}
+.card .ph{background:#fff;border-bottom:1px solid var(--line)}
+.card .brand{color:var(--gold2)}.card h3{color:#161412}.card h3 a{color:#161412}
+.notes{color:#6b655a}.notes b{color:#161412}
+.pix{color:#161412}.pix small{color:#6b655a}
+.pill{background:rgba(255,255,255,.92);border-color:var(--line);color:#6b655a}.pill.M{color:#2f5aa8;border-color:#b9c9e8}.pill.F{color:#b43a76;border-color:#eab6cf}.pill.U{color:#7a5f22;border-color:#e0cf9a}
+.card .ph .off{background:#161412;color:#fff}
+.card .ph .fg{background:#e8f5ea;color:#1b6b32}
+.acts .buy,.buy{background:#161412;color:#fff;border:1px solid #161412}.acts .buy:hover{background:#2a2622}
+.acts .cart-ic,.cart-ic{border-color:#cfc7b6;color:#161412}.acts .ask{background:#fff;color:#1b6b32;border-color:#25a05a}.acts button.in{background:#161412;color:#fff}
+.btn-gold{background:#161412;color:#fff}
+.btn-ghost{border-color:#161412;color:#161412}
+.tab{color:#6b655a;border-color:var(--line)}.tab.on{background:#161412;border-color:#161412;color:#fff}
+.filters select{background:#fff;color:#161412}
+.count{color:#6b655a}
+.tile{border-color:var(--line);background:#f3f0e9}.tile img{opacity:.9}.tile::after{background:linear-gradient(180deg,rgba(255,255,255,0) 35%,rgba(22,20,18,.9))}.tile .tx b{color:#fff}.tile .tx span{color:#e8e2d6}.tile .tx em{color:#f5dd95}
+.bn{background:#0a0908}.bn .txt,.bn .lead,.bn li{color:#f3ecdc}.bn .lead{color:#cfc6b2}.bn .stats b{color:#f3ecdc}.bn .kick{color:#d9b25a}.bn h2.gold-text{-webkit-text-fill-color:#f3ecdc;color:#f3ecdc}
+.quiz{background:var(--bg2)}.qz-s b{color:#161412}.chips button{border-color:#cfc7b6;color:#4a453c;background:#fff}.chips button.on{background:#161412;color:#fff}
+.benef{background:var(--bg2)}.benef b{color:#161412}.benef svg{color:var(--gold)}
+.sobre{background:#fff}.sobre h2{color:#161412}.sobre .lead{color:#4a453c}
+.nao{background:var(--bg2);border-color:var(--line)}.nao h3,.nao li b{color:#161412}.nao li{color:#4a453c}.nao li i{color:var(--gold)}
+.faq summary{color:#161412}.faq details p{color:#5c564c}.faq summary::after{color:var(--gold)}
+.insta{background:var(--bg2)}.insta h3{color:#161412}
+footer{background:#0a0908;border-top:0;color:#cfc6b2}footer h4{color:#d9b25a}.fcols ul{color:#cfc6b2}.fcols a:hover{color:#f5dd95}
+.news{border-color:#3a3328}.news input{color:#f3ecdc}.news button{background:#d9b25a}
+footer .note{color:#8d8678}.pay span{border-color:#3a3328;color:#cfc6b2}
+.seg>div{background:#12100c;border-color:#2a261e}.seg b{color:#f3ecdc}.seg span{color:#a9a294}
+.copy{color:#8d8678;border-color:#2a261e}
+/* modal produto */
+.pv{background:rgba(0,0,0,.6)}.pv-box{background:#fff;border-color:var(--line)}.pv-main{background:#fff}.pv-info h3{color:#161412}.pv-info .brand{color:var(--gold2)}.pv-close{color:#161412}
+.frete{background:var(--bg2)}.frete h4{color:#161412}.frete input,.frete select{background:#fff;color:#161412}.frete button.calc{border-color:#161412;color:#161412}
+.opt{background:#fff}.opt.on{border-color:#161412;background:#f3f0e9}.opt b{color:#161412}
+.tot b{color:#161412}.msg{color:#6b655a}
+.ask{border-color:#25a05a;color:#1b6b32;background:#fff}
+/* modais (carrinho, login, pagamento) */
+.mx{background:rgba(22,20,18,.6)}.mx-box{background:#fff;border-color:var(--line)}.mx h3{color:#161412}.mx p.sub{color:#6b655a}
+.mx-tabs{background:#f0ece4}.mx-tabs button{color:#5c564c}.mx-tabs button.on{background:#161412;color:#fff}
+.mx label{color:#6b655a}.mx input[type=text],.mx input[type=email],.mx input[type=password],.mx input[type=tel],.mx select{background:#fff;border-color:#d6d0c4;color:#161412}
+.mx .ck{color:#4a453c}.mx .go{background:#161412;color:#fff}.mx .lnk{color:var(--gold2)}.mx .err{color:#c0392b}
+.ped{background:var(--bg2)}.ped-h{color:#6b655a}.ped-h b{color:#161412}.ck-sec h4{color:#161412}
+.mx .opt.on{background:#f3f0e9;border-color:#161412}.mx .opt small{color:#6b655a}
+.cart-l .br{color:var(--gold2)}.cart-l .nm{color:#161412}.cart-l .pr{color:#6b655a}.cart-l .rm{color:#b43a3a}
+.cart-vazio{color:#6b655a}
+.st-badge{background:#f0ece4;color:#161412}
+.toast{background:#161412;color:#fff}
+.ok-bar{background:#e8f5ea;border-color:#9fd6ad;color:#1b6b32}
+/* página de produto SSR */
+.ssr-p{background:#fff}.ssr-m{background:var(--bg2);border:1px solid var(--line)}.ssr-i h1{color:#161412}.ssr-i .brand{color:var(--gold2)}
+.cat-crumb{color:#6b655a}.cat-crumb a{color:var(--gold2)}
+.fab a{background:#25d366}
+.old{color:#8a8375}
+.promo em{font-style:normal}@media(max-width:700px){.promo em:not(:first-child),.promo i{display:none}.promo{padding:0}}
+</style>
 </head>
 <body>
 
@@ -639,7 +720,7 @@ h2.gold-text,h3.gold-text{background:none;-webkit-text-fill-color:#f3ecdc;color:
     <h2>Uma curadoria pequena, feita por quem usa o que vende</h2>
     <p class="lead">A Nota Perfumaria nasceu de uma ideia simples: vender alta perfumaria árabe e importada do jeito que a gente gostaria de comprar. Sem mistério sobre o que é o produto, sem pressão, com alguém do outro lado que conhece cada fragrância da coleção.</p>
     <p class="lead">Selecionamos as casas mais respeitadas do Oriente Médio e da perfumaria internacional, trabalhamos só com frascos originais e lacrados e acompanhamos o seu pedido do pagamento até a entrega.</p>
-    <div class="stats" style="display:flex;gap:28px;flex-wrap:wrap;margin-top:26px"><div><b style="display:block;font-family:var(--display);font-size:2.2rem;color:#f3ecdc;line-height:1">35+</b><span style="font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">casas e marcas</span></div><div><b style="display:block;font-family:var(--display);font-size:2.2rem;color:#f3ecdc;line-height:1">350+</b><span style="font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">fragrâncias</span></div><div><b style="display:block;font-family:var(--display);font-size:2.2rem;color:#f3ecdc;line-height:1">100%</b><span style="font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">originais e lacrados</span></div></div>
+    <div class="stats" style="display:flex;gap:28px;flex-wrap:wrap;margin-top:26px"><div><b style="display:block;font-family:var(--display);font-size:2.2rem;color:#161412;line-height:1">35+</b><span style="font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">casas e marcas</span></div><div><b style="display:block;font-family:var(--display);font-size:2.2rem;color:#161412;line-height:1">350+</b><span style="font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">fragrâncias</span></div><div><b style="display:block;font-family:var(--display);font-size:2.2rem;color:#161412;line-height:1">100%</b><span style="font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">originais e lacrados</span></div></div>
   </div>
   <div class="nao">
     <h3>O que a Nota não faz</h3>
@@ -768,7 +849,7 @@ function waLink(it){
 }
 
 // promo marquee
-{const items=(FRETE_GRATIS>0?[`Frete grátis acima de ${brl(FRETE_GRATIS)}`]:[]).concat(PROMO);const s='<span>'+items.map(t=>`${t}`).join('<i>◆</i>')+'</span>';$('#promo-track').innerHTML=s;}
+{const items=(FRETE_GRATIS>0?[`Frete grátis acima de ${brl(FRETE_GRATIS)}`]:[]).concat(PROMO);const s='<span>'+items.map(t=>`<em>${t}</em>`).join('<i>◆</i>')+'</span>';$('#promo-track').innerHTML=s;}
 
 
 const bottle=`<svg viewBox="0 0 100 130" fill="none"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#3a2d18"/><stop offset=".45" stop-color="#8a6a2a"/><stop offset=".5" stop-color="#f5dd95"/><stop offset=".55" stop-color="#8a6a2a"/><stop offset="1" stop-color="#2a1f10"/></linearGradient></defs><rect x="36" y="4" width="28" height="18" rx="3" fill="#d9b25a"/><rect x="40" y="22" width="20" height="12" fill="#2a241a"/><path d="M22 36h56a10 10 0 0 1 10 10v66a10 10 0 0 1-10 10H22a10 10 0 0 1-10-10V46a10 10 0 0 1 10-10z" fill="url(#g)" stroke="#d9b25a" stroke-opacity=".6"/><rect x="28" y="66" width="44" height="30" fill="#050505" fill-opacity=".7" stroke="#d9b25a"/></svg>`;
@@ -934,7 +1015,7 @@ function leadOk(){try{return !!localStorage.getItem('nota_lead2')}catch(e){retur
 function leadGate(href,it){
   if(!LEAD_GATE||leadOk()){track('whatsapp',it);window.open(href,'_blank','noopener');return}
   const c=CLI||{};
-  mx(`<h3>Fale com um especialista</h3><p class="sub">Atendimento personalizado pelo WhatsApp. Deixe seu nome e número para começarmos${it?` sobre <b style="color:#e9e2d2">${it.n}</b>`:''}.</p>
+  mx(`<h3>Fale com um especialista</h3><p class="sub">Atendimento personalizado pelo WhatsApp. Deixe seu nome e número para começarmos${it?` sobre <b style="color:#161412">${it.n}</b>`:''}.</p>
    <form id="lgf" autocomplete="on"><label>Nome completo</label><input type="text" id="lg-nome" autocomplete="name" required value="${c.nome||''}">
    <label>WhatsApp</label><input type="tel" id="lg-fone" autocomplete="tel" inputmode="tel" required placeholder="(11) 98888-7777" value="${c.whatsapp?maskTel(String(c.whatsapp).replace(/^55/,'')):''}">
    <label class="ck"><input type="checkbox" id="lg-ok" required checked><span>Aceito receber atendimento e ofertas da Nota Perfumaria. Posso cancelar quando quiser.</span></label>
@@ -990,12 +1071,12 @@ function openCart(){
   if(!ls.length){mx(`<h3>Seu carrinho</h3><div class="cart-vazio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 7h12l-1 13H7L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg><p>Seu carrinho está vazio.</p><p style="font-size:.88rem">Toque em <b>Adicionar ao carrinho</b> em qualquer perfume.</p></div><button class="go" type="button" id="ck-ver">Ver perfumes</button>`);$('#ck-ver').onclick=()=>{$('#mx').hidden=true;location.hash='colecoes'};return}
   mx(`<h3>Seu carrinho</h3><div id="ck-lines"></div>
    <div class="ck-sec"><h4>Entrega</h4><div class="ck-row"><input type="text" id="ck-cep" inputmode="numeric" placeholder="CEP" value="${CK.cep}"><button class="go" type="button" id="ck-calc" style="margin:0;padding:0 18px">Calcular</button></div>
-     <p id="ck-end" style="font-size:.85rem;color:#c9c2b2;margin:8px 0 0"></p>
+     <p id="ck-end" style="font-size:.85rem;color:#4a453c;margin:8px 0 0"></p>
      <div class="ck-row2" id="ck-numrow" hidden><input type="text" id="ck-num" placeholder="Número"><input type="text" id="ck-comp" placeholder="Complemento (opcional)"></div>
      <div id="ck-opts"></div><p class="err" id="ck-msg"></p></div>
    <div class="ck-sec"><h4>Pagamento</h4><div id="ck-pay"></div><select id="ck-parc" hidden></select></div>
-   <div class="tot"><span id="ck-lab">Total</span><b id="ck-tot">—</b></div><p id="ck-det" style="font-size:.8rem;color:#9a9385;margin:4px 0 0"></p>
-   <a class="go" id="ck-go" href="#" style="display:block;text-align:center;text-decoration:none">Finalizar compra</a><p class="err" id="ck-hint" style="color:#a9a294"></p>`,true);
+   <div class="tot"><span id="ck-lab">Total</span><b id="ck-tot">—</b></div><p id="ck-det" style="font-size:.8rem;color:#6b655a;margin:4px 0 0"></p>
+   <a class="go" id="ck-go" href="#" style="display:block;text-align:center;text-decoration:none">Finalizar compra</a><p class="err" id="ck-hint" style="color:#6b655a"></p>`,true);
   $('#ck-cep').oninput=e=>{let v=e.target.value.replace(/\D/g,'').slice(0,8);e.target.value=v.length>5?v.slice(0,5)+'-'+v.slice(5):v};
   $('#ck-calc').onclick=ckCEP;$('#ck-cep').onkeydown=e=>{if(e.key==='Enter')ckCEP()};
   ['#ck-num','#ck-comp'].forEach(s=>$(s).oninput=renderCart);
@@ -1056,20 +1137,20 @@ function resumoPg(o){const ls=o.cart.map(l=>({it:BYID[l.id],q:l.q})).filter(x=>x
   return {ls,c,fr,txt:o.metodo==='PIX'?'PIX à vista':o.metodo==='BOLETO'?'Boleto à vista':o.parcelas>1?`Cartão em ${o.parcelas}x de ${brl(c.parcela)}`:'Cartão à vista'}}
 function abrirPagamento(o){PAGTO=o;clearInterval(POLL);const r=resumoPg(o);const c=CLI||{};
   mx(`<h3>Finalizar pagamento</h3><p class="sub">Você paga aqui mesmo, sem sair do site. Ambiente seguro.</p>
-  <div class="ped" style="margin-top:0">${r.ls.map(x=>`<div class="ped-h" style="color:#e9e2d2"><span>${x.q}× ${x.it.n}</span><span>${brl((o.metodo==='PIX'?pix(x.it.p):x.it.p)*x.q)}</span></div>`).join('')}
+  <div class="ped" style="margin-top:0">${r.ls.map(x=>`<div class="ped-h" style="color:#161412"><span>${x.q}× ${x.it.n}</span><span>${brl((o.metodo==='PIX'?pix(x.it.p):x.it.p)*x.q)}</span></div>`).join('')}
    <div class="ped-h"><span>Frete ${o.frete?o.frete.nome:''}</span><span>${brl(r.fr)}</span></div>${r.c.taxa>0?`<div class="ped-h"><span>Taxa do cartão</span><span>${brl(r.c.taxa)}</span></div>`:''}
-   <div class="tot" style="margin-top:8px"><span>${r.txt}</span><b>${brl(r.c.total)}</b></div><p style="font-size:.78rem;color:#8d8678;margin:6px 0 0">Entrega: ${o.endereco.texto}</p></div>
+   <div class="tot" style="margin-top:8px"><span>${r.txt}</span><b>${brl(r.c.total)}</b></div><p style="font-size:.78rem;color:#7a7466;margin:6px 0 0">Entrega: ${o.endereco.texto}</p></div>
   <form id="pgf" autocomplete="on">
-   <div class="ck-sec"><h4>Seus dados</h4>${CLI?`<p class="sub" style="margin:0">Comprando como <b style="color:#e9e2d2">${c.nome}</b> · ${c.email}</p>`:`
+   <div class="ck-sec"><h4>Seus dados</h4>${CLI?`<p class="sub" style="margin:0">Comprando como <b style="color:#161412">${c.nome}</b> · ${c.email}</p>`:`
     <label>Nome completo</label><input type="text" id="pg-nome" autocomplete="name" required>
     <div class="row2"><div><label>CPF</label><input type="text" id="pg-cpf" inputmode="numeric" required></div><div><label>WhatsApp</label><input type="tel" id="pg-tel" autocomplete="tel" required></div></div>
     <label>E-mail</label><input type="email" id="pg-email" autocomplete="email" required>
-    <p style="font-size:.82rem;color:#a9a294;margin:8px 0 0">Já tem conta? <button type="button" class="lnk" id="pg-login">Entrar</button> para acompanhar o pedido.</p>`}</div>
+    <p style="font-size:.82rem;color:#6b655a;margin:8px 0 0">Já tem conta? <button type="button" class="lnk" id="pg-login">Entrar</button> para acompanhar o pedido.</p>`}</div>
    ${o.metodo==='CARD'?`<div class="ck-sec"><h4>Cartão de crédito <span id="pg-band" style="color:var(--gold);font-weight:500"></span></h4>
     <label>Número do cartão</label><input type="text" id="pg-num" inputmode="numeric" autocomplete="cc-number" required>
     <label>Nome impresso no cartão</label><input type="text" id="pg-tit" autocomplete="cc-name" required style="text-transform:uppercase">
     <div class="row2"><div><label>Validade (MM/AA)</label><input type="text" id="pg-val" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/AA" required></div><div><label>CVV</label><input type="text" id="pg-cvv" inputmode="numeric" autocomplete="cc-csc" maxlength="4" required></div></div>
-    <p style="font-size:.78rem;color:#8d8678;margin:8px 0 0">🔒 Os dados do cartão vão criptografados direto para o Asaas. A loja não guarda o número do seu cartão.</p></div>`:''}
+    <p style="font-size:.78rem;color:#7a7466;margin:8px 0 0">🔒 Os dados do cartão vão criptografados direto para o Asaas. A loja não guarda o número do seu cartão.</p></div>`:''}
    <button class="go" type="submit" id="pg-go">${o.metodo==='PIX'?'Gerar QR Code PIX':o.metodo==='BOLETO'?'Gerar boleto':'Pagar '+brl(r.c.total)}</button><p class="err" id="pg-msg"></p></form>`,true);
   if(!CLI){$('#pg-cpf').oninput=e=>e.target.value=maskCPF(e.target.value);$('#pg-tel').oninput=e=>e.target.value=maskTel(e.target.value);$('#pg-login').onclick=()=>openAuth('login',()=>abrirPagamento(PAGTO))}
   if(o.metodo==='CARD'){$('#pg-num').oninput=e=>{e.target.value=maskCard(e.target.value);$('#pg-band').textContent=bandeira(e.target.value)};$('#pg-val').oninput=e=>e.target.value=maskVal(e.target.value);$('#pg-cvv').oninput=e=>e.target.value=e.target.value.replace(/\D/g,'')}
@@ -1101,9 +1182,9 @@ function mostrarResultado(d){
     mx(`<h3>Pagamento em análise</h3><p class="sub">Pedido <b style="color:var(--gold2)">${d.codigo}</b>. O emissor do cartão está analisando a compra; avisaremos assim que for aprovada.</p><p class="sub" id="pg-st">Verificando…</p>`);acompanhar(d.codigo);return}
   const qr=d.qr?`<div style="text-align:center;margin:10px 0"><img src="data:image/png;base64,${d.qr}" alt="QR Code PIX" style="width:220px;height:220px;background:#fff;border-radius:12px;padding:8px"></div>
     <label>PIX copia e cola</label><div class="ck-row"><input type="text" readonly value="${d.copia}" id="pg-copia"><button class="go" type="button" id="pg-cp" style="margin:0;padding:0 14px;white-space:nowrap">Copiar código</button></div>`:'';
-  if(d.metodo==='PIX'){mx(`<h3>Pague com PIX</h3><p class="sub">Pedido <b style="color:var(--gold2)">${d.codigo}</b> · <b style="color:#e9e2d2">${brl(d.total)}</b><br>Abra o app do seu banco, escolha <b>PIX → Ler QR Code</b> ou <b>Copia e cola</b>.</p>${qr}
+  if(d.metodo==='PIX'){mx(`<h3>Pague com PIX</h3><p class="sub">Pedido <b style="color:var(--gold2)">${d.codigo}</b> · <b style="color:#161412">${brl(d.total)}</b><br>Abra o app do seu banco, escolha <b>PIX → Ler QR Code</b> ou <b>Copia e cola</b>.</p>${qr}
     <p class="sub" style="margin-top:14px;display:flex;align-items:center;gap:8px"><span class="spin"></span> Aguardando pagamento… esta tela confirma sozinha.</p>`)}
-  else{mx(`<h3>Boleto gerado</h3><p class="sub">Pedido <b style="color:var(--gold2)">${d.codigo}</b> · <b style="color:#e9e2d2">${brl(d.total)}</b> · vence em ${d.vencimento?d.vencimento.split('-').reverse().join('/'):'3 dias'}</p>
+  else{mx(`<h3>Boleto gerado</h3><p class="sub">Pedido <b style="color:var(--gold2)">${d.codigo}</b> · <b style="color:#161412">${brl(d.total)}</b> · vence em ${d.vencimento?d.vencimento.split('-').reverse().join('/'):'3 dias'}</p>
     ${d.linha?`<label>Linha digitável</label><div class="ck-row"><input type="text" readonly value="${d.linha}" id="pg-linha"><button class="go" type="button" id="pg-cpl" style="margin:0;padding:0 14px;white-space:nowrap">Copiar código</button></div>`:''}
     ${d.boletoUrl?`<a class="go" style="display:block;text-align:center;text-decoration:none" target="_blank" rel="noopener" href="${d.boletoUrl}">Abrir boleto (PDF)</a>`:''}
     ${d.qr?`<p class="sub" style="margin-top:16px">Prefere pagar agora? Este boleto também aceita <b>PIX</b>:</p>${qr}`:''}
@@ -1126,7 +1207,7 @@ function openAuth(tab,after){
   <form id="f-login" autocomplete="on"><label>E-mail ou CPF</label><input type="text" id="l-id" autocomplete="username" required>
     <label>Senha</label><input type="password" id="l-pw" autocomplete="current-password" required>
     <button class="go">Entrar</button><p class="err" id="l-err"></p>
-    <p style="font-size:.85rem;color:#a9a294;margin:6px 0 0">Esqueceu a senha? <a href="https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Olá! Esqueci a senha da minha conta na Nota Perfumaria.')}" target="_blank" style="color:var(--gold)">Fale com a gente no WhatsApp</a></p></form>
+    <p style="font-size:.85rem;color:#6b655a;margin:6px 0 0">Esqueceu a senha? <a href="https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Olá! Esqueci a senha da minha conta na Nota Perfumaria.')}" target="_blank" style="color:var(--gold)">Fale com a gente no WhatsApp</a></p></form>
   <form id="f-cad" hidden autocomplete="on"><label>Nome completo</label><input type="text" id="c-nome" autocomplete="name" required>
     <div class="row2"><div><label>CPF</label><input type="text" id="c-cpf" inputmode="numeric" required></div><div><label>WhatsApp</label><input type="tel" id="c-tel" autocomplete="tel" required></div></div>
     <label>E-mail</label><input type="email" id="c-email" autocomplete="email" required>
@@ -1144,7 +1225,7 @@ function openAuth(tab,after){
 const PASSOS=['aguardando_pagamento','pago','em_separacao','enviado','entregue'];
 const PASSOS_L=['Pagamento','Aprovado','Separação','Enviado','Entregue'];
 async function openConta(){
-  const m=mx(`<h3>Olá, ${CLI.nome.split(' ')[0]}</h3><p class="sub">${CLI.email} · CPF ${CLI.cpf}</p><h4 style="margin:6px 0;color:#e9e2d2">Meus pedidos</h4><div id="peds"><p class="sub">Carregando…</p></div>
+  const m=mx(`<h3>Olá, ${CLI.nome.split(' ')[0]}</h3><p class="sub">${CLI.email} · CPF ${CLI.cpf}</p><h4 style="margin:6px 0;color:#161412">Meus pedidos</h4><div id="peds"><p class="sub">Carregando…</p></div>
     <div style="display:flex;gap:14px;margin-top:16px;flex-wrap:wrap"><button class="lnk" id="acc-out" type="button">Sair da conta</button><a class="lnk" style="color:var(--gold)" href="https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Olá! Preciso de ajuda com um pedido na Nota Perfumaria.')}" target="_blank">Ajuda no WhatsApp</a>${CLI.admin?'<a class="go" href="/admin" style="width:auto;margin:0 0 0 auto;padding:10px 16px;text-decoration:none">Painel administrativo</a>':''}</div>`,true);
   $('#acc-out').onclick=async()=>{await accApi('logout',{});setAcc(null);m.hidden=true;toast('Você saiu da conta.')};
   try{const ps=await accApi('pedidos');
@@ -1154,7 +1235,7 @@ async function openConta(){
       <div class="ped-h"><span>${brl(p.total)} · ${p.metodo==='PIX'?'PIX':p.metodo==='BOLETO'?'Boleto':'Cartão'+(p.parcelas>1?' '+p.parcelas+'x':'')}</span><span class="st-badge ${canc?'cancelado':''}">${p.status_txt}</span></div>
       ${canc?'':`<div class="steps">${PASSOS.map((_,i)=>`<i class="${i<=k?'on':''}"></i>`).join('')}</div><div class="steps-l">${PASSOS_L.map(l=>`<span>${l}</span>`).join('')}</div>`}
       ${p.rastreio?`<p style="margin:10px 0 0;font-size:.9rem">Rastreio: <a target="_blank" style="color:var(--gold)" href="https://rastreamento.correios.com.br/app/index.php?objetos=${encodeURIComponent(p.rastreio)}">${p.rastreio}</a></p>`:''}
-      ${p.endereco?`<p style="margin:6px 0 0;font-size:.8rem;color:#8d8678">Entrega: ${p.endereco}</p>`:''}</div>`}).join('')
+      ${p.endereco?`<p style="margin:6px 0 0;font-size:.8rem;color:#7a7466">Entrega: ${p.endereco}</p>`:''}</div>`}).join('')
       :'<p class="sub">Você ainda não tem pedidos. Quando comprar logado, eles aparecem aqui com o status em tempo real.</p>';
   }catch(e){$('#peds').innerHTML='<p class="err">'+e.message+'</p>'}
 }

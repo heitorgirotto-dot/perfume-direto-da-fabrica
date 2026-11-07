@@ -1465,10 +1465,10 @@ render(true);rota();
 (function(){
   const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
   let si=0;const sl=$$('#slides .h-slide'),dt=$$('[data-dot]');function go(n){si=(n+sl.length)%sl.length;sl.forEach((e,k)=>e.classList.toggle('on',k===si));dt.forEach((e,k)=>e.classList.toggle('on',k===si))}
-  let T;const play=()=>{clearInterval(T);T=setInterval(()=>go(si+1),5500)};play();
+  let T;const play=()=>{clearInterval(T);T=setInterval(()=>go(si+1),4500)};play();
   $$('[data-slide]').forEach(b=>b.onclick=e=>{e.preventDefault();go(si+ +b.dataset.slide);play()});
   dt.forEach(b=>b.onclick=e=>{e.preventDefault();go(+b.dataset.dot);play()});
-  const SB=$('#slides');if(SB){SB.addEventListener('mouseenter',()=>clearInterval(T));SB.addEventListener('mouseleave',play);
+  const SB=$('#slides');if(SB){
     let x0=null,sw=false;SB.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;sw=false},{passive:true});
     SB.addEventListener('touchend',e=>{if(x0==null)return;const d=e.changedTouches[0].clientX-x0;x0=null;if(Math.abs(d)>40){sw=true;go(si+(d<0?1:-1));play()}},{passive:true});
     SB.addEventListener('click',e=>{if(sw){e.preventDefault();e.stopPropagation();sw=false}},true)}

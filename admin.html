@@ -79,6 +79,7 @@ tr:hover td{background:#141414}
     <button data-v="fin">Financeiro</button>
     <button data-v="leads">Leads</button>
     <button data-v="vid">Vídeos</button>
+    <button data-v="blog">Blog</button>
     <button id="trocar" title="Trocar senha">Senha</button>
     <button id="sair" title="Sair">Sair</button>
   </nav>
@@ -168,6 +169,36 @@ tr:hover td{background:#141414}
     <div class="card" style="padding:0;overflow:auto"><table><thead><tr><th>Data</th><th>Nome</th><th>WhatsApp</th><th>Cidade/UF</th><th>Interesse</th><th>Origem</th><th></th></tr></thead><tbody id="llist"></tbody></table></div>
   </section>
 
+
+  <!-- BLOG -->
+  <section id="v-blog" class="hidden">
+    <h1 style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">Blog <span id="bcount" style="color:var(--mut);font-size:14px"></span>
+      <a class="btn ghost" href="/blog" target="_blank" style="margin-left:auto;text-decoration:none">Ver blog</a><button class="btn" id="bnovo">Novo artigo</button></h1>
+    <div class="card" id="beditor" hidden style="margin-bottom:16px">
+      <h2 id="btit" style="margin-top:0">Novo artigo</h2>
+      <form id="fpost">
+        <input type="hidden" id="b-id">
+        <label>Título</label><input id="b-titulo" required maxlength="200" placeholder="Ex.: Como fazer o perfume fixar mais na pele">
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:12px">
+          <div><label>Endereço (fica notaperfumaria.com/blog/…)</label><input id="b-slug" placeholder="gerado a partir do título"></div>
+          <div><label>Data de publicação</label><input id="b-data" type="datetime-local"></div>
+        </div>
+        <label>Resumo (aparece no card do blog)</label><textarea id="b-resumo" rows="2" maxlength="400"></textarea>
+        <label>Imagem de capa (proporção 2:1, ex. 1200×600)</label>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><input id="b-capa" placeholder="/api/foto?id=… ou https://…" style="flex:1;min-width:240px"><input id="b-capa-file" type="file" accept="image/*" style="width:auto"></div>
+        <img id="b-capa-prev" alt="" style="max-width:320px;aspect-ratio:2/1;object-fit:cover;border-radius:8px;margin-top:8px;display:none">
+        <label style="display:flex;justify-content:space-between;gap:10px;align-items:center">Conteúdo <span style="font-weight:400;color:var(--mut);font-size:12px">## Título · ### Subtítulo · **negrito** · *itálico* · - lista · [texto](link) · ![descrição](imagem)</span></label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><textarea id="b-conteudo" rows="18" style="font-family:ui-monospace,Menlo,monospace;font-size:13px"></textarea><div id="b-prev" class="card" style="margin:0;max-height:440px;overflow:auto;background:#fff;color:#222;font-size:14px;line-height:1.6"></div></div>
+        <h3 style="margin:18px 0 6px">SEO (Google)</h3>
+        <label>Título no Google <span id="b-st-c" style="color:var(--mut);font-weight:400"></span></label><input id="b-seo-t" maxlength="90" placeholder="se vazio, usa o título">
+        <label>Descrição no Google <span id="b-sd-c" style="color:var(--mut);font-weight:400"></span></label><textarea id="b-seo-d" rows="2" maxlength="200" placeholder="se vazio, usa o resumo"></textarea>
+        <div id="b-serp" style="border:1px solid #333;border-radius:8px;padding:10px 12px;margin-top:8px;font-family:Arial,sans-serif;background:#fff"><div style="color:#1a0dab;font-size:18px" id="b-serp-t"></div><div style="color:#006621;font-size:13px" id="b-serp-u"></div><div style="color:#545454;font-size:13px" id="b-serp-d"></div></div>
+        <label style="display:flex;gap:8px;align-items:center;margin-top:12px"><input id="b-pub" type="checkbox" style="width:auto"> Publicado (visível no site)</label>
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap"><button class="btn">Salvar</button><button class="btn ghost" type="button" id="bcancel">Cancelar</button><a class="btn ghost" id="bver" target="_blank" style="text-decoration:none" hidden>Ver no site</a><span id="bmsg" class="msg"></span></div>
+      </form>
+    </div>
+    <div class="card" style="padding:0;overflow:auto"><table><thead><tr><th>Data</th><th>Título</th><th>Status</th><th></th></tr></thead><tbody id="blist"></tbody></table></div>
+  </section>
   <!-- VÍDEOS DE CLIENTES -->
   <section id="v-vid" class="hidden">
     <h1 style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">Vídeos de clientes <span id="vcount" style="color:var(--mut);font-size:14px"></span></h1>
@@ -236,9 +267,9 @@ async function api(a,opt={}){const r=await fetch('/api/admin?a='+a+(opt.q||''),{
 
 function show(v){
   $('#login').classList.toggle('hidden',v!=='login');$('#nav').classList.toggle('hidden',v==='login');
-  ['dash','ped','prod','cli','afi','fin','leads','vid'].forEach(k=>$('#v-'+k).classList.toggle('hidden',v!==k));
+  ['dash','ped','prod','cli','afi','fin','leads','vid','blog'].forEach(k=>$('#v-'+k).classList.toggle('hidden',v!==k));
   document.querySelectorAll('#nav [data-v]').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
-  if(v==='dash')loadStats();if(v==='prod')loadProds();if(v==='leads')loadLeads();if(v==='vid')loadVids();if(v==='ped')loadPeds();if(v==='cli')loadClis();if(v==='afi')loadAfis();if(v==='fin')loadFin();
+  if(v==='dash')loadStats();if(v==='prod')loadProds();if(v==='leads')loadLeads();if(v==='vid')loadVids();if(v==='blog')loadPosts();if(v==='ped')loadPeds();if(v==='cli')loadClis();if(v==='afi')loadAfis();if(v==='fin')loadFin();
 }
 $('#nav').addEventListener('click',e=>{const b=e.target.closest('[data-v]');if(b)show(b.dataset.v)});
 $('#trocar').onclick=async()=>{const atual=prompt('Senha atual:');if(!atual)return;const nova=prompt('Nova senha (mínimo 10 caracteres):');if(!nova)return;try{await api('senha',{method:'POST',body:{atual,nova}});toast('Senha alterada')}catch(e){toast(e.message)}};
@@ -576,6 +607,45 @@ $('#fvid').onsubmit=async e=>{e.preventDefault();const f=$('#vfile').files[0],li
 $('#vlist').onclick=async e=>{const t=e.target.closest('[data-vtog]'),d=e.target.closest('[data-vdel]');
   try{if(t){const v=VIDS_ADM.find(x=>x.id===+t.dataset.vtog);await api('video',{method:'POST',body:Object.assign({},v,{ativo:!v.ativo})});await loadVids()}
   if(d){if(!confirm('Excluir este vídeo do site?'))return;await api('video',{method:'POST',body:{id:+d.dataset.vdel,excluir:true}});await loadVids()}}catch(err){toast(err.message)}};
+</script>
+
+<script>
+/* ===== Blog ===== */
+let POSTS=[];
+const besc=x=>String(x==null?'':x).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const bslug=t=>String(t||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+function bmd(src){const inl=t=>besc(t).replace(/!\[([^\]]*)\]\(([^)\s]+)\)/g,'<img src="$2" alt="$1" style="max-width:100%">').replace(/\[([^\]]+)\]\(([^)\s]+)\)/g,'<a href="$2">$1</a>').replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>').replace(/(^|[^*])\*([^*\s][^*]*)\*/g,'$1<i>$2</i>');
+  const o=[];let par=[],li=null;const fp=()=>{if(par.length){o.push('<p>'+inl(par.join(' '))+'</p>');par=[]}},fl=()=>{if(li){o.push('<'+li.t+'>'+li.i.map(x=>'<li>'+inl(x)+'</li>').join('')+'</'+li.t+'>');li=null}};
+  String(src||'').split('\n').forEach(l=>{const t=l.trim();let m;if(!t){fp();fl();return}
+    if(m=/^(#{1,4})\s+(.+)$/.exec(t)){fp();fl();const n=Math.max(2,Math.min(4,m[1].length));o.push(`<h${n}>${inl(m[2])}</h${n}>`);return}
+    if(m=/^[-*]\s+(.+)$/.exec(t)){fp();if(!li||li.t!=='ul'){fl();li={t:'ul',i:[]}}li.i.push(m[1]);return}
+    if(m=/^\d+[.)]\s+(.+)$/.exec(t)){fp();if(!li||li.t!=='ol'){fl();li={t:'ol',i:[]}}li.i.push(m[1]);return}
+    if(m=/^>\s?(.*)$/.exec(t)){fp();fl();o.push('<blockquote style="border-left:3px solid #d9b25a;margin:8px 0;padding-left:10px">'+inl(m[1])+'</blockquote>');return}
+    fl();par.push(t)});fp();fl();return o.join('')}
+function bsync(){$('#b-prev').innerHTML='<h2 style="margin-top:0">'+besc($('#b-titulo').value)+'</h2>'+bmd($('#b-conteudo').value);
+  const st=$('#b-seo-t').value||$('#b-titulo').value,sd=$('#b-seo-d').value||$('#b-resumo').value;$('#b-st-c').textContent=`(${st.length}/60)`;$('#b-sd-c').textContent=`(${sd.length}/160)`;
+  $('#b-serp-t').textContent=(st+' · Nota Perfumaria').slice(0,70);$('#b-serp-u').textContent='notaperfumaria.com › blog › '+($('#b-slug').value||bslug($('#b-titulo').value));$('#b-serp-d').textContent=sd.slice(0,160);
+  const c=$('#b-capa').value;$('#b-capa-prev').style.display=c?'block':'none';if(c)$('#b-capa-prev').src=c}
+['#b-titulo','#b-conteudo','#b-seo-t','#b-seo-d','#b-resumo','#b-slug','#b-capa'].forEach(id=>$(id).addEventListener('input',bsync));
+$('#b-titulo').addEventListener('blur',()=>{if(!$('#b-slug').value&&!$('#b-id').value)$('#b-slug').value=bslug($('#b-titulo').value);bsync()});
+async function loadPosts(){try{POSTS=await api('posts');renderPosts()}catch(e){toast(e.message)}}
+function renderPosts(){$('#bcount').textContent=POSTS.length?`${POSTS.length} artigo(s)`:'';
+  $('#blist').innerHTML=POSTS.length?POSTS.map(p=>`<tr><td>${new Date(p.publicado_em).toLocaleDateString('pt-BR')}</td><td><b>${besc(p.titulo)}</b><br><small style="color:var(--mut)">/blog/${besc(p.slug)}</small></td><td>${p.publicado?'<span style="color:#3ddc84">Publicado</span>':'<span style="color:#ff9f43">Rascunho</span>'}</td>
+    <td style="white-space:nowrap"><a class="btn ghost" href="/blog/${encodeURIComponent(p.slug)}" target="_blank" style="text-decoration:none;padding:6px 10px">Ver</a> <button class="btn ghost" data-bed="${p.id}" style="padding:6px 10px">Editar</button> <button class="btn ghost" data-bdel="${p.id}" style="padding:6px 10px">Excluir</button></td></tr>`).join('')
+    :'<tr><td colspan="4" style="color:var(--mut);padding:18px">Nenhum artigo ainda. Clique em “Novo artigo”.</td></tr>'}
+function bdt(d){const x=new Date(d||Date.now());x.setMinutes(x.getMinutes()-x.getTimezoneOffset());return x.toISOString().slice(0,16)}
+function bopen(p){p=p||{};$('#beditor').hidden=false;$('#btit').textContent=p.id?'Editar artigo':'Novo artigo';$('#b-id').value=p.id||'';$('#b-titulo').value=p.titulo||'';$('#b-slug').value=p.slug||'';$('#b-data').value=bdt(p.publicado_em);
+  $('#b-resumo').value=p.resumo||'';$('#b-capa').value=p.capa||'';$('#b-conteudo').value=p.conteudo||'';$('#b-seo-t').value=p.seo_titulo||'';$('#b-seo-d').value=p.seo_descricao||'';$('#b-pub').checked=p.id?!!p.publicado:true;
+  $('#bver').hidden=!p.id;if(p.id)$('#bver').href='/blog/'+encodeURIComponent(p.slug);$('#bmsg').textContent='';bsync();$('#beditor').scrollIntoView({behavior:'smooth'})}
+$('#bnovo').onclick=()=>bopen();$('#bcancel').onclick=()=>{$('#beditor').hidden=true};
+$('#blist').onclick=async e=>{const ed=e.target.closest('[data-bed]'),del=e.target.closest('[data-bdel]');
+  if(ed)bopen(POSTS.find(p=>p.id===+ed.dataset.bed));
+  if(del){const p=POSTS.find(x=>x.id===+del.dataset.bdel);if(!confirm('Excluir o artigo "'+p.titulo+'"? Não dá para desfazer.'))return;try{await api('post',{method:'POST',body:{id:p.id,excluir:true}});toast('Artigo excluído');loadPosts()}catch(err){toast(err.message)}}};
+$('#b-capa-file').onchange=async()=>{const f=$('#b-capa-file').files[0];if(!f)return;$('#bmsg').textContent='Enviando imagem…';try{const dados=await reduzir(f);const r=await api('upload',{method:'POST',body:{nome:'blog-'+bslug($('#b-titulo').value||f.name),dados}});$('#b-capa').value=r.url;bsync();$('#bmsg').textContent=''}catch(err){$('#bmsg').textContent='Falha na imagem: '+err.message}$('#b-capa-file').value=''};
+$('#fpost').onsubmit=async e=>{e.preventDefault();$('#bmsg').textContent='Salvando…';
+  try{const d=$('#b-data').value?new Date($('#b-data').value).toISOString():'';
+    const r=await api('post',{method:'POST',body:{id:$('#b-id').value?+$('#b-id').value:null,titulo:$('#b-titulo').value.trim(),slug:$('#b-slug').value.trim()||bslug($('#b-titulo').value),resumo:$('#b-resumo').value.trim(),capa:$('#b-capa').value.trim(),conteudo:$('#b-conteudo').value,seo_titulo:$('#b-seo-t').value.trim(),seo_descricao:$('#b-seo-d').value.trim(),publicado:$('#b-pub').checked,publicado_em:d}});
+    toast('Artigo salvo');$('#b-id').value=r.id;$('#b-slug').value=r.slug;$('#bver').hidden=false;$('#bver').href='/blog/'+encodeURIComponent(r.slug);$('#bmsg').textContent='Salvo.';loadPosts()}catch(err){$('#bmsg').textContent=err.message}};
 </script>
 </body>
 </html>

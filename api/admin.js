@@ -82,6 +82,11 @@ module.exports = async (req, res) => {
         const id = await P('adm_foto_salvar', { p_mime: m[1], p_b64: m[3] });
         return res.status(200).json({ url: '/api/foto?id=' + id });
       }
+      case 'posts': return res.status(200).json(await P('adm_posts'));
+      case 'post': {
+        if (b.excluir) { await P('adm_post_excluir', { p_id: +b.id }); return res.status(200).json({ ok: true }); }
+        return res.status(200).json(await P('adm_post_salvar', { p: { id: b.id || null, slug: String(b.slug || ''), titulo: String(b.titulo || ''), resumo: String(b.resumo || ''), conteudo: String(b.conteudo || '').slice(0, 60000), capa: String(b.capa || ''), autor: String(b.autor || ''), seo_titulo: String(b.seo_titulo || ''), seo_descricao: String(b.seo_descricao || ''), publicado: !!b.publicado, publicado_em: b.publicado_em || '' } }));
+      }
       case 'videos': return res.status(200).json(await P('adm_videos'));
       case 'video-token': return res.status(200).json({ token: await P('adm_video_token'), url: db.URL, key: db.KEY });
       case 'video': {

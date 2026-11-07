@@ -4,6 +4,10 @@ const fs = require('fs');
 const path = require('path');
 const C = require('./_catalogo');
 const { taxas } = require('./_taxas');
+const MD = require('./_md');
+const DB = require('./_db');
+async function posts(q) { try { const r = await DB.select('posts', q); return Array.isArray(r) ? r : []; } catch (e) { return []; } }
+const dataBR = d => new Date(d).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric', timeZone: 'America/Sao_Paulo' });
 
 let TPL = null;
 function template() {
@@ -43,15 +47,62 @@ module.exports = async (req, res) => {
     return res.json(Array.isArray(v) ? v : []);
   }
   if (tipo === 'taxas') { res.setHeader('Cache-Control', 'public, max-age=300'); return res.json(taxas()); }
+
+  if (tipo === 'blog' || tipo === 'post') {
+    let html; try { html = template(); } catch (e) { res.statusCode = 302; res.setHeader('Location', '/'); return res.end(); }
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    const casca = (corpo, cls) => html.replace('<body>', `<body class="pg-blog ${cls}">`).replace('<main id="home">', corpo + '\n<main id="home">');
+    const crumb = (itens) => `<nav class="b-crumb" aria-label="Você está em">${itens.map((x, k) => k < itens.length - 1 ? `<a href="${x[1]}">${MD.esc(x[0])}</a><span>›</span>` : `<span>${MD.esc(x[0])}</span>`).join('')}</nav>`;
+    if (tipo === 'blog') {
+      const lista = await posts('select=slug,titulo,resumo,capa,publicado_em,conteudo&order=publicado_em.desc&limit=60');
+      const url = C.BASE + '/blog';
+      const desc = 'Blog da Nota Perfumaria: dicas de perfumaria árabe e importada, famílias olfativas, como escolher e fazer seu perfume durar mais.';
+      const ld = { '@context': 'https://schema.org', '@type': 'Blog', name: 'Blog Nota Perfumaria', url, blogPost: lista.slice(0, 20).map(p => ({ '@type': 'BlogPosting', headline: p.titulo, url: `${C.BASE}/blog/${p.slug}`, datePublished: p.publicado_em, image: p.capa ? (p.capa.startsWith('http') ? p.capa : C.BASE + p.capa) : undefined })) };
+      const cards = lista.length ? lista.map(p => `<article class="b-card"><a class="b-img" href="/blog/${p.slug}">${p.capa ? `<img src="${MD.esc(p.capa)}" alt="${MD.esc(p.titulo)}" loading="lazy">` : ''}</a>
+        <div class="b-tx"><h2><a href="/blog/${p.slug}">${MD.esc(p.titulo)}</a></h2><p>${MD.esc(p.resumo || MD.texto(p.conteudo).slice(0, 180))}</p><a class="b-mais" href="/blog/${p.slug}">Leia mais</a></div></article>`).join('')
+        : '<p class="b-vazio">Em breve, nossos primeiros artigos.</p>';
+      const corpo = `<section class="b-head"><div class="h-w b-head-in"><h1>Blog</h1>${crumb([['Início', '/'], ['Blog', '/blog']])}</div></section>
+<section class="b-lista"><div class="h-w"><div class="b-grid">${cards}</div></div></section>`;
+      let out = head(casca(corpo, 'pg-blog-lista'), { title: 'Blog · Nota Perfumaria', desc, url, extra: `<script type="application/ld+json">${JSON.stringify(ld)}</script>` });
+      res.setHeader('Cache-Control', 's-maxage=120, stale-while-revalidate=600');
+      return res.end(out);
+    }
+    const r = (await posts(`select=*&slug=eq.${encodeURIComponent(s)}&limit=1`))[0];
+    if (!r) { res.statusCode = 302; res.setHeader('Location', '/blog'); return res.end(); }
+    const url = `${C.BASE}/blog/${r.slug}`;
+    const capaAbs = r.capa ? (r.capa.startsWith('http') ? r.capa : C.BASE + r.capa) : null;
+    const desc = (r.seo_descricao || r.resumo || MD.texto(r.conteudo)).slice(0, 160);
+    const outros = (await posts(`select=slug,titulo,capa,publicado_em&slug=neq.${encodeURIComponent(r.slug)}&order=publicado_em.desc&limit=3`));
+    const ld = { '@context': 'https://schema.org', '@type': 'BlogPosting', headline: r.titulo, description: desc, image: capaAbs || undefined, datePublished: r.publicado_em, dateModified: r.atualizado_em,
+      author: { '@type': 'Organization', name: r.autor || 'Nota Perfumaria' }, publisher: { '@type': 'Organization', name: 'Nota Perfumaria', logo: { '@type': 'ImageObject', url: C.BASE + '/img/logo-branco.jpg' } }, mainEntityOfPage: url };
+    const bc = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Início', item: C.BASE + '/' }, { '@type': 'ListItem', position: 2, name: 'Blog', item: C.BASE + '/blog' }, { '@type': 'ListItem', position: 3, name: r.titulo, item: url }] };
+    const wa = `https://wa.me/5511982659792?text=${encodeURIComponent('Olá! Li o artigo "' + r.titulo + '" no blog da Nota e quero uma indicação de perfume.')}`;
+    const share = `https://wa.me/?text=${encodeURIComponent(r.titulo + ' ' + url)}`;
+    const corpo = `<section class="b-head"><div class="h-w b-head-in"><p class="b-kick">Blog</p>${crumb([['Início', '/'], ['Blog', '/blog'], [r.titulo, '']])}</div></section>
+<article class="b-post"><div class="b-w">
+  <h1>${MD.esc(r.titulo)}</h1>
+  <p class="b-meta">${MD.esc(r.autor || 'Nota Perfumaria')} · <time datetime="${r.publicado_em}">${dataBR(r.publicado_em)}</time></p>
+  ${r.capa ? `<img class="b-capa" src="${MD.esc(r.capa)}" alt="${MD.esc(r.titulo)}">` : ''}
+  <div class="b-conteudo">${MD.md(r.conteudo)}</div>
+  <div class="b-cta"><div><b>Quer ajuda para escolher?</b><span>Um especialista da Nota indica o perfume ideal para você pelo WhatsApp.</span></div><a href="${wa}" target="_blank" rel="noopener">Falar com especialista</a></div>
+  <p class="b-share"><a href="${share}" target="_blank" rel="noopener">Compartilhar no WhatsApp</a> · <a href="/blog">Ver todos os artigos</a></p>
+</div></article>
+${outros.length ? `<section class="b-lista b-rel"><div class="h-w"><h2 class="h-title">Leia também</h2><div class="b-grid">${outros.map(p => `<article class="b-card"><a class="b-img" href="/blog/${p.slug}">${p.capa ? `<img src="${MD.esc(p.capa)}" alt="${MD.esc(p.titulo)}" loading="lazy">` : ''}</a><div class="b-tx"><h2><a href="/blog/${p.slug}">${MD.esc(p.titulo)}</a></h2><a class="b-mais" href="/blog/${p.slug}">Leia mais</a></div></article>`).join('')}</div></div></section>` : ''}`;
+    let out = head(casca(corpo, 'pg-blog-post'), { title: (r.seo_titulo || r.titulo) + ' · Nota Perfumaria', desc, url, image: capaAbs, extra: `<script type="application/ld+json">${JSON.stringify(ld)}</script><script type="application/ld+json">${JSON.stringify(bc)}</script>` });
+    out = out.replace(/<meta property="og:type" content="[^"]*">/, '<meta property="og:type" content="article">');
+    res.setHeader('Cache-Control', 's-maxage=120, stale-while-revalidate=600');
+    return res.end(out);
+  }
   if (tipo === 'sitemap') {
     const items = await C.produtos();
     const marcas = [...new Set(items.map(i => i.b))].sort();
-    const urls = ['/', ...Object.keys(C.CATS).map(k => '/c/' + k), ...marcas.map(b => '/c/' + C.slug(b)), ...items.map(i => '/p/' + i.slug)];
+    const ps = await posts('select=slug&order=publicado_em.desc&limit=500');
+    const urls = ['/', '/blog', ...ps.map(p => '/blog/' + p.slug), ...Object.keys(C.CATS).map(k => '/c/' + k), ...marcas.map(b => '/c/' + C.slug(b)), ...items.map(i => '/p/' + i.slug)];
     const hoje = new Date().toISOString().slice(0, 10);
     res.setHeader('Content-Type', 'application/xml; charset=utf-8');
     res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
     return res.end('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
-      urls.map(u => `<url><loc>${C.BASE}${u}</loc><lastmod>${hoje}</lastmod><changefreq>${u === '/' ? 'daily' : 'weekly'}</changefreq><priority>${u === '/' ? '1.0' : u.startsWith('/c/') ? '0.8' : '0.6'}</priority></url>`).join('\n') + '\n</urlset>');
+      urls.map(u => `<url><loc>${C.BASE}${u}</loc><lastmod>${hoje}</lastmod><changefreq>${u === '/' ? 'daily' : 'weekly'}</changefreq><priority>${u === '/' ? '1.0' : u.startsWith('/c/') || u.startsWith('/blog') ? '0.8' : '0.6'}</priority></url>`).join('\n') + '\n</urlset>');
   }
   let html;
   try { html = template(); } catch (e) { res.statusCode = 302; res.setHeader('Location', '/'); return res.end(); }

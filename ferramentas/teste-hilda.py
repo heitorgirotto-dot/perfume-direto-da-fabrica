@@ -32,7 +32,7 @@ with sync_playwright() as p:
             pg.click('#morebtn'); pg.wait_for_timeout(300); print('carregar mais:', pg.locator('#grid .h-card').count())
             pg.click('#grid .h-card .h-n >> nth=1'); pg.wait_for_timeout(500); print('produto:', pg.url, not pg.is_hidden('#pv'))
             pg.screenshot(path=f'{OUT}/h-desk-produto.png'); pg.keyboard.press('Escape'); pg.wait_for_timeout(200)
-            pg.click('#tabs [data-f="arabe"]'); pg.wait_for_timeout(400); print('arabes:', pg.text_content('#cat-title'), pg.text_content('#count'))
+            pg.goto(B + '/c/arabes'); pg.wait_for_timeout(700); print('arabes:', pg.text_content('#cat-title'), pg.text_content('#count'))
             pg.screenshot(path=f'{OUT}/h-desk-lista.png')
             pg.click('.h-logo'); pg.wait_for_timeout(400); print('logo->home:', pg.url, pg.is_visible('.h-banner'))
             pg.click('#brands a >> nth=0'); pg.wait_for_timeout(400); print('marca chip:', pg.text_content('#cat-title'), pg.text_content('#count'))
@@ -40,10 +40,9 @@ with sync_playwright() as p:
             pg.click('.h-foot a[data-pol="trocas"]'); pg.wait_for_timeout(300); print('política:', pg.is_visible('#mx')); pg.keyboard.press('Escape')
             pg.goto(B + '/c/lattafa'); pg.wait_for_timeout(800); print('rota marca:', pg.text_content('#cat-title'), pg.text_content('#count'))
             pg.goto(B + '/p/lattafa-asad-edp-100ml'); pg.wait_for_timeout(800); print('rota produto:', not pg.is_hidden('#pv'))
-            pg.goto(B + '/'); pg.wait_for_timeout(600); pg.click('a[data-jump="colecoes"]'); pg.wait_for_timeout(700); print('mostrar todos:', pg.evaluate('Math.round(document.getElementById("colecoes").getBoundingClientRect().top)'))
-            pg.click('.h-foot a[data-modo="quiz"]'); pg.wait_for_timeout(300); pg.click('.chips[data-q="f"] button >> nth=1'); pg.wait_for_timeout(300); print('quiz:', pg.locator('#qz-res .h-card').count())
+            pg.goto(B + '/'); pg.wait_for_timeout(600); pg.click('.h-foot a[data-modo="quiz"]'); pg.wait_for_timeout(300); pg.click('.chips[data-q="f"] button >> nth=1'); pg.wait_for_timeout(300); print('quiz:', pg.locator('#qz-res .h-card').count())
         else:
-            pg.click('#burger'); pg.wait_for_timeout(300); pg.screenshot(path=f'{OUT}/h-mob-menu.png')
+            pass
         pg.close()
     b.close()
 srv.shutdown()

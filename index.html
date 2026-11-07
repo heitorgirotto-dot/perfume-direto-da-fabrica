@@ -829,6 +829,44 @@ body.pg-p .h-banner{display:none}
 .h-oc-arr.l{left:10px;background:rgba(255,255,255,.35);color:#333}.h-oc-arr.r{right:10px;background:#fff;color:#111}
 .h-oc-arr svg{width:18px;height:18px}
 @media(max-width:900px){.h-oc-in{grid-template-columns:1fr;gap:16px}.h-oc-side{display:flex;flex-wrap:wrap;gap:8px}.h-oc-side h2{width:100%;font-size:28px!important;margin-bottom:6px!important}.h-oc-pill{width:auto;height:40px;padding:0 16px;margin:0;font-size:11px}.h-oc-track{grid-auto-columns:72%}.h-oc-arr{display:none}.h-oc-card{height:380px}}
+
+/* blog */
+.h-blog{font-size:14px;font-weight:500;color:#000;text-decoration:none;padding:0 6px}.h-blog:hover{color:var(--h-ac)}
+body.pg-blog main#home,body.pg-blog .h-colecoes,body.pg-blog .h-quiz{display:none!important}
+.b-head{border-bottom:1px solid #eee;padding:22px 0}
+.b-head-in{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.b-head h1{font-size:44px!important;font-weight:500!important;color:#000!important;margin:0!important;letter-spacing:-.01em}
+.b-kick{margin:0;font-size:22px;font-weight:500;color:#000}
+.b-crumb{display:flex;align-items:center;gap:10px;font-size:15px;color:#666;flex-wrap:wrap}.b-crumb a{color:#111;text-decoration:none}.b-crumb a:hover{text-decoration:underline}.b-crumb span:last-child{max-width:46ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.b-lista{padding:28px 0 60px}
+.b-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:56px 40px}
+.b-card{display:flex;flex-direction:column}
+.b-img{display:block;aspect-ratio:2/1;overflow:hidden;background:#f1f1f1}
+.b-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}.b-card:hover .b-img img{transform:scale(1.04)}
+.b-tx{padding:20px 14px 0}
+.b-tx h2{font-size:21px!important;font-weight:600!important;line-height:1.5;margin:0 0 10px!important;color:#111!important}.b-tx h2 a{color:inherit;text-decoration:none}.b-tx h2 a:hover{text-decoration:underline}
+.b-tx p{margin:0 0 18px;color:#222;font-size:15px;line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.b-mais{color:#a9a3d6;font-size:18px;text-decoration:underline;text-underline-offset:3px}.b-mais:hover{color:#6c63b5}
+.b-vazio{grid-column:1/-1;text-align:center;color:#777;padding:60px 0}
+.b-post{padding:34px 0 20px}
+.b-w{max-width:760px;margin:0 auto;padding:0 16px}
+.b-post h1{font-size:clamp(28px,4vw,42px)!important;font-weight:600!important;line-height:1.2!important;color:#000!important;margin:0 0 10px!important}
+.b-meta{color:#777;font-size:14px;margin:0 0 22px}
+.b-capa{width:100%;height:auto;display:block;border-radius:10px;margin:0 0 26px}
+.b-conteudo{font-size:17px;line-height:1.75;color:#222}
+.b-conteudo h2{font-size:26px!important;font-weight:600!important;color:#000!important;margin:34px 0 12px!important;line-height:1.3}
+.b-conteudo h3{font-size:21px!important;font-weight:600!important;color:#000!important;margin:26px 0 10px!important}
+.b-conteudo p{margin:0 0 18px}.b-conteudo ul,.b-conteudo ol{margin:0 0 18px;padding-left:22px}.b-conteudo li{margin-bottom:6px}
+.b-conteudo a{color:#6c4f12;text-decoration:underline}
+.b-conteudo blockquote{margin:22px 0;padding:14px 20px;border-left:4px solid var(--h-ac);background:#faf7ef;font-style:italic}
+.b-conteudo img{max-width:100%;height:auto;border-radius:8px}.b-conteudo figure{margin:22px 0}
+.b-cta{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:#111;color:#fff;border-radius:12px;padding:20px 22px;margin:34px 0 18px}
+.b-cta b{display:block;font-size:17px}.b-cta span{font-size:14px;color:#ddd}
+.b-cta a{background:#25d366;color:#07140b;text-decoration:none;font-weight:600;border-radius:8px;padding:12px 18px}
+.b-share{font-size:14px;color:#666}.b-share a{color:#111}
+.b-rel{background:#fafafa;border-top:1px solid #eee}
+@media(max-width:900px){.b-grid{grid-template-columns:1fr 1fr;gap:36px 18px}}
+@media(max-width:600px){.b-grid{grid-template-columns:1fr}.b-head h1{font-size:34px!important}.b-tx{padding:16px 4px 0}.h-blog{display:none}}
 </style>
 </head>
 <body>
@@ -837,6 +875,7 @@ body.pg-p .h-banner{display:none}
     <a class="h-logo" href="/" data-cat="all" aria-label="Nota Perfumaria"><img src="/img/logo-branco.jpg?v=1" alt="Nota Perfumaria" width="900" height="352"></a>
     <form class="h-search" id="sform" role="search"><span class="h-s-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></span><input id="q" type="search" placeholder="Busque seu perfume, marca ou nota" aria-label="Buscar"><button type="submit" aria-label="Buscar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></button></form>
     <div class="h-acts">
+      <a class="h-blog" href="/blog">Blog</a>
       <button class="h-acc" id="acc-btn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9.5"/><circle cx="12" cy="10" r="3.2"/><path d="M6.2 18.4c1.4-2.2 3.4-3.3 5.8-3.3s4.4 1.1 5.8 3.3"/></svg><span id="acc-lbl">Minha conta</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
       <a class="h-ic h-wa-top" href="https://wa.me/5511982659792" target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.8-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.2-.2-.5-.3z"/></svg></a>
       <button class="h-ic h-cart" id="cart-btn" type="button" aria-label="Carrinho"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 4h2.2l2.2 11h10.4l2-8H6.3"/><circle cx="9" cy="19.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/></svg><span class="h-cq" id="cart-q">0</span><span id="cart-v" class="sr">R$ 0,00</span></button>
@@ -940,7 +979,7 @@ body.pg-p .h-banner{display:none}
   <div class="h-foot-top">
     <div><h4>Sobre nós</h4><p>Nota Perfumaria: alta perfumaria árabe e importada, só frascos originais e lacrados. Perfumes Lattafa, Armaf, Al Haramain, Afnan, Rasasi, Maison Alhambra, Al Wataniah e grandes grifes internacionais, com atendimento humano do primeiro contato ao pós-venda.</p></div>
     <div><h4>Dados de contato</h4><p class="h-foot-ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.8-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.2-.2-.5-.3z"/></svg> <span id="f-wa">(11) 98265-9792</span></p><p class="h-foot-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg> @notaperfumaria</p><a href="https://wa.me/5511982659792" target="_blank" rel="noopener">Fale conosco</a><p class="h-foot-small">Segunda a sábado, das 9h às 18h</p></div>
-    <div><h4>Institucional</h4><a href="#" data-pol="originalidade">Como saber se o perfume é original</a><a href="#" data-pol="pagamento">Pagamentos e preços</a><a href="#" data-pol="prazos">Política de entrega</a><a href="#" data-pol="rastreio">Rastreie o seu pedido</a><a href="#" data-pol="trocas">Trocas ou devoluções</a><a href="#" data-pol="privacidade">Sobre LGPD</a><a href="#assinatura" data-modo="quiz">Descubra o seu perfume</a></div>
+    <div><h4>Institucional</h4><a href="/blog">Blog</a><a href="#" data-pol="originalidade">Como saber se o perfume é original</a><a href="#" data-pol="pagamento">Pagamentos e preços</a><a href="#" data-pol="prazos">Política de entrega</a><a href="#" data-pol="rastreio">Rastreie o seu pedido</a><a href="#" data-pol="trocas">Trocas ou devoluções</a><a href="#" data-pol="privacidade">Sobre LGPD</a><a href="#assinatura" data-modo="quiz">Descubra o seu perfume</a></div>
     <div><h4>Redes sociais</h4><div class="h-soc"><a href="https://instagram.com/notaperfumaria" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a><a href="https://wa.me/5511982659792" target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.8-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.2-.2-.5-.3z"/></svg></a></div></div>
   </div>
   <div class="h-foot-bot">
@@ -1496,6 +1535,17 @@ document.addEventListener('click',function(e){
     document.querySelectorAll('#occ-tiles [data-occ]').forEach(function(a){var c=a.dataset.occ+'-'+v;a.dataset.cat=c;a.setAttribute('href','/c/'+c)});return}
   var r=e.target.closest('[data-ocar]');if(r){var t=document.getElementById('occ-tiles');t.scrollBy({left:(+r.dataset.ocar)*t.clientWidth/3,behavior:'smooth'})}
 });
+</script>
+
+<script>
+/* páginas do blog: links da loja navegam normalmente (a home fica escondida) */
+if(document.body.classList.contains('pg-blog')){
+  document.addEventListener('click',function(e){var a=e.target.closest('a[data-cat],a[data-jump],a[data-modo]');if(!a)return;e.preventDefault();e.stopPropagation();
+    var h=a.getAttribute('href')||'/';if(a.dataset.modo==='quiz')h='/#descubra';else if(a.dataset.jump)h='/#'+a.dataset.jump;location.href=h},true);
+  var _bf=document.getElementById('sform');if(_bf)_bf.addEventListener('submit',function(e){e.preventDefault();e.stopImmediatePropagation();location.href='/?q='+encodeURIComponent(document.getElementById('q').value)},true);
+}
+/* busca vinda do blog (?q=) */
+(function(){var q=new URLSearchParams(location.search).get('q');if(q&&!document.body.classList.contains('pg-blog')){var i=document.getElementById('q');i.value=q;document.getElementById('sform').dispatchEvent(new Event('submit',{cancelable:true}))}})();
 </script>
 </body>
 </html>

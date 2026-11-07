@@ -9,6 +9,14 @@
   },
   "rewrites": [
     {
+      "source": "/blog",
+      "destination": "/api/pagina?tipo=blog"
+    },
+    {
+      "source": "/blog/:slug",
+      "destination": "/api/pagina?tipo=post&slug=:slug"
+    },
+    {
       "source": "/p/:slug",
       "destination": "/api/pagina?tipo=p&slug=:slug"
     },

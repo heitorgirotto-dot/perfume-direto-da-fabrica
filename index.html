@@ -1167,7 +1167,7 @@ function render(reset){
 }
 /* faixa PERFUMES: entra na lista depois de linhas completas (6 no celular/tablet, 8 no computador) */
 let FAIXA=null;
-function faixaGeo(){const g=$('#grid');const cols=g?getComputedStyle(g).gridTemplateColumns.split(' ').filter(Boolean).length||4:4;const n=cols>=4?cols*2:6;const B=Math.ceil(40/cols)*cols;return {n,B,pos:[n,n+B,n+2*B],min:n+3*B}}
+function faixaGeo(){const g=$('#grid');const cols=g?getComputedStyle(g).gridTemplateColumns.split(' ').filter(Boolean).length||4:4;const n=cols>=4?cols*2:6;const B=Math.ceil(40/cols)*cols;return {n:B,B,pos:[B,2*B,3*B],min:4*B}}
 function placeFaixa(){FAIXA=FAIXA||['fem-faixa','masc-faixa','ocasioes'].map(id=>document.getElementById(id)).filter(Boolean);const g=$('#grid');if(!FAIXA.length||!g)return;
   const G=faixaGeo();
   FAIXA.forEach((fx,k)=>{const cs=g.querySelectorAll(':scope>.h-card'),i=G.pos[k];if(cs.length>i){if(cs[i].previousElementSibling!==fx)g.insertBefore(fx,cs[i])}else if(fx.parentNode===g)fx.remove()})}

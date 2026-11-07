@@ -2,9 +2,27 @@
   "functions": {
     "api/checkout.js": {
       "maxDuration": 10
+    },
+    "api/pagina.js": {
+      "includeFiles": "{index.html,produtos.json}"
+    },
+    "api/sitemap.js": {
+      "includeFiles": "produtos.json"
     }
   },
   "rewrites": [
+    {
+      "source": "/p/:slug",
+      "destination": "/api/pagina?tipo=p&slug=:slug"
+    },
+    {
+      "source": "/c/:slug",
+      "destination": "/api/pagina?tipo=c&slug=:slug"
+    },
+    {
+      "source": "/sitemap.xml",
+      "destination": "/api/sitemap"
+    },
     {
       "source": "/admin",
       "destination": "/admin.html"
@@ -25,6 +43,24 @@
         {
           "key": "X-Robots-Tag",
           "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/produtos.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300, stale-while-revalidate=3600"
+        }
+      ]
+    },
+    {
+      "source": "/(img|fotos|fotos-king)/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=2592000, immutable"
         }
       ]
     }

@@ -201,16 +201,16 @@ tr:hover td{background:#141414}
   </section>
   <!-- VÍDEOS DE CLIENTES -->
   <section id="v-vid" class="hidden">
-    <h1 style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">Vídeos de clientes <span id="vcount" style="color:var(--mut);font-size:14px"></span></h1>
+    <h1 style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">Vídeos (Reels dos mais vendidos) <span id="vcount" style="color:var(--mut);font-size:14px"></span></h1>
     <div class="card" style="margin-bottom:16px">
       <h2 style="margin-top:0">Adicionar vídeo</h2>
-      <p style="color:var(--mut);font-size:14px;margin:-4px 0 12px">Envie o vídeo do cliente (MP4 ou MOV do celular, até 50 MB) <b>ou</b> cole o link de um Short do YouTube ou Reel do Instagram. Tenha a autorização do cliente para publicar.</p>
+      <p style="color:var(--mut);font-size:14px;margin:-4px 0 12px">O site mostra <b>até 6 vídeos</b> na seção “Os mais vendidos”, em formato Reels (<b>vertical 9:16</b>), na ordem abaixo. Vaga sem vídeo mostra um perfume mais vendido. Escolha o perfume do vídeo: é ele que o botão “Comprar agora” coloca no carrinho. Envie MP4/MOV do celular (até 50 MB) <b>ou</b> cole o link de um Short do YouTube. Tenha a autorização de quem aparece no vídeo.</p>
       <form id="fvid">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
           <div><label>Arquivo do vídeo</label><input id="vfile" type="file" accept="video/mp4,video/quicktime,video/webm"></div>
           <div><label>ou link (YouTube / Instagram)</label><input id="vlink" type="url" placeholder="https://youtube.com/shorts/..."></div>
           <div><label>Nome do cliente (opcional)</label><input id="vnome" maxlength="80" placeholder="Ex.: Ana, Mogi das Cruzes"></div>
-          <div><label>Perfume que aparece no vídeo</label><select id="vprod"><option value="">— nenhum —</option></select></div>
+          <div><label>Perfume do vídeo (botão Comprar)</label><select id="vprod"><option value="">— nenhum —</option></select></div>
           <div><label>Ordem (menor aparece primeiro)</label><input id="vordem" type="number" value="0"></div>
           <div style="display:flex;align-items:flex-end"><label style="display:flex;gap:8px;align-items:center;margin:0"><input id="vativo" type="checkbox" checked style="width:auto"> Publicado no site</label></div>
         </div>
@@ -580,12 +580,12 @@ async function loadVids(){
   }catch(e){toast(e.message)}
 }
 function renderVids(){
-  $('#vcount').textContent=VIDS_ADM.length?`${VIDS_ADM.length} vídeo(s)`:'';
+  const _at=VIDS_ADM.filter(v=>v.ativo).length;$('#vcount').innerHTML=VIDS_ADM.length?`${Math.min(6,_at)} de 6 no site`+(_at>6?` · <b style="color:#ff9f43">${_at-6} publicado(s) além do limite não aparecem — oculte ou ajuste a ordem</b>`:''):'0 de 6 no site';
   $('#vlist').innerHTML=VIDS_ADM.length?VIDS_ADM.map(v=>{const p=PRODS_VID.find(x=>x.id===v.produto_id);const yt=ytId(v.src);
     const th=v.poster||(yt?`https://i.ytimg.com/vi/${yt}/hqdefault.jpg`:'');
     return `<div class="card" style="padding:10px"><div style="aspect-ratio:9/14;border-radius:10px;overflow:hidden;background:#111;margin-bottom:8px">${/\.(mp4|mov|webm)(\?|$)/i.test(v.src)?`<video src="${vesc(v.src)}#t=0.5" ${th?`poster="${vesc(th)}"`:''} controls preload="metadata" style="width:100%;height:100%;object-fit:cover"></video>`:(th?`<img src="${vesc(th)}" style="width:100%;height:100%;object-fit:cover">`:`<a href="${vesc(v.src)}" target="_blank" style="display:grid;place-items:center;height:100%;color:#ddd">Abrir link</a>`)}</div>
       <div style="font-weight:600;font-size:14px">${vesc(v.nome||'Sem nome')}</div><div style="font-size:12px;color:var(--mut)">${p?vesc(p.n):'Sem perfume'} · ordem ${v.ordem}${v.ativo?'':' · <b style="color:#ff9f43">oculto</b>'}</div>
-      <div style="display:flex;gap:6px;margin-top:8px"><button class="btn ghost" data-vtog="${v.id}" style="flex:1;padding:6px">${v.ativo?'Ocultar':'Publicar'}</button><button class="btn ghost" data-vdel="${v.id}" style="padding:6px 10px">Excluir</button></div></div>`}).join(''):'<p style="color:var(--mut)">Nenhum vídeo ainda. Enquanto não houver vídeos, o site mostra o convite “Envie seu vídeo” para os clientes.</p>';
+      <div style="display:flex;gap:6px;margin-top:8px"><button class="btn ghost" data-vtog="${v.id}" style="flex:1;padding:6px">${v.ativo?'Ocultar':'Publicar'}</button><button class="btn ghost" data-vdel="${v.id}" style="padding:6px 10px">Excluir</button></div></div>`}).join(''):'<p style="color:var(--mut)">Nenhum vídeo ainda. Enquanto não houver vídeos, a seção mostra os 6 perfumes mais vendidos.</p>';
 }
 function posterDe(file){return new Promise(res=>{try{const v=document.createElement('video');v.muted=true;v.playsInline=true;v.preload='auto';v.src=URL.createObjectURL(file);
   v.onloadeddata=()=>{v.currentTime=Math.min(1,(v.duration||2)/3)};v.onseeked=()=>{try{const W=540,H=Math.round(W*v.videoHeight/v.videoWidth)||960;const c=document.createElement('canvas');c.width=W;c.height=H;c.getContext('2d').drawImage(v,0,0,W,H);c.toBlob(b=>{URL.revokeObjectURL(v.src);res(b)},'image/jpeg',.82)}catch(e){res(null)}};v.onerror=()=>res(null);setTimeout(()=>res(null),12000)}catch(e){res(null)}})}
@@ -594,6 +594,8 @@ function enviar(url,key,path,blob,tipo,onp){return new Promise((ok,ko)=>{const x
 $('#fvid').onsubmit=async e=>{e.preventDefault();const f=$('#vfile').files[0],link=$('#vlink').value.trim();const msg=$('#vmsg'),btn=$('#vgo'),bar=$('#vbar'),bi=bar.querySelector('i');
   if(!f&&!link){msg.textContent='Escolha um arquivo ou cole um link.';return}
   if(f&&f.size>50*1024*1024){msg.textContent='Vídeo acima de 50 MB. Corte ou exporte em qualidade menor.';return}
+  if(f){const dim=await new Promise(r=>{const v=document.createElement('video');v.preload='metadata';v.onloadedmetadata=()=>{r([v.videoWidth,v.videoHeight]);URL.revokeObjectURL(v.src)};v.onerror=()=>r([0,0]);v.src=URL.createObjectURL(f);setTimeout(()=>r([0,0]),8000)});
+    if(dim[0]>dim[1]&&!confirm('Este vídeo está na horizontal. A seção usa formato Reels (vertical 9:16) e as laterais serão cortadas. Enviar mesmo assim?'))return}
   btn.disabled=true;msg.textContent='Enviando…';
   try{
     let src=link,poster='';

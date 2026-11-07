@@ -42,7 +42,7 @@ module.exports = async (req, res) => {
   const tipo = q.tipo, s = String(q.slug || '').toLowerCase().replace(/[^a-z0-9-]/g, '');
   if (tipo === 'videos') {
     let v = [];
-    try { v = await require('./_db').select('videos', 'select=id,src,poster,nome,produto_id&ativo=is.true&order=ordem.asc,id.desc&limit=40'); } catch (e) { v = []; }
+    try { v = await require('./_db').select('videos', 'select=id,src,poster,nome,produto_id&ativo=is.true&order=ordem.asc,id.desc&limit=6'); } catch (e) { v = []; }
     res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300');
     return res.json(Array.isArray(v) ? v : []);
   }

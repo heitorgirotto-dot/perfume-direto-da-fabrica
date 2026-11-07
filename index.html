@@ -793,6 +793,36 @@ body.pg-p .h-banner{display:none}
 .h-vmodal .pi .bt>*{flex:1;min-width:120px;margin:0}
 @media(max-width:560px){.h-vid-track{grid-auto-columns:40%;gap:12px;padding:12px}.h-vmodal{grid-template-columns:1fr}.h-vid-wrap .h-car-btn{display:none}}
 
+
+/* mais vendidos em reels (6 cards 9:16) */
+.h-vid{padding:26px 0 30px}
+.h-vid-hd{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:6px}
+.h-vid-hd .h-title{margin:0!important}.h-vid-hd span{font-size:13px;color:#7a6a45;letter-spacing:.04em}
+.h-vid-track{grid-auto-columns:calc((100% - 5*14px)/6);gap:14px;padding:10px 2px 8px;scroll-snap-type:x mandatory}
+.h-rc{position:relative;display:block;aspect-ratio:9/16;border-radius:16px;overflow:hidden;cursor:pointer;background:#111;color:#fff;text-decoration:none;scroll-snap-align:start;transition:transform .25s,box-shadow .25s;border:0;padding:0;font:inherit;text-align:left;width:100%}
+.h-rc:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(0,0,0,.18)}
+.h-rc>video,.h-rc>.rcm{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.h-rc::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.28) 0,rgba(0,0,0,0) 22%,rgba(0,0,0,0) 52%,rgba(0,0,0,.78));pointer-events:none}
+.h-rc .tg{position:absolute;left:10px;top:10px;z-index:2;background:#d9b25a;color:#140f05;font-size:10px;font-weight:700;letter-spacing:.06em;padding:4px 8px;border-radius:99px}
+.h-rc .rl{position:absolute;right:10px;top:10px;z-index:2;width:22px;height:22px;color:#fff;filter:drop-shadow(0 1px 4px rgba(0,0,0,.6))}
+.h-rc .pl{position:absolute;left:50%;top:44%;z-index:2;width:50px;height:50px;margin:-25px 0 0 -25px;border-radius:50%;background:rgba(255,255,255,.22);border:2px solid rgba(255,255,255,.7);backdrop-filter:blur(4px);display:grid;place-items:center}
+.h-rc .pl::after{content:"";border-left:13px solid #fff;border-top:8px solid transparent;border-bottom:8px solid transparent;margin-left:4px}
+.h-rc .inf{position:absolute;left:10px;right:10px;bottom:10px;z-index:2}
+.h-rc .inf span{display:block;font-size:13px;line-height:1.25;font-weight:600;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+.h-rc .inf s{font-size:11px;opacity:.75;margin-right:6px}.h-rc .inf b{font-size:15px}
+.h-rc .inf em{display:block;margin-top:8px;font-style:normal;text-align:center;background:#fff;color:#000;font-size:12px;font-weight:700;padding:8px 0;border-radius:8px}
+.h-rc .inf em:hover{background:#d9b25a}
+.h-rc.prod{background:#f8f8f8;color:#111;box-shadow:inset 0 0 0 1px #ececec}
+.h-rc.prod .rcm{object-fit:contain;padding:14% 8% 46%;box-sizing:border-box;transition:transform .5s}
+.h-rc.prod:hover .rcm{transform:scale(1.06)}
+.h-rc.prod::after{display:none}
+.h-rc.prod .inf span{text-shadow:none;color:#111}.h-rc.prod .inf s{color:#888;opacity:1}.h-rc.prod .inf b{color:#000}
+.h-rc.prod .inf em{background:#000;color:#fff}.h-rc.prod .inf em:hover{background:#d9b25a;color:#140f05}
+@media(max-width:900px){.h-vid-track{grid-auto-columns:30%}}
+@media(max-width:560px){.h-vid-track{grid-auto-columns:44%;gap:10px}.h-vid-hd span{font-size:12px}}
+.h-st-prod .bt2{display:flex;gap:6px;margin-top:8px}.h-st-prod .bt2 button{margin:0;flex:1}
+.h-st-prod .bt2 .buy{background:#d9b25a;color:#140f05}
+
 /* player estilo stories */
 .h-story{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center}
 .h-story[hidden]{display:none}
@@ -908,11 +938,12 @@ body.pg-blog main#home,body.pg-blog .h-colecoes,body.pg-blog .h-quiz{display:non
 </div></section>
 
 
-<section class="h-vid" id="depoimentos" aria-label="Vídeos de clientes">
+<section class="h-vid" id="depoimentos" aria-label="Os mais vendidos em vídeo"><div class="h-w">
+  <div class="h-vid-hd"><h2 class="h-title">Os mais vendidos</h2><span>Assista e compre</span></div>
   <div class="h-vid-wrap"><button class="h-car-btn l" type="button" data-car="-1" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 5l-7 7 7 7"/></svg></button>
     <div class="h-track h-vid-track" id="vids"></div>
     <button class="h-car-btn r" type="button" data-car="1" aria-label="Próximo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg></button></div>
-</section>
+</div></section>
 <section class="h-list"><div class="h-w">
   <h2 class="h-title">Os mais desejados da Nota</h2>
   <div class="h-car"><button class="h-car-btn l" type="button" data-car="-1" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 5l-7 7 7 7"/></svg></button>
@@ -1490,19 +1521,26 @@ render(true);rota();
   let VIDS=[];
   function prodDe(v){if(v.produto_id!=null&&BYID[v.produto_id])return BYID[v.produto_id];return v.produto?byName(v.produto)||ITEMS.find(i=>i.n===v.produto):null}
   function mini(it){return it?`<div class="h-vc-p">${it.img?`<img src="${it.img}" alt="">`:''}<div><span>${it.n}</span>${it.p!=null?`<s>${brl(it.po>it.p?it.po:it.p)}</s><b>${brl(pix(it.p))}</b>`:'<b>Consultar</b>'}</div></div>`:''}
+  const RL='<svg class="rl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M3 8h18M8 3l3 5M13 3l3 5"/><path d="M10 11.5v5l4-2.5z" fill="currentColor"/></svg>';
+  const preco=it=>it&&it.p!=null?`<s>${brl(it.po>it.p?it.po:it.p)}</s><b>${brl(pix(it.p))}</b>`:'';
+  function maisVendidos(){const bs=ITEMS.some(i=>i.best)?ITEMS.filter(i=>i.best):BEST.map(byName).filter(Boolean);
+    return bs.concat(ITEMS.filter(i=>!bs.includes(i)&&!i.splash&&!i.kit)).filter(i=>i.img&&i.p!=null)}
+  let IO=null;
   function render(){
     const box=$('#vids');if(!box)return;
-    if(VIDS.length){
-      box.innerHTML=VIDS.map((v,k)=>{const it=prodDe(v);const thumb=v.poster||(v.youtube?`https://i.ytimg.com/vi/${v.youtube}/hqdefault.jpg`:'');
-        const media=v.src?`<video src="${v.src}#t=0.5" ${thumb?`poster="${thumb}"`:''} muted playsinline preload="metadata" loop></video>`:(thumb?`<img src="${thumb}" alt="" loading="lazy">`:'');
-        return `<button class="h-vc" type="button" data-vid="${k}"><div class="h-vc-v">${media}<span class="pl"></span>${v.nome?`<span class="nm">${v.nome}</span>`:''}</div>${mini(it)}</button>`}).join('');
-      box.querySelectorAll('.h-vc').forEach(c=>{const vd=c.querySelector('video');if(!vd)return;c.onmouseenter=()=>{vd.play().catch(()=>{})};c.onmouseleave=()=>{vd.pause()}});
-    }else{
-      const pool=ITEMS.filter(i=>i.img&&i.best).concat(ITEMS.filter(i=>i.img)).slice(0,10);
-      const wa=`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Olá! Comprei na Nota Perfumaria e quero enviar meu vídeo de depoimento.')}`;
-      box.innerHTML=pool.map(it=>`<a class="h-vc vazio" href="${wa}" target="_blank" rel="noopener"><div class="h-vc-v"><img class="bg" src="${it.img}" alt=""><b>Já comprou na Nota?<br>Envie seu vídeo</b><em>Enviar meu vídeo</em></div>${mini(it)}</a>`).join('');
-    }
+    const vs=VIDS.slice(0,6),usados=new Set(vs.map(prodDe).filter(Boolean));
+    const prods=maisVendidos().filter(i=>!usados.has(i)).slice(0,6-vs.length);
+    box.innerHTML=vs.map((v,k)=>{const it=prodDe(v);const thumb=v.poster||(v.youtube?`https://i.ytimg.com/vi/${v.youtube}/hqdefault.jpg`:'');
+        const media=v.src?`<video data-src="${v.src}" ${thumb?`poster="${thumb}"`:''} muted playsinline loop preload="none"></video>`:(thumb?`<img class="rcm" src="${thumb}" alt="" loading="lazy">`:'');
+        return `<div class="h-rc" role="button" tabindex="0" data-vid="${k}" aria-label="Ver vídeo${it?' de '+it.n:''}">${media}${RL}<span class="pl"></span><div class="inf">${it?`<span>${it.n}</span>${preco(it)}`:(v.nome?`<span>${v.nome}</span>`:'')}${it&&it.p!=null?'<em>Comprar</em>':''}</div></div>`}).join('')
+      +prods.map(it=>`<div class="h-rc prod" role="button" tabindex="0" data-rp="${it.id}" aria-label="${it.n}"><img class="rcm" src="${it.img}" alt="${it.n}" loading="lazy"><span class="tg">MAIS VENDIDO</span><div class="inf"><span>${it.n}</span>${preco(it)}<em data-add="${it.id}">Comprar</em></div></div>`).join('');
+    // vídeos tocam sozinhos (sem som) quando aparecem na tela
+    if(IO)IO.disconnect();
+    if('IntersectionObserver' in window){IO=new IntersectionObserver(es=>es.forEach(en=>{const vd=en.target;if(en.isIntersecting){if(!vd.src)vd.src=vd.dataset.src;vd.play().catch(()=>{})}else vd.pause()}),{threshold:.4});box.querySelectorAll('video[data-src]').forEach(v=>IO.observe(v))}
+    else box.querySelectorAll('video[data-src]').forEach(v=>{v.src=v.dataset.src});
   }
+  document.addEventListener('click',e=>{const c=e.target.closest('[data-rp]');if(c&&!e.target.closest('[data-add]')){e.preventDefault();openPV(+c.dataset.rp)}});
+  document.addEventListener('keydown',e=>{if(e.key!=='Enter')return;const c=e.target.closest&&e.target.closest('[data-rp],[data-vid]');if(c)c.click()});
   const IC={x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 6l12 12M18 6L6 18"/></svg>',pause:'<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>',play:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 5l12 7-12 7z"/></svg>',som:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>',mudo:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M17 9l5 6M22 9l-5 6"/></svg>',up:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 15l6-6 6 6"/></svg>',down:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg>'};
   let ST=null,AT=0,MUDO=false;
   function fechar(){if(!ST)return;const v=ST.querySelector('video');if(v)v.pause();const f=ST.querySelector('iframe');if(f)f.src='about:blank';ST.hidden=true;document.body.style.overflow=''}
@@ -1513,7 +1551,8 @@ render(true);rota();
         if(a==='x')fechar();else if(a==='prev')abrir(AT-1);else if(a==='next')abrir(AT+1);
         else if(a==='pp'&&vd){vd.paused?vd.play():vd.pause();b.innerHTML=vd.paused?IC.play:IC.pause}
         else if(a==='som'&&vd){MUDO=!MUDO;vd.muted=MUDO;b.innerHTML=MUDO?IC.mudo:IC.som}
-        else if(a==='ver'&&it0()){fechar();openPV(it0().id)}});
+        else if(a==='ver'&&it0()){fechar();openPV(it0().id)}
+        else if(a==='buy'&&it0()){const id=it0().id;fechar();addCart(id,1);openCart()}});
       ST.addEventListener('pointerdown',e=>{if(e.target.closest('[data-add]'))setTimeout(fechar,60)});
       document.addEventListener('keydown',e=>{if(!ST||ST.hidden)return;if(e.key==='Escape')fechar();if(e.key==='ArrowDown'||e.key==='ArrowRight')abrir(AT+1);if(e.key==='ArrowUp'||e.key==='ArrowLeft')abrir(AT-1)});
       let y0=null;ST.addEventListener('touchstart',e=>{y0=e.touches[0].clientY},{passive:true});ST.addEventListener('touchend',e=>{if(y0==null)return;const d=e.changedTouches[0].clientY-y0;if(Math.abs(d)>60)abrir(AT+(d<0?1:-1));y0=null})}
@@ -1521,7 +1560,7 @@ render(true);rota();
     ST.innerHTML=`${n>1?`<div class="h-st-nav"><button type="button" data-st="prev" aria-label="Vídeo anterior">${IC.up}</button><button type="button" data-st="next" aria-label="Próximo vídeo">${IC.down}</button></div>`:''}
      <div class="h-st-box">${media}<div class="h-st-bar"><i></i></div>${v.nome?`<span class="h-st-nm">${v.nome}</span>`:''}
       <div class="h-st-top">${v.src?`<button type="button" data-st="pp" aria-label="Pausar">${IC.pause}</button><button type="button" data-st="som" aria-label="Som">${MUDO?IC.mudo:IC.som}</button>`:''}<button type="button" data-st="x" aria-label="Fechar">${IC.x}</button></div>
-      ${it?`<div class="h-st-prod"><div class="r" data-st="ver">${it.img?`<img src="${it.img}" alt="">`:''}<div style="min-width:0"><span>${it.n}</span>${it.p!=null?`<s>${brl(it.po>it.p?it.po:it.p)}</s><b>${brl(pix(it.p))}</b>`:''}</div></div>${it.p!=null?`<button type="button" data-add="${it.id}">Adicionar produto</button>`:''}</div>`:''}</div>`;
+      ${it?`<div class="h-st-prod"><div class="r" data-st="ver">${it.img?`<img src="${it.img}" alt="">`:''}<div style="min-width:0"><span>${it.n}</span>${it.p!=null?`<s>${brl(it.po>it.p?it.po:it.p)}</s><b>${brl(pix(it.p))}</b>`:''}</div></div>${it.p!=null?`<div class="bt2"><button type="button" data-st="ver">Ver detalhes</button><button type="button" class="buy" data-st="buy">Comprar agora</button></div>`:''}</div>`:''}</div>`;
     ST._it=it;ST.hidden=false;document.body.style.overflow='hidden';
     const vd=ST.querySelector('video');if(vd){const bar=ST.querySelector('.h-st-bar i');vd.ontimeupdate=()=>{if(vd.duration)bar.style.width=(vd.currentTime/vd.duration*100)+'%'};vd.onended=()=>{if(n>1)abrir(AT+1)};vd.play().catch(()=>{vd.muted=true;MUDO=true;vd.play().catch(()=>{});const sb=ST.querySelector('[data-st="som"]');if(sb)sb.innerHTML=IC.mudo})}
   }

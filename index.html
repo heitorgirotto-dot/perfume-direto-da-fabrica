@@ -867,7 +867,7 @@ fetch('/api/produtos',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(list=
   catHead();if(location.pathname.startsWith('/p/')&&!$('#pv').hidden){const it=ITEMS.find(i=>i.slug===location.pathname.slice(3));if(it)openPV(it.id)}
 }).catch(()=>{});
 
-let f='all',page=1,FAMF='',OCCF='',CAT='all';const PAGE=1000;
+let f='all',page=1,FAMF='',OCCF='',CAT='all';const PAGE=40;
 const norm=s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
 function passF(i){switch(f){case'M':case'F':case'U':return i.g===f;case'arabe':return!i.imp&&!i.splash;case'import':return i.imp;case'splash':return i.splash;case'kit':return i.kit;case'p99':return i.p!=null&&i.p<=99;case'p199':return i.p!=null&&i.p<=199;case'sale':return i.p!=null&&(i.p<=149||i.po>i.p);case'best':return!!i.best||BEST.map(byName).includes(i);default:return true}}
 function passFam(i){if(FAMF&&!i.fam.includes(FAMF))return false;if(OCCF&&!OCC[OCCF].f.includes(i.fam[0]))return false;return true}

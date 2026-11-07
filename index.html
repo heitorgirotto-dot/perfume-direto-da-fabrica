@@ -579,25 +579,6 @@ footer .note{color:#8d8678}.pay span{border-color:#3a3328;color:#cfc6b2}
     <button class="acc cartb" id="cart-btn" type="button" aria-label="Carrinho"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 7h12l-1 13H7L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg><span class="cq" id="cart-q">0</span><span id="cart-v">R$ 0,00</span></button>
       </div>
 
-  <div class="nav-scroll"><nav class="nav" id="nav" aria-label="Navegação da loja">
-    <a href="/" data-cat="all">Início</a>
-    <div class="dd"><button type="button" aria-haspopup="true">Perfumes <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></button>
-      <div class="dd-box"><div class="cols">
-        <div class="grp"><h5>Por gênero</h5><a href="/c/masculinos" data-cat="masculinos">Masculinos</a><a href="/c/femininos" data-cat="femininos">Femininos</a><a href="/c/unissex" data-cat="unissex">Unissex</a></div>
-        <div class="grp"><h5>Por origem</h5><a href="/c/arabes" data-cat="arabes">Perfumes árabes</a><a href="/c/importados" data-cat="importados">Importados &amp; grifes</a></div>
-        <div class="grp"><h5>Formatos</h5><a href="/c/kits" data-cat="kits">Kits e presentes</a><a href="/c/body-splash" data-cat="body-splash">Body splash &amp; mists</a><a href="/c/ofertas" data-cat="ofertas">Ofertas</a></div>
-        <div class="grp"><h5>Mais</h5><a href="/c/mais-desejados" data-cat="mais-desejados">Mais desejados</a><a href="#assinatura">Descubra seu perfume</a></div>
-      </div></div></div>
-    <div class="dd"><button type="button" aria-haspopup="true">Marcas <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></button><div class="dd-box"><div class="cols" id="nav-marcas"></div></div></div>
-    <a href="/c/masculinos" data-cat="masculinos">Masculinos</a>
-    <a href="/c/femininos" data-cat="femininos">Femininos</a>
-    <a href="/c/arabes" data-cat="arabes">Árabes</a>
-    <div class="dd"><button type="button" aria-haspopup="true">Famílias olfativas <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></button><div class="dd-box"><div class="tiles" id="nav-fam"></div></div></div>
-    <div class="dd"><button type="button" aria-haspopup="true">Ocasiões <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></button><div class="dd-box"><div class="tiles" id="nav-occ"></div></div></div>
-    <a href="/c/kits" data-cat="kits">Kits</a>
-    <a href="/c/ofertas" data-cat="ofertas" class="hl">Ofertas</a>
-    <a href="#assinatura" class="hl">Descubra seu perfume</a>
-  </nav></div>
   </div></header>
 
 <a class="cover-wide" id="top" href="#colecoes" aria-label="Ver todos os perfumes"><img src="/img/capa.jpg" alt="Casal com os perfumes Asad Elixir e Yara, da Lattafa"><span class="cw-txt"><span class="cw-k">Alta perfumaria original</span><span class="cw-h">Fragrâncias que<br><em>marcam presença</em></span><span class="cw-d">✦</span><span class="cw-s">Originais, exclusivas e escolhidas com você<br>por quem entende de perfume.</span><span class="cw-b">Explorar a coleção</span></span></a>
@@ -870,23 +851,23 @@ function renderFixos(){
   $('#sale').innerHTML=ITEMS.filter(i=>i.p&&i.p<=149&&!i.splash).sort((a,b)=>(!!b.img-!!a.img)||a.p-b.p).slice(0,10).map(i=>card(i)).join('');
   const marcas=[...new Set(ITEMS.map(i=>i.b))].sort((a,b)=>a.localeCompare(b));
   const sel=$('#brand'),cur=sel.value;sel.innerHTML='<option value="">Todas as marcas</option>'+marcas.map(b=>`<option>${b}</option>`).join('');sel.value=cur;
-  $('#nav-marcas').innerHTML=marcas.map(b=>`<a href="/c/${slug(b)}" data-cat="${slug(b)}">${b} <small style="color:var(--muted)">(${ITEMS.filter(i=>i.b===b).length})</small></a>`).join('');
+  if($('#nav-marcas'))$('#nav-marcas').innerHTML=marcas.map(b=>`<a href="/c/${slug(b)}" data-cat="${slug(b)}">${b} <small style="color:var(--muted)">(${ITEMS.filter(i=>i.b===b).length})</small></a>`).join('');
   const TILE_PIC={doce:'Yara Tous EDP 100ml',amadeirado:'Lattafa|Asad EDP 100ml',fresco:'Hawas Ice EDP 100ml',floral:'Yara Elixir EDP 100ml',oriental:'Teriaq EDP 100ml',dia:'Hawas For Him 100ml',noite:'9 PM Elixir Black Gold Parfum 100ml',trabalho:'Club De Nuit Intense Man EDT 105ml',romantico:'Yara Tous EDP 100ml'};
   const pic=(pred,k)=>{const pref=TILE_PIC[k]&&byName(TILE_PIC[k]);if(pref&&pref.img)return pref.img;const x=ITEMS.filter(i=>i.img&&pred(i));return x.length?x[Math.floor(x.length/3)].img:''};
   $('#fam-tiles').innerHTML=Object.keys(FAM_L).map(k=>`<a class="tile" href="/c/${k}" data-cat="${k}"><img src="${pic(i=>i.fam.includes(k),k)}" alt="" loading="lazy"><div class="tx"><b>${FAM_L[k][0]}</b><span>${FAM_L[k][1]}</span><em>Ver fragrâncias ›</em></div></a>`).join('');
-  $('#nav-fam').innerHTML=Object.keys(FAM_L).map(k=>`<a href="/c/${k}" data-cat="${k}"><b>${FAM_L[k][0]}</b><small>${FAM_L[k][1]}</small></a>`).join('');
+  if($('#nav-fam'))$('#nav-fam').innerHTML=Object.keys(FAM_L).map(k=>`<a href="/c/${k}" data-cat="${k}"><b>${FAM_L[k][0]}</b><small>${FAM_L[k][1]}</small></a>`).join('');
   $('#occ-tiles').innerHTML=Object.keys(OCC).map(k=>`<a class="tile" href="/c/${k}" data-cat="${k}"><img src="${pic(i=>OCC[k].f.includes(i.fam[0]),k)}" alt="" loading="lazy"><div class="tx"><b>${OCC[k].t}</b><span>${OCC[k].s}</span><em>Ver seleção ›</em></div></a>`).join('');
-  $('#nav-occ').innerHTML=Object.keys(OCC).map(k=>`<a href="/c/${k}" data-cat="${k}"><b>${OCC[k].t}</b><small>${OCC[k].s}</small></a>`).join('');
+  if($('#nav-occ'))$('#nav-occ').innerHTML=Object.keys(OCC).map(k=>`<a href="/c/${k}" data-cat="${k}"><b>${OCC[k].t}</b><small>${OCC[k].s}</small></a>`).join('');
 }
 renderFixos();
 // Catálogo dinâmico: o painel administrativo edita os produtos; o site busca a versão mais recente.
 fetch('/api/produtos',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(list=>{
   if(!Array.isArray(list)||!list.length)return;
-  ITEMS.length=0;list.forEach(it=>ITEMS.push(it));decorate();renderFixos();render(true);if(typeof paintCartBtn==='function')paintCartBtn();if(typeof renderQuiz==='function')renderQuiz();
+  const FOTOS={};ITEMS.forEach(i=>{if(i.pics)FOTOS[i.id]=i.pics});ITEMS.length=0;list.forEach(it=>{if(!it.pics&&FOTOS[it.id])it.pics=FOTOS[it.id];ITEMS.push(it)});decorate();renderFixos();render(true);if(typeof paintCartBtn==='function')paintCartBtn();if(typeof renderQuiz==='function')renderQuiz();
   catHead();if(location.pathname.startsWith('/p/')&&!$('#pv').hidden){const it=ITEMS.find(i=>i.slug===location.pathname.slice(3));if(it)openPV(it.id)}
 }).catch(()=>{});
 
-let f='all',page=1,FAMF='',OCCF='',CAT='all';const PAGE=40;
+let f='all',page=1,FAMF='',OCCF='',CAT='all';const PAGE=1000;
 const norm=s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
 function passF(i){switch(f){case'M':case'F':case'U':return i.g===f;case'arabe':return!i.imp&&!i.splash;case'import':return i.imp;case'splash':return i.splash;case'kit':return i.kit;case'p99':return i.p!=null&&i.p<=99;case'p199':return i.p!=null&&i.p<=199;case'sale':return i.p!=null&&(i.p<=149||i.po>i.p);case'best':return!!i.best||BEST.map(byName).includes(i);default:return true}}
 function passFam(i){if(FAMF&&!i.fam.includes(FAMF))return false;if(OCCF&&!OCC[OCCF].f.includes(i.fam[0]))return false;return true}

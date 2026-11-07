@@ -52,7 +52,9 @@ async function produtos() {
     const rows = await db.select('produtos', 'select=id,marca,nome,genero,preco,notas,lembra,descricao,fotos,ativo,mais_vendido,top5&ativo=is.true&order=id.asc&limit=2000');
     if (Array.isArray(rows) && rows.length) items = rows.map(db.toSite);
   } catch (e) { /* cai no arquivo */ }
-  if (!items) items = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'produtos.json'), 'utf8'));
+  const estat = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'produtos.json'), 'utf8'));
+  if (!items) items = estat;
+  else { const fotos = {}; estat.forEach(i => { if (i.pics) fotos[i.id] = i.pics; }); items.forEach(i => { if (!i.pics && fotos[i.id]) i.pics = fotos[i.id]; }); }
   decorate(items);
   cache = { t: Date.now(), items };
   return items;

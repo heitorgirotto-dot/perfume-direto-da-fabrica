@@ -1,0 +1,23 @@
+name: Buscar fotos dos produtos sem imagem
+on:
+  workflow_dispatch:
+  push:
+    paths: ["ferramentas/buscar-fotos.js"]
+permissions:
+  contents: write
+jobs:
+  buscar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Buscar e baixar
+        run: node ferramentas/buscar-fotos.js
+      - name: Commit
+        run: |
+          git config user.name "nota-bot"
+          git config user.email "bot@notaperfumaria"
+          git add fotos-king fotos-king-lista.txt produtos.json produtos.js
+          git diff --cached --quiet || git commit -m "Fotos dos produtos sem imagem (busca automática)"
+          git push

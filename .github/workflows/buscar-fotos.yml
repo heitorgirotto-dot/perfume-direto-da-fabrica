@@ -2,7 +2,7 @@ name: Buscar fotos dos produtos sem imagem
 on:
   workflow_dispatch:
   push:
-    paths: ["ferramentas/buscar-fotos.js"]
+    paths: ["fotos-pendentes.txt"]
 permissions:
   contents: write
 jobs:
@@ -15,7 +15,7 @@ jobs:
       - name: Buscar e baixar
         run: node ferramentas/buscar-fotos.js
         env:
-          DEBUG: "1"
+          DEBUG: ${{ vars.FOTOS_DEBUG }}
       - name: Commit
         run: |
           git config user.name "nota-bot"

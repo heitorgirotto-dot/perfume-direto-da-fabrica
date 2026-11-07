@@ -67,7 +67,6 @@ function filtrar(items, cat) {
   if (d) {
     if (String(d.f).startsWith('carro')) return items.filter(i => i.carro && (d.f === 'carro' || i.g === d.f.slice(6)));
     return items.filter(i => {
-      if (i.carro) return false;
       if (d.fam && !i.fam.includes(d.fam)) return false;
       if (d.occ && !OCC[d.occ].f.includes(i.fam[0])) return false;
       switch (d.f) {

@@ -841,7 +841,8 @@ body.pg-p .h-banner{display:none}
 .h-aro{padding:34px 0;margin:10px 0;background:radial-gradient(70% 90% at 75% 40%,#2a2012,#0b0906 70%);color:#f3e7c6}
 .h-aro-girls{background:radial-gradient(70% 90% at 75% 40%,#3a1430,#12060f 70%);color:#f7dbe6}
 .h-aro[hidden]{display:none}
-.h-aro-in{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.6fr);gap:32px;align-items:center}
+.h-aro-in{display:grid;grid-template-columns:minmax(0,.72fr) minmax(0,2fr);gap:32px;align-items:start}
+.h-aro-ban{position:sticky;top:90px}
 .h-aro-ban{display:block;border-radius:14px;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.45)}
 .h-aro-ban img{display:block;width:100%;height:auto;transition:transform .5s}.h-aro-ban:hover img{transform:scale(1.03)}
 .h-aro-side{min-width:0}
@@ -850,15 +851,15 @@ body.pg-p .h-banner{display:none}
 .h-aro h2{margin:0 0 8px!important;font-family:'Cormorant Garamond',Georgia,serif!important;font-weight:500!important;font-size:clamp(1.9rem,3.4vw,3rem)!important;line-height:1.05;color:#fff!important}
 .h-aro-s{margin:0 0 18px;font-size:15px;opacity:.88}.h-aro-s b{color:#e7c66f}
 .h-aro-girls .h-aro-s b{color:#f5b6cf}
-.h-aro .h-track{gap:14px;grid-auto-columns:calc((100% - 2*14px)/3)}
-@media(max-width:900px){.h-aro .h-track{grid-auto-columns:calc((100% - 14px)/2)}}
-@media(max-width:520px){.h-aro .h-track{grid-auto-columns:62%}}
+.h-aro-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+@media(max-width:1100px){.h-aro-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:620px){.h-aro-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.h-aro .h-card{padding:8px}}
 .h-aro .h-card{background:#fff;border-radius:12px;padding:12px;color:#111}
 .h-aro .h-car-btn{background:#d9b25a;color:#140f05}
 .h-aro-all{display:inline-block;margin-top:16px;padding:12px 26px;border:1.5px solid currentColor;border-radius:999px;color:inherit;text-decoration:none;font-size:13px;letter-spacing:.08em}
 .h-aro-all:hover{background:#d9b25a;border-color:#d9b25a;color:#140f05}
 .h-aro-girls .h-aro-all:hover{background:#f0a6c2;border-color:#f0a6c2}
-@media(max-width:900px){.h-aro-in{grid-template-columns:1fr;gap:20px}.h-aro-ban{max-width:520px;margin:0 auto}}
+@media(max-width:900px){.h-aro-in{grid-template-columns:1fr;gap:20px}.h-aro-ban{max-width:520px;margin:0 auto;position:static}}
 /* player estilo stories */
 .h-story{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center}
 .h-story[hidden]{display:none}
@@ -992,9 +993,7 @@ body.pg-blog main#home,body.pg-blog .h-colecoes,body.pg-blog .h-quiz{display:non
     <p class="h-aro-k">AROMATIZADOR AUTOMOTIVO · LINHA KING</p>
     <h2>O seu carro com o seu cheiro marcante</h2>
     <p class="h-aro-s">20 fragrâncias árabes masculinas para pendurar no retrovisor. <b>R$ 59,90</b> cada.</p>
-    <div class="h-car"><button class="h-car-btn l" type="button" data-car="-1" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 5l-7 7 7 7"/></svg></button>
-      <div class="h-track h-aro-track" id="aro-M"></div>
-      <button class="h-car-btn r" type="button" data-car="1" aria-label="Próximo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg></button></div>
+    <div class="h-aro-grid" id="aro-M"></div>
     <a class="h-aro-all" href="/c/aromatizadores-masculinos" data-cat="aromatizadores-masculinos">Ver os 20 aromatizadores KING</a>
   </div>
 </div></section>
@@ -1004,9 +1003,7 @@ body.pg-blog main#home,body.pg-blog .h-colecoes,body.pg-blog .h-quiz{display:non
     <p class="h-aro-k">AROMATIZADOR AUTOMOTIVO · LINHA GIRLS</p>
     <h2>Elegância e feminilidade no seu carro</h2>
     <p class="h-aro-s">20 fragrâncias árabes femininas para pendurar no retrovisor. <b>R$ 59,90</b> cada.</p>
-    <div class="h-car"><button class="h-car-btn l" type="button" data-car="-1" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 5l-7 7 7 7"/></svg></button>
-      <div class="h-track h-aro-track" id="aro-F"></div>
-      <button class="h-car-btn r" type="button" data-car="1" aria-label="Próximo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg></button></div>
+    <div class="h-aro-grid" id="aro-F"></div>
     <a class="h-aro-all" href="/c/aromatizadores-femininos" data-cat="aromatizadores-femininos">Ver os 20 aromatizadores GIRLS</a>
   </div>
 </div></section>
@@ -1184,7 +1181,7 @@ function renderFixos(){
   const sel=$('#brand'),cur=sel.value;sel.innerHTML='<option value="">Todas as marcas</option>'+marcas.map(b=>`<option>${b}</option>`).join('');sel.value=cur;
   if($('#nav-marcas'))$('#nav-marcas').innerHTML=marcas.map(b=>`<a href="/c/${slug(b)}" data-cat="${slug(b)}">${b}</a>`).join('');
   const porQtd=[...marcas].sort((a,b)=>ITEMS.filter(i=>i.b===b).length-ITEMS.filter(i=>i.b===a).length);
-  $('#brands').innerHTML=porQtd.filter(b=>!ITEMS.some(i=>i.b===b&&i.carro)).map(b=>`<a href="/c/${slug(b)}" data-cat="${slug(b)}">${b}</a>`).join('');
+  $('#brands').innerHTML=porQtd.map(b=>`<a href="/c/${slug(b)}" data-cat="${slug(b)}">${b}</a>`).join('');
 }
 renderFixos();
 // Catálogo dinâmico: o painel administrativo edita os produtos; o site busca a versão mais recente.
@@ -1200,8 +1197,7 @@ function passF(i){if(f==='carro')return i.carro;if(f==='carro-M')return i.carro&
 function passFam(i){if(FAMF&&!i.fam.includes(FAMF))return false;if(OCCF&&!OCC[OCCF].f.includes(i.fam[0]))return false;return true}
 function filtered(){
   const q=norm($('#q').value.trim()),b=$('#brand').value,r=$('#range').value,s=$('#sort').value;
-  const comCarro=String(f).startsWith('carro')||!!q||(!!b&&ITEMS.some(i=>i.b===b&&i.carro));
-  let out=ITEMS.filter(i=>(comCarro||!i.carro)&&passF(i)&&passFam(i)&&(!b||i.b===b)&&(!q||norm(i.n+' '+i.b+' '+(i.like||'')).includes(q)));
+  let out=ITEMS.filter(i=>passF(i)&&passFam(i)&&(!b||i.b===b)&&(!q||norm(i.n+' '+i.b+' '+(i.like||'')).includes(q)));
   if(r){const [lo,hi]=r.split('-').map(Number);out=out.filter(i=>i.p!=null&&i.p>=lo&&i.p<hi)}
   if(s==='asc')out.sort((a,c)=>(a.p??1e9)-(c.p??1e9));else if(s==='desc')out.sort((a,c)=>(c.p??0)-(a.p??0));else if(s==='az')out.sort((a,c)=>a.n.localeCompare(c.n));else out.sort((a,c)=>(!!c.img-!!a.img));
   return out;

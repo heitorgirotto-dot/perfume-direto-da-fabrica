@@ -1115,7 +1115,7 @@ function render(reset){
 }
 window.setModo=function(m){document.body.classList.toggle('modo-lista',m==='lista');document.body.classList.toggle('modo-quiz',m==='quiz');if(m==='quiz'){document.title='Descubra o seu perfume · Nota Perfumaria';(function(){try{history.pushState(null,'','/#descubra')}catch(e){}})()}};
 function setF(v,scroll){f=v;FAMF='';OCCF='';CAT=Object.keys(CATS).find(k=>CATS[k].f===v)||'all';catHead();render(true);setModo('lista');if(CAT!=='all'){(function(){try{history.replaceState(null,'','/c/'+CAT)}catch(e){}})()}}
-function catHead(){const c=CATS[CAT]||{};const brandCat=!c.t&&CAT!=='all';const title=brandCat?($('#brand').value||'Marca'):(c.t||'Todos os perfumes');
+function catHead(){if(document.body.classList.contains('pg-blog'))return;const c=CATS[CAT]||{};const brandCat=!c.t&&CAT!=='all';const title=brandCat?($('#brand').value||'Marca'):(c.t||'Todos os perfumes');
   $('#cat-title').textContent=title;$('#cat-sub').textContent=brandCat?`Todas as fragrâncias ${$('#brand').value} da nossa curadoria, 100% originais`:(c.s||'Mais de 350 fragrâncias originais, das casas árabes às grifes internacionais');
   $('#cat-crumb-n').textContent=title;
   document.querySelectorAll('#nav [data-cat]').forEach(a=>a.classList.toggle('on',a.dataset.cat===CAT));

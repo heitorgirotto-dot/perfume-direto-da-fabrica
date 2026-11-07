@@ -840,12 +840,15 @@ body.pg-p .h-banner{display:none}
 /* aromatizadores automotivos: faixa de ponta a ponta + produtos */
 .h-aro{padding:0 0 26px}
 .h-aro[hidden]{display:none}
+body.modo-lista .h-aro,body.modo-quiz .h-aro{display:none}
+.h-aro-grid{grid-template-columns:repeat(5,minmax(0,1fr))}
+@media(max-width:1100px){.h-aro-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:900px){.h-aro-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:620px){.h-aro-grid{grid-template-columns:1fr 1fr}}
+.h-full.h-full-m.h-full-cku a{background:radial-gradient(38% 60% at 50% 50%,rgba(0,0,0,.4),rgba(0,0,0,0) 100%),url(/img/faixa-cheirinho-unissex.webp) center/cover no-repeat}
+.h-full.h-full-m.h-full-cku span{font-size:clamp(1.9rem,4.4vw,4.6rem)}
+@media(max-width:700px){.h-full.h-full-m.h-full-cku a{background:linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.6)),url(/img/faixa-cheirinho-unissex-m.webp) center/cover no-repeat}}
 .h-aro .h-full{margin:20px 0 26px}
-.h-full.h-full-m.h-full-ckm a{background:radial-gradient(38% 60% at 50% 50%,rgba(0,0,0,.45),rgba(0,0,0,0) 100%),url(/img/faixa-cheirinho-masc.webp) center/cover no-repeat}
-.h-full.h-full-m.h-full-ckf a{background:radial-gradient(38% 60% at 50% 50%,rgba(0,0,0,.4),rgba(0,0,0,0) 100%),url(/img/faixa-cheirinho-fem.webp) center/cover no-repeat}
-.h-full.h-full-m.h-full-ckm span,.h-full.h-full-m.h-full-ckf span{font-size:clamp(1.9rem,4.4vw,4.6rem)}
-.h-full.h-full-m.h-full-ckf span{background:linear-gradient(180deg,#fff 30%,#f3b9cf);-webkit-background-clip:text;background-clip:text}
-@media(max-width:700px){.h-full.h-full-m.h-full-ckm a{background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.55)),url(/img/faixa-cheirinho-masc-m.webp) left center/cover no-repeat}.h-full.h-full-m.h-full-ckf a{background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.55)),url(/img/faixa-cheirinho-fem-m.webp) left center/cover no-repeat}}
 .h-aro-mais{text-align:center;margin:22px 0 0}
 .h-aro-all{display:inline-block;padding:12px 28px;border:1.5px solid #000;border-radius:999px;color:#000;text-decoration:none;font-size:13px;letter-spacing:.08em}
 .h-aro-all:hover{background:#000;color:#fff}
@@ -1023,16 +1026,6 @@ body.pg-blog main#home,body.pg-blog .h-colecoes,body.pg-blog .h-quiz{display:non
     <div class="h-track" id="best"></div>
     <button class="h-car-btn r" type="button" data-car="1" aria-label="Próximo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg></button></div>
 </div></section>
-<section class="h-aro" id="aromatizador-king" hidden>
-  <section class="h-full h-full-m h-full-ckm"><a href="/c/aromatizadores-masculinos" data-cat="aromatizadores-masculinos"><span>CHEIRINHO MASCULINO</span><em>Aromatizadores automotivos KING: fragrâncias árabes para o seu carro por R$ 59,90</em></a></section>
-  <div class="h-w"><div class="h-grid h-aro-grid" id="aro-M"></div>
-  <p class="h-aro-mais"><a class="h-aro-all" href="/c/aromatizadores-masculinos" data-cat="aromatizadores-masculinos">Ver todos os aromatizadores KING</a></p></div>
-</section>
-<section class="h-aro" id="aromatizador-girls" hidden>
-  <section class="h-full h-full-m h-full-ckf"><a href="/c/aromatizadores-femininos" data-cat="aromatizadores-femininos"><span>CHEIRINHO FEMININO</span><em>Aromatizadores automotivos GIRLS: fragrâncias árabes para o seu carro por R$ 59,90</em></a></section>
-  <div class="h-w"><div class="h-grid h-aro-grid" id="aro-F"></div>
-  <p class="h-aro-mais"><a class="h-aro-all" href="/c/aromatizadores-femininos" data-cat="aromatizadores-femininos">Ver todos os aromatizadores GIRLS</a></p></div>
-</section>
 
 
 
@@ -1060,6 +1053,11 @@ body.pg-blog main#home,body.pg-blog .h-colecoes,body.pg-blog .h-quiz{display:non
   <div class="h-more" id="more"></div>
 </div></section>
 
+<section class="h-aro" id="aromatizadores" hidden>
+  <section class="h-full h-full-m h-full-cku"><a href="/c/aromatizadores" data-cat="aromatizadores"><span>CHEIRINHO UNISSEX</span><em>Aromatizadores automotivos KING e GIRLS: fragrâncias árabes para o seu carro por R$ 59,90</em></a></section>
+  <div class="h-w"><div class="h-grid h-aro-grid" id="aro-U"></div>
+  <p class="h-aro-mais"><a class="h-aro-all" href="/c/aromatizadores" data-cat="aromatizadores">Ver todos os 40 aromatizadores</a></p></div>
+</section>
 <section class="h-brands h-home" id="marcas"><div class="h-w">
   <h2 class="h-title">Filtre os produtos por fabricantes</h2>
   <p class="h-sub">Trabalhamos com as casas mais desejadas da perfumaria árabe e internacional</p>
@@ -1201,7 +1199,7 @@ const byName=n=>{const [b,nm]=n.includes("|")?n.split("|"):[null,n];return ITEMS
 function renderFixos(){
   const best=ITEMS.some(i=>i.best)?ITEMS.filter(i=>i.best):BEST.map(byName).filter(Boolean);
   const extra=ITEMS.filter(i=>i.img&&i.p!=null&&!best.includes(i)&&!i.splash&&!i.kit&&!i.carro).slice(0,6);
-  ['M','F'].forEach(g=>{const el=$('#aro-'+g);if(!el)return;const l=ITEMS.filter(i=>i.carro&&i.g===g);el.innerHTML=l.map(i=>card(i)).join('');el.closest('.h-aro').hidden=!l.length});
+  {const el=$('#aro-U');if(el){const K=ITEMS.filter(i=>i.carro&&i.g==='M'),Gs=ITEMS.filter(i=>i.carro&&i.g!=='M'),l=[];for(let k=0;l.length<10&&(k<K.length||k<Gs.length);k++){if(K[k])l.push(K[k]);if(Gs[k]&&l.length<10)l.push(Gs[k])}el.innerHTML=l.map(i=>card(i)).join('');el.closest('.h-aro').hidden=!l.length}}
   $('#best').innerHTML=[...best,...extra].slice(0,14).map(i=>card(i)).join('');
   const marcas=[...new Set(ITEMS.map(i=>i.b))].sort((a,b)=>a.localeCompare(b));
   const sel=$('#brand'),cur=sel.value;sel.innerHTML='<option value="">Todas as marcas</option>'+marcas.map(b=>`<option>${b}</option>`).join('');sel.value=cur;

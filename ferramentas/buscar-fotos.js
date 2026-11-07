@@ -24,6 +24,7 @@ function score(a, b) {
 async function buscar(it) {
   const q = encodeURIComponent((it.b + ' ' + it.n).replace(/\b\d+\s?ml\b/i, '').trim());
   const html = await get(`${LOJA}/search/?q=${q}`);
+  if (process.env.DEBUG) { console.log('DEBUG url:', `${LOJA}/search/?q=${q}`, 'tamanho:', html.length, 'links /produtos/:', (html.match(/\/produtos\//g) || []).length); console.log(html.replace(/\s+/g, ' ').slice(0, 4000)); const i = html.indexOf('/produtos/'); if (i > 0) console.log('TRECHO:', html.slice(Math.max(0, i - 600), i + 400)); }
   // links de produto do resultado + o texto do link para conferir o nome
   const cand = [];
   const re = /<a[^>]+href="([^"]*\/produtos\/[^"]+)"[^>]*>([\s\S]*?)<\/a>/gi;
@@ -52,7 +53,7 @@ async function baixar(url, dest) {
   console.log(sem.length, 'produtos sem foto');
   let ok = 0, lista = [];
   fs.mkdirSync(path.join(ROOT, 'fotos-king'), { recursive: true });
-  for (const it of sem) {
+  for (const it of (process.env.DEBUG ? sem.slice(0, 1) : sem)) {
     try {
       const r = await buscar(it);
       if (!r || !r.imgs.length) { console.log('  sem resultado:', it.b, it.n); continue; }

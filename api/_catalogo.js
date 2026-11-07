@@ -18,7 +18,7 @@ const FAM_L = { doce: ['Doce & envolvente', 'Baunilha, caramelo, frutas', 'Perfu
 const OCC = { dia: { t: 'Para o dia', s: 'Leves, frescos e fáceis de usar', f: ['fresco', 'floral'] }, noite: { t: 'Para a noite', s: 'Intensos, marcantes e sensuais', f: ['oriental', 'doce'] }, trabalho: { t: 'Para o trabalho', s: 'Elegantes, discretos e sofisticados', f: ['amadeirado', 'fresco'] }, romantico: { t: 'Encontro romântico', s: 'Doces, quentes e envolventes', f: ['doce', 'floral'] } };
 const CATS = { masculinos: { f: 'M', t: 'Perfumes masculinos', s: 'Fragrâncias para ele: amadeirados, frescos e orientais das melhores casas' }, femininos: { f: 'F', t: 'Perfumes femininos', s: 'Fragrâncias para ela: doces, florais e marcantes' }, unissex: { f: 'U', t: 'Perfumes unissex', s: 'Fragrâncias compartilhadas, para quem não se prende a rótulos' }, arabes: { f: 'arabe', t: 'Perfumes árabes', s: 'Lattafa, Armaf, Al Haramain, Rasasi, Afnan e as casas mais desejadas do Oriente Médio' }, importados: { f: 'import', t: 'Importados & grifes', s: 'Grifes internacionais 100% originais' }, kits: { f: 'kit', t: 'Kits e presentes', s: 'Conjuntos prontos para presentear' }, 'body-splash': { f: 'splash', t: 'Body splash & mists', s: 'Leves, refrescantes, para o dia a dia' }, ofertas: { f: 'sale', t: 'Ofertas', s: 'Fragrâncias originais com o melhor preço da curadoria' }, 'mais-desejados': { f: 'best', t: 'Os mais desejados', s: 'As fragrâncias que nossos clientes mais escolhem' } };
 Object.keys(FAM_L).forEach(k => CATS[k] = { fam: k, t: FAM_L[k][2], s: 'Fragrâncias ' + FAM_L[k][0].toLowerCase().replace(' & ', ' e ') + 's: ' + FAM_L[k][1].toLowerCase() });
-Object.keys(OCC).forEach(k => CATS[k] = { occ: k, t: OCC[k].t, s: OCC[k].s });
+Object.keys(OCC).forEach(k => { CATS[k] = { occ: k, t: OCC[k].t, s: OCC[k].s }; [['masculino', 'M', 'masculinos'], ['feminino', 'F', 'femininos']].forEach(([n, g, pl]) => CATS[k + '-' + n] = { occ: k, f: g, t: OCC[k].t + ' · perfumes ' + pl, s: OCC[k].s }); });
 
 const norm0 = s => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 const slug = s => norm0(s).replace(/&/g, ' e ').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -67,7 +67,8 @@ function filtrar(items, cat) {
       if (d.fam && !i.fam.includes(d.fam)) return false;
       if (d.occ && !OCC[d.occ].f.includes(i.fam[0])) return false;
       switch (d.f) {
-        case 'M': case 'F': case 'U': return i.g === d.f;
+        case 'M': case 'F': return i.g === d.f || (!!d.occ && i.g === 'U');
+        case 'U': return i.g === d.f;
         case 'arabe': return !i.imp && !i.splash;
         case 'import': return i.imp;
         case 'splash': return i.splash;

@@ -27,10 +27,10 @@ function head(html, { title, desc, url, image, extra }) {
 
 const cardHTML = it => {
   const off = it.p != null && it.po > it.p ? Math.round((1 - it.p / it.po) * 100) : 0;
-  const price = it.p == null ? '<div class="pix" style="font-size:1rem">Consultar</div>' : `${off ? `<div class="old">de ${C.brl(it.po)}</div>` : ''}<div class="pix">${C.brl(C.pix(it.p))}<small>no PIX</small></div><div class="full">${C.brl(it.p)} no boleto</div><div class="parc">ou em até 12x no cartão</div>`;
-  return `<div class="card"><div class="ph${it.img ? ' has zoom' : ''}" data-open="${it.id}">${it.img ? `<img src="${it.img}" alt="${C.esc(it.b + ' ' + it.n)}" loading="lazy">` : ''}${off ? `<span class="off">${off}% OFF</span>` : ''}<span class="pill ${it.g}">${C.G[it.g]}</span></div>
-  <div class="cb"><div class="brand">${C.esc(it.b)}</div><h3><a href="/p/${it.slug}" data-open="${it.id}" style="text-decoration:none">${C.esc(it.n)}</a></h3><p class="notes"><b>Notas:</b> ${C.esc(it.notes || '')}</p>${it.like ? `<p class="like">Lembra: <b>${C.esc(it.like)}</b></p>` : ''}${price}
-  <div class="acts"><a class="buy" href="/p/${it.slug}" data-open="${it.id}">Comprar</a></div></div></div>`;
+  const badge = off ? `${off}% OFF` : (it.p != null ? '10% PIX' : '');
+  const price = it.p == null ? '<div class="l8-pr">Consultar</div>' : `${off ? `<div class="l8-cmp">${C.brl(it.po)}</div>` : ''}<div class="l8-pr">${C.brl(C.pix(it.p))}<small>no PIX</small></div><div class="l8-ins">ou ${C.brl(it.p)} em até 12x no cartão</div>`;
+  return `<div class="l8-card"><div class="l8-card-ph" data-open="${it.id}">${it.img ? `<img src="${it.img}" alt="${C.esc(it.b + ' ' + it.n)}" loading="lazy">` : ''}<span class="l8-card-g">${C.G[it.g]}</span></div>
+  <div class="l8-card-b"><div class="l8-card-top"><a class="l8-card-n" href="/p/${it.slug}" data-open="${it.id}">${C.esc(it.n)}</a>${badge ? `<span class="l8-badge">${badge}</span>` : ''}</div><div class="l8-card-brand">${C.esc(it.b)}</div>${price}</div></div>`;
 };
 
 module.exports = async (req, res) => {
@@ -77,14 +77,14 @@ module.exports = async (req, res) => {
     <div class="ssr-m">${it.img ? `<img src="${it.img}" alt="${C.esc(nome)}">` : ''}</div>
     <div class="ssr-i">
       <div class="brand">${C.esc(it.b)}</div><h1>${C.esc(nome)}</h1><span class="pill ${it.g}" style="position:static;display:inline-block">${C.G[it.g]}</span>
-      <p class="notes"><b>Notas:</b> ${C.esc(it.notes || '')}</p>${it.like ? `<p class="like">Lembra: <b>${C.esc(it.like)}</b></p>` : ''}${it.desc ? `<p class="pv-desc">${C.esc(it.desc)}</p>` : ''}
-      ${it.p == null ? '<div class="pix">Consultar</div>' : `${off ? `<div class="old">de ${C.brl(it.po)} · ${off}% OFF</div>` : ''}<div class="pix">${C.brl(C.pix(it.p))}<small>no PIX</small></div><div class="full">${C.brl(it.p)} no boleto · cartão em até 12x</div>`}
+      <p class="notes"><b>Notas:</b> ${C.esc(it.notes || '')}</p>${it.like ? `<p class="like">Perfil olfativo próximo a <b>${C.esc(it.like)}</b></p>` : ''}${it.desc ? `<p class="pv-desc">${C.esc(it.desc)}</p>` : ''}
+      ${it.p == null ? '<div class="pix">Consultar</div>' : `${off ? `<div class="old">de ${C.brl(it.po)} · ${off}% OFF</div>` : ''}<div class="pix">${C.brl(C.pix(it.p))}<small>no PIX</small></div><div class="full">${C.brl(it.p)} no cartão (até 12x) ou boleto</div>`}
       <div class="acts" style="margin-top:18px"><a class="buy" href="/p/${it.slug}" data-open="${it.id}">Comprar</a><a class="ask" href="https://wa.me/5511982659792?text=${encodeURIComponent('Olá! Tenho uma dúvida sobre ' + nome)}" target="_blank" rel="noopener">Falar com especialista</a></div>
       <p class="msg" style="margin-top:14px">100% original e lacrado · PIX, boleto ou cartão em até 12x · Envio pelos Correios com rastreio</p>
     </div>
   </div>
 </div></section>`;
-    html = html.replace('<a class="cover-wide"', bloco + '\n<a class="cover-wide"').replace('<body>', '<body class="pg-p">');
+    html = html.replace('<main id="home" class="l8-home">', bloco + '\n<main id="home" class="l8-home">').replace('<body>', '<body class="pg-p">');
     res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=3600');
     return res.end(html);
   }
@@ -98,12 +98,11 @@ module.exports = async (req, res) => {
     const crumb = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Início', item: C.BASE + '/' }, { '@type': 'ListItem', position: 2, name: t.t, item: url }] };
     const lista = { '@context': 'https://schema.org', '@type': 'ItemList', name: t.t, numberOfItems: list.length, itemListElement: list.slice(0, 40).map((it, k) => ({ '@type': 'ListItem', position: k + 1, url: `${C.BASE}/p/${it.slug}`, name: C.nomeCompleto(it) })) };
     html = head(html, { title: `${t.t} · Nota Perfumaria`, desc, url, extra: `<script type="application/ld+json">${JSON.stringify(crumb)}</script><script type="application/ld+json">${JSON.stringify(lista)}</script>` });
-    html = html.replace('<h2 class="gold-text" id="cat-title">A coleção Nota</h2>', `<h1 class="gold-text" id="cat-title">${C.esc(t.t)}</h1>`)
+    html = html.replace('<h1 id="cat-title">Todos os perfumes</h1>', `<h1 id="cat-title">${C.esc(t.t)}</h1>`)
       .replace('<p id="cat-sub">Mais de 350 fragrâncias originais, das casas árabes às grifes internacionais</p>', `<p id="cat-sub">${C.esc(t.s)}</p>`)
-      .replace('<p class="cat-crumb" id="cat-crumb" hidden>', '<p class="cat-crumb" id="cat-crumb">')
-      .replace('<span id="cat-crumb-n"></span>', `<span id="cat-crumb-n">${C.esc(t.t)}</span>`)
+      .replace('<span id="cat-crumb-n">Todos os perfumes</span>', `<span id="cat-crumb-n">${C.esc(t.t)}</span>`)
       .replace('<span class="count" id="count"></span>', `<span class="count" id="count">${list.length} produtos</span>`)
-      .replace('<div class="grid" id="grid"></div>', `<div class="grid" id="grid">${list.slice(0, 40).map(cardHTML).join('')}</div>`).replace('<body>', '<body class="pg-c">');
+      .replace('<div class="l8-grid" id="grid"></div>', `<div class="l8-grid" id="grid">${list.slice(0, 40).map(cardHTML).join('')}</div>`).replace('<body>', '<body class="pg-c modo-lista">');
     res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=3600');
     return res.end(html);
   }

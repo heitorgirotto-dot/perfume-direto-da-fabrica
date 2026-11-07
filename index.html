@@ -685,11 +685,13 @@ section{padding-block:0}
 .h-full.h-full-m a{padding:0 16px;background:radial-gradient(38% 60% at 50% 50%,rgba(0,0,0,.45),rgba(0,0,0,0) 100%),url(/img/faixa-masculinos.webp) center/cover no-repeat}
 .h-full.h-full-m em{max-width:min(560px,46vw)}
 .h-full.h-full-m span{font-size:clamp(2rem,6.2vw,6.6rem);background:linear-gradient(180deg,#fff 30%,#e7c66f);-webkit-background-clip:text;background-clip:text;color:transparent}
+.h-full.h-full-m.h-full-f a{background:radial-gradient(38% 60% at 50% 50%,rgba(0,0,0,.4),rgba(0,0,0,0) 100%),url(/img/faixa-femininos.webp) center/cover no-repeat}
+@media(max-width:700px){.h-full.h-full-m.h-full-f a{background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.55)),url(/img/faixa-femininos-m.webp) left center/cover no-repeat}}
 @media(max-width:700px){.h-full.h-full-m em{max-width:none}.h-full.h-full-m a{background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.55)),url(/img/faixa-masculinos-m.webp) left center/cover no-repeat}}
 #grid>.h-full{grid-column:1/-1;margin:16px calc(50% - 50vw)}
 .h-colecoes{overflow-x:clip}
 body.modo-lista #grid>.h-full{display:none}
-.h-home>#masc-faixa{display:none}
+.h-home>.h-full-m{display:none}
 .h-full a{display:flex;flex-direction:column;align-items:center;justify-content:center;height:clamp(220px,31vw,420px);background:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.45)),url(/img/hero.jpg) center 30%/cover no-repeat;color:#fff;text-decoration:none;text-align:center}
 .h-full span{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(3.4rem,11vw,9.5rem);line-height:.9;letter-spacing:.04em;font-weight:500}
 .h-full em{font-style:normal;font-size:clamp(.9rem,1.6vw,1.3rem);opacity:.9;margin-top:10px}
@@ -969,7 +971,7 @@ body.pg-blog main#home,body.pg-blog .h-colecoes,body.pg-blog .h-quiz{display:non
     <div class="h-oc-track" id="occ-tiles"><a class="h-oc-card" href="/c/romantico-masculino" data-occ="romantico" data-cat="romantico-masculino" style="background-image:url(https://images.unsplash.com/photo-1507363102828-2022ceba1dfe?auto=format&fit=crop&w=900&h=1000&q=70)"><b>Encontros Românticos</b><em>VER SELEÇÃO</em></a><a class="h-oc-card" href="/c/dia-masculino" data-occ="dia" data-cat="dia-masculino" style="background-image:url(https://images.unsplash.com/photo-1761834521474-003ed9af6bc7?auto=format&fit=crop&w=900&h=1000&q=70)"><b>Dia</b><em>VER SELEÇÃO</em></a><a class="h-oc-card" href="/c/noite-masculino" data-occ="noite" data-cat="noite-masculino" style="background-image:url(https://images.unsplash.com/photo-1530258614483-0185dc8d6632?auto=format&fit=crop&w=900&h=1000&q=70)"><b>Noite</b><em>VER SELEÇÃO</em></a><a class="h-oc-card" href="/c/trabalho-masculino" data-occ="trabalho" data-cat="trabalho-masculino" style="background-image:url(https://images.unsplash.com/photo-1758876017801-f5a892ee460a?auto=format&fit=crop&w=900&h=1000&q=70)"><b>Trabalho</b><em>VER SELEÇÃO</em></a></div>
     <button class="h-oc-arr r" type="button" data-ocar="1" aria-label="Próximo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l7 7-7 7"/></svg></button></div>
 </div></section>
-<section class="h-full" id="perf-faixa"><a href="/c/arabes" data-cat="arabes"><span>PERFUMES</span><em>Originais e lacrados, das casas mais desejadas</em></a></section>
+<section class="h-full h-full-m h-full-f" id="fem-faixa"><a href="/c/femininos" data-cat="femininos"><span>FEMININOS</span><em>Florais, doces e envolventes: fragrâncias que exaltam a sua essência</em></a></section>
 <section class="h-full h-full-m" id="masc-faixa"><a href="/c/masculinos" data-cat="masculinos"><span>MASCULINOS</span><em>Amadeirados, intensos e marcantes: fragrâncias que impõem presença</em></a></section>
 </div>
 
@@ -1154,7 +1156,7 @@ function filtered(){
 }
 function render(reset){
   if(reset)page=1;
-  const out=filtered(),show=out.slice(0,page*PAGE);
+  const out=filtered(),lim=page*PAGE+(CAT==='all'&&!$('#q').value.trim()?Math.max(0,faixaGeo().min-PAGE):0),show=out.slice(0,lim);
   $('#grid').innerHTML=show.length?show.map(i=>card(i)).join(''):'<p class="empty">Nenhum produto encontrado. Tente outra busca ou fale com a gente no WhatsApp.</p>';
   $('#count').textContent=`${out.length} ${out.length===1?'produto':'produtos'}`;
   $('#more').innerHTML=out.length>show.length?`<button type="button" id="morebtn">Carregar mais produtos (${out.length-show.length})</button>`:'';
@@ -1163,9 +1165,10 @@ function render(reset){
 }
 /* faixa PERFUMES: entra na lista depois de linhas completas (6 no celular/tablet, 8 no computador) */
 let FAIXA=null;
-function placeFaixa(){FAIXA=FAIXA||['perf-faixa','masc-faixa'].map(id=>document.getElementById(id)).filter(Boolean);const g=$('#grid');if(!FAIXA.length||!g)return;
-  const cols=getComputedStyle(g).gridTemplateColumns.split(' ').filter(Boolean).length||4;const n=cols>=4?cols*2:6;
-  FAIXA.forEach((fx,k)=>{const cs=g.querySelectorAll(':scope>.h-card'),i=n*(k+1);if(cs.length>i){if(cs[i].previousElementSibling!==fx)g.insertBefore(fx,cs[i])}else if(fx.parentNode===g)fx.remove()})}
+function faixaGeo(){const g=$('#grid');const cols=g?getComputedStyle(g).gridTemplateColumns.split(' ').filter(Boolean).length||4:4;const n=cols>=4?cols*2:6;const B=Math.ceil(40/cols)*cols;return {n,B,pos:[n,n+B],min:n+B+n}}
+function placeFaixa(){FAIXA=FAIXA||['fem-faixa','masc-faixa'].map(id=>document.getElementById(id)).filter(Boolean);const g=$('#grid');if(!FAIXA.length||!g)return;
+  const G=faixaGeo();
+  FAIXA.forEach((fx,k)=>{const cs=g.querySelectorAll(':scope>.h-card'),i=G.pos[k];if(cs.length>i){if(cs[i].previousElementSibling!==fx)g.insertBefore(fx,cs[i])}else if(fx.parentNode===g)fx.remove()})}
 addEventListener('resize',()=>{clearTimeout(placeFaixa._t);placeFaixa._t=setTimeout(placeFaixa,150)});
 window.setModo=function(m){document.body.classList.toggle('modo-lista',m==='lista');document.body.classList.toggle('modo-quiz',m==='quiz');if(m==='quiz'){document.title='Descubra o seu perfume · Nota Perfumaria';(function(){try{history.pushState(null,'','/#descubra')}catch(e){}})()}};
 function setF(v,scroll){f=v;FAMF='';OCCF='';CAT=Object.keys(CATS).find(k=>CATS[k].f===v)||'all';catHead();render(true);setModo('lista');if(CAT!=='all'){(function(){try{history.replaceState(null,'','/c/'+CAT)}catch(e){}})()}}

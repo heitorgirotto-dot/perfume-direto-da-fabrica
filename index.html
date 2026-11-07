@@ -837,29 +837,18 @@ body.pg-p .h-banner{display:none}
 .h-st-prod .bt2 .buy{background:#d9b25a;color:#140f05}
 
 
-/* aromatizadores automotivos KING / GIRLS */
-.h-aro{padding:34px 0;margin:10px 0;background:radial-gradient(70% 90% at 75% 40%,#2a2012,#0b0906 70%);color:#f3e7c6}
-.h-aro-girls{background:radial-gradient(70% 90% at 75% 40%,#3a1430,#12060f 70%);color:#f7dbe6}
+/* aromatizadores automotivos: faixa de ponta a ponta + produtos */
+.h-aro{padding:0 0 26px}
 .h-aro[hidden]{display:none}
-.h-aro-in{display:grid;grid-template-columns:minmax(0,.72fr) minmax(0,2fr);gap:32px;align-items:start}
-.h-aro-ban{position:sticky;top:90px}
-.h-aro-ban{display:block;border-radius:14px;overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.45)}
-.h-aro-ban img{display:block;width:100%;height:auto;transition:transform .5s}.h-aro-ban:hover img{transform:scale(1.03)}
-.h-aro-side{min-width:0}
-.h-aro-k{margin:0 0 8px;font-size:12px;letter-spacing:.24em;color:#d9b25a;font-weight:600}
-.h-aro-girls .h-aro-k{color:#f0a6c2}
-.h-aro h2{margin:0 0 8px!important;font-family:'Cormorant Garamond',Georgia,serif!important;font-weight:500!important;font-size:clamp(1.9rem,3.4vw,3rem)!important;line-height:1.05;color:#fff!important}
-.h-aro-s{margin:0 0 18px;font-size:15px;opacity:.88}.h-aro-s b{color:#e7c66f}
-.h-aro-girls .h-aro-s b{color:#f5b6cf}
-.h-aro-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
-@media(max-width:1100px){.h-aro-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:620px){.h-aro-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.h-aro .h-card{padding:8px}}
-.h-aro .h-card{background:#fff;border-radius:12px;padding:12px;color:#111}
-.h-aro .h-car-btn{background:#d9b25a;color:#140f05}
-.h-aro-all{display:inline-block;margin-top:16px;padding:12px 26px;border:1.5px solid currentColor;border-radius:999px;color:inherit;text-decoration:none;font-size:13px;letter-spacing:.08em}
-.h-aro-all:hover{background:#d9b25a;border-color:#d9b25a;color:#140f05}
-.h-aro-girls .h-aro-all:hover{background:#f0a6c2;border-color:#f0a6c2}
-@media(max-width:900px){.h-aro-in{grid-template-columns:1fr;gap:20px}.h-aro-ban{max-width:520px;margin:0 auto;position:static}}
+.h-aro .h-full{margin:20px 0 26px}
+.h-full.h-full-m.h-full-ckm a{background:radial-gradient(38% 60% at 50% 50%,rgba(0,0,0,.45),rgba(0,0,0,0) 100%),url(/img/faixa-cheirinho-masc.webp) center/cover no-repeat}
+.h-full.h-full-m.h-full-ckf a{background:radial-gradient(38% 60% at 50% 50%,rgba(0,0,0,.4),rgba(0,0,0,0) 100%),url(/img/faixa-cheirinho-fem.webp) center/cover no-repeat}
+.h-full.h-full-m.h-full-ckm span,.h-full.h-full-m.h-full-ckf span{font-size:clamp(1.9rem,4.4vw,4.6rem)}
+.h-full.h-full-m.h-full-ckf span{background:linear-gradient(180deg,#fff 30%,#f3b9cf);-webkit-background-clip:text;background-clip:text}
+@media(max-width:700px){.h-full.h-full-m.h-full-ckm a{background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.55)),url(/img/faixa-cheirinho-masc-m.webp) left center/cover no-repeat}.h-full.h-full-m.h-full-ckf a{background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.55)),url(/img/faixa-cheirinho-fem-m.webp) left center/cover no-repeat}}
+.h-aro-mais{text-align:center;margin:22px 0 0}
+.h-aro-all{display:inline-block;padding:12px 28px;border:1.5px solid #000;border-radius:999px;color:#000;text-decoration:none;font-size:13px;letter-spacing:.08em}
+.h-aro-all:hover{background:#000;color:#fff}
 /* player estilo stories */
 .h-story{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center}
 .h-story[hidden]{display:none}
@@ -987,26 +976,16 @@ body.pg-blog main#home,body.pg-blog .h-colecoes,body.pg-blog .h-quiz{display:non
     <div class="h-track" id="best"></div>
     <button class="h-car-btn r" type="button" data-car="1" aria-label="Próximo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg></button></div>
 </div></section>
-<section class="h-aro h-aro-king" id="aromatizador-king" hidden><div class="h-w h-aro-in">
-  <a class="h-aro-ban" href="/c/aromatizadores-masculinos" data-cat="aromatizadores-masculinos"><img src="/img/aromatizadores/king-poster.webp" alt="Aromatizador automotivo KING: o seu veículo pode ter o seu cheiro marcante" width="1199" height="1312" loading="lazy"></a>
-  <div class="h-aro-side">
-    <p class="h-aro-k">AROMATIZADOR AUTOMOTIVO · LINHA KING</p>
-    <h2>O seu carro com o seu cheiro marcante</h2>
-    <p class="h-aro-s">20 fragrâncias árabes masculinas para pendurar no retrovisor. <b>R$ 59,90</b> cada.</p>
-    <div class="h-aro-grid" id="aro-M"></div>
-    <a class="h-aro-all" href="/c/aromatizadores-masculinos" data-cat="aromatizadores-masculinos">Ver os 20 aromatizadores KING</a>
-  </div>
-</div></section>
-<section class="h-aro h-aro-girls" id="aromatizador-girls" hidden><div class="h-w h-aro-in">
-  <a class="h-aro-ban" href="/c/aromatizadores-femininos" data-cat="aromatizadores-femininos"><img src="/img/aromatizadores/girls-poster.webp" alt="Aromatizador automotivo GIRLS feminino: o seu veículo pode ter o seu cheiro marcante" width="1199" height="1312" loading="lazy"></a>
-  <div class="h-aro-side">
-    <p class="h-aro-k">AROMATIZADOR AUTOMOTIVO · LINHA GIRLS</p>
-    <h2>Elegância e feminilidade no seu carro</h2>
-    <p class="h-aro-s">20 fragrâncias árabes femininas para pendurar no retrovisor. <b>R$ 59,90</b> cada.</p>
-    <div class="h-aro-grid" id="aro-F"></div>
-    <a class="h-aro-all" href="/c/aromatizadores-femininos" data-cat="aromatizadores-femininos">Ver os 20 aromatizadores GIRLS</a>
-  </div>
-</div></section>
+<section class="h-aro" id="aromatizador-king" hidden>
+  <section class="h-full h-full-m h-full-ckm"><a href="/c/aromatizadores-masculinos" data-cat="aromatizadores-masculinos"><span>CHEIRINHO MASCULINO</span><em>Aromatizadores automotivos KING: fragrâncias árabes para o seu carro por R$ 59,90</em></a></section>
+  <div class="h-w"><div class="h-grid h-aro-grid" id="aro-M"></div>
+  <p class="h-aro-mais"><a class="h-aro-all" href="/c/aromatizadores-masculinos" data-cat="aromatizadores-masculinos">Ver todos os aromatizadores KING</a></p></div>
+</section>
+<section class="h-aro" id="aromatizador-girls" hidden>
+  <section class="h-full h-full-m h-full-ckf"><a href="/c/aromatizadores-femininos" data-cat="aromatizadores-femininos"><span>CHEIRINHO FEMININO</span><em>Aromatizadores automotivos GIRLS: fragrâncias árabes para o seu carro por R$ 59,90</em></a></section>
+  <div class="h-w"><div class="h-grid h-aro-grid" id="aro-F"></div>
+  <p class="h-aro-mais"><a class="h-aro-all" href="/c/aromatizadores-femininos" data-cat="aromatizadores-femininos">Ver todos os aromatizadores GIRLS</a></p></div>
+</section>
 
 
 

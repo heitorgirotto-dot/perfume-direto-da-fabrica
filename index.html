@@ -626,8 +626,9 @@ section{padding-block:0}
   .h-dd-marcas{grid-template-columns:1fr 1fr;padding:0}
 }
 /* banner */
-.h-banner{padding:20px 0}
-.h-banner .h-w{position:relative}
+.h-banner{padding:0 0 20px}
+.h-banner .h-w{position:relative;max-width:none;padding:0}
+.h-banner .h-slides{border-radius:0;max-height:760px}
 .h-slides{position:relative;aspect-ratio:3/1;background:#0a0a0a;overflow:hidden}
 .h-slide{position:absolute;inset:0;opacity:0;transition:opacity .6s;background:#0a0a0a center/cover no-repeat;color:#fff;text-decoration:none;display:flex;align-items:center}
 .h-slide.on{opacity:1;z-index:1}
